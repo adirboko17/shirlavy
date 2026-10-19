@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const WHATSAPP_PHONE = "972502444994";
 const WHATSAPP_MESSAGE = "היי הגעתי מהאתר";
 
@@ -11,15 +9,7 @@ export default function HomePage() {
       <div className="glow" aria-hidden="true" />
       <span />
       <div className="content">
-        <Image
-          className="logo"
-          src="/logo.png"
-          alt="SHIR LAVY — Aesthetics & Academy"
-          width={800}
-          height={632}
-          priority
-          style={{ width: "clamp(230px, 32vw, 290px)", height: "auto" }}
-        />
+        <p className="wordmark">SHIR LAVY</p>
         <div className="rule" />
         <div className="copy">
           <h1>האתר החדש בדרך</h1>

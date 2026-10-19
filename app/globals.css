@@ -61,10 +61,16 @@ a {
   max-width: 580px;
 }
 
-.logo {
-  width: clamp(230px, 32vw, 290px);
-  height: auto;
-  filter: drop-shadow(0 1px 0 rgba(90, 60, 35, 0.35));
+.wordmark {
+  margin: 0;
+  direction: ltr;
+  font-family: var(--font-marcellus), serif;
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 52px);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: #f3e2b0;
+  text-indent: 0.22em;
   animation: slUp 1.4s cubic-bezier(0.16, 0.8, 0.2, 1) both;
 }
 
