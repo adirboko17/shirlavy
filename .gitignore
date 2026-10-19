@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+.DS_Store
+*.log
+.env
+.env*.local
+_extract.js
+_extract_logo.js
+_extracted_template.html
