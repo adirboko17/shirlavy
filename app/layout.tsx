@@ -3,6 +3,7 @@ import { Heebo } from "next/font/google";
 import "./globals.css";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
+import { RenovationGate } from "@/components/renovation-gate";
 
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="he" dir="rtl" className={heebo.variable}>
       <body className={heebo.className}>
         <SiteProvider>
-          <Shell>{children}</Shell>
+          <RenovationGate>
+            <Shell>{children}</Shell>
+          </RenovationGate>
         </SiteProvider>
       </body>
     </html>
