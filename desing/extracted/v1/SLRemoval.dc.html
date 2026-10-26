@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Assistant',sans-serif;color:#292522;background:#FBFAF7">
+
+  <section data-screen-label="Removal · Hero" style="position:relative;background:#292522;color:#F7F3EC;padding:clamp(120px,15vh,170px) clamp(20px,5vw,80px) clamp(72px,8vw,120px);overflow:hidden">
+    <div style="max-width:1520px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(40px,6vw,100px);align-items:end">
+      <div style="display:flex;flex-direction:column;gap:32px">
+        <div data-reveal="0" style="display:flex;align-items:center;gap:16px"><span style="width:44px;height:1px;background:#C9B07E"></span><span style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#C9B07E">LASER REMOVAL</span></div>
+        <h1 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(50px,7vw,120px);line-height:1;letter-spacing:-.02em">
+          <span data-reveal="80" style="display:block">הסרת איפור קבוע</span>
+          <span data-reveal="200" style="display:block;color:#C9B07E">בלייזר</span>
+        </h1>
+        <p data-reveal="300" style="margin:0;max-width:500px;font-size:clamp(17px,1.4vw,20px);line-height:1.85;color:rgba(247,243,236,.78);text-wrap:pretty">טיפול להבהרה ולהסרה של איפור קבוע ישן, לא רצוי או כזה שלא הצליח, מתוך הקשבה, זהירות ותיאום ציפיות כן.</p>
+        <a data-reveal="380" href="{{ waLink }}" target="_blank" rel="noopener" style="align-self:flex-start;height:58px;padding:0 34px;display:flex;align-items:center;gap:16px;background:#B09256;color:#FBFAF7;font-size:16px;transition:background .4s" style-hover="background:#F7F3EC;color:#292522">לבדיקת התאמה ללא עלות<span aria-hidden="true">←</span></a>
+      </div>
+      <div data-reveal="120" style="aspect-ratio:4/5;max-height:72vh;background:#3A342F;color:#BFB3A3;overflow:hidden;position:relative"><div data-parallax="0.04" style="position:absolute;inset:-6% 0"><image-slot id="rm-hero" shape="rect" placeholder="צילום טיפול הסרה"></image-slot></div></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · Overview" style="padding:clamp(96px,12vw,180px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(32px,6vw,120px)">
+      <span data-reveal="0" style="flex:0 0 220px;font-size:14px;letter-spacing:.14em;color:#8A7040">01 — על הטיפול</span>
+      <div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:36px">
+        <p data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(28px,3.4vw,50px);line-height:1.3;text-wrap:pretty">הלייזר מפרק בהדרגה את הפיגמנט בעור, כך שהגוף יכול לפנות אותו לאורך זמן. התהליך הדרגתי, ומשתנה מאישה לאישה.</p>
+        <p data-reveal="160" style="margin:0;max-width:640px;font-size:17px;line-height:1.9;color:#5E554D">מספר המפגשים ומידת ההבהרה תלויים בגורמים רבים, ביניהם סוג הפיגמנט, עומקו, גוון העור והיסטוריית הטיפולים. לכן כל תהליך מתחיל בבדיקה אישית, ואין הבטחה מראש להסרה מלאה או למספר טיפולים קבוע.</p>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · Reasons" style="background:#F7F3EC;padding:clamp(96px,12vw,180px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto">
+      <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:clamp(48px,6vw,88px)">
+        <span data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">02 — למה נשים פונות</span>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04;letter-spacing:-.015em">סיבות נפוצות להסרה</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:2px;background:rgba(41,37,34,.08)">
+        <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4">
+          <div data-reveal="{{ r.delay }}" style="background:#F7F3EC;padding:clamp(28px,3vw,44px) 0 clamp(28px,3vw,44px) 36px;display:flex;flex-direction:column;gap:14px">
+            <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:46px;line-height:1;color:#B09256">{{ r.n }}</span>
+            <h3 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(24px,2.2vw,30px)">{{ r.t }}</h3>
+            <p style="margin:0;font-size:16px;line-height:1.8;color:#5E554D;max-width:340px">{{ r.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · Process" style="padding:clamp(96px,12vw,180px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(48px,7vw,120px);align-items:start">
+      <div style="position:sticky;top:120px;display:flex;flex-direction:column;gap:26px">
+        <span data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">03 — התהליך</span>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5vw,80px);line-height:1.04">צעד אחר צעד,<br>בקצב של העור</h2>
+        <p data-reveal="160" style="margin:0;max-width:440px;font-size:17px;line-height:1.85;color:#5E554D">הסבר כללי בלבד. התוכנית המדויקת נבנית אחרי בדיקת התאמה אישית.</p>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <li data-reveal="{{ s.delay }}" style="display:grid;grid-template-columns:64px minmax(0,1fr);gap:16px;padding:32px 0;border-bottom:1px solid rgba(41,37,34,.14)">
+            <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:34px;color:#B09256;line-height:1">{{ s.n }}</span>
+            <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(22px,2vw,28px)">{{ s.t }}</span><span style="font-size:16px;line-height:1.8;color:#5E554D">{{ s.d }}</span></div>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · Consultation" style="background:#E8DDD0;padding:clamp(80px,10vw,150px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(32px,6vw,100px);align-items:center">
+      <div style="flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:24px">
+        <span data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#6B5D4F">04 — בדיקת התאמה</span>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(36px,4.4vw,68px);line-height:1.1">לפני כל טיפול,<br>שיחה כנה.</h2>
+      </div>
+      <p data-reveal="160" style="flex:1 1 420px;min-width:0;margin:0;font-size:17px;line-height:1.9;color:#4A423C">בפגישת הייעוץ שיר בוחנת את האזור, שומעת על הטיפולים הקודמים ומסבירה מה ניתן לצפות. אם הטיפול אינו מתאים, היא תאמר זאת בפשטות. לעיתים ניתן לשלב הבהרה עם טיפול גבות חדש בהמשך.</p>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · Results" style="padding:clamp(96px,12vw,180px) clamp(20px,5vw,80px)">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(44px,5vw,72px)">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <span data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">05 — מהקליניקה</span>
+          <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04">תמונות טיפול</h2>
+        </div>
+        <p data-reveal="160" style="margin:0;max-width:380px;font-size:14px;line-height:1.8;color:#6B625A">תמונות אמיתיות של לקוחות, באישורן. כל תוצאה אישית ואינה מעידה על תוצאה אצל אחרות.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(28px,4vw,56px)">
+        <div data-reveal="0"><dc-import name="SLCompare" sid="rm-ba-1" caption="לפני ואחרי סדרת טיפולים" note="[מספר טיפולים]" ratio="1/1" hint-size="100%,520px"></dc-import></div>
+        <div data-reveal="120"><dc-import name="SLCompare" sid="rm-ba-2" caption="הבהרה לקראת טיפול חדש" note="[מספר טיפולים]" ratio="1/1" hint-size="100%,520px"></dc-import></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · FAQ" style="background:#F7F3EC;padding:clamp(96px,12vw,180px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(40px,6vw,100px);align-items:start">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">06 — שאלות נפוצות</span>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5vw,80px);line-height:1.04">שאלות<br>ותשובות</h2>
+      </div>
+      <dc-import name="SLFaq" items="{{ faq }}" hint-size="100%,480px"></dc-import>
+    </div>
+  </section>
+
+  <section data-screen-label="Removal · CTA" style="background:#292522;color:#F7F3EC;padding:clamp(96px,12vw,170px) clamp(20px,5vw,80px)">
+    <div style="max-width:900px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:30px">
+      <h2 data-reveal="0" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(40px,5.6vw,88px);line-height:1.04">נתחיל בבדיקה אישית.</h2>
+      <p data-reveal="80" style="margin:0;max-width:480px;font-size:17px;line-height:1.8;color:rgba(247,243,236,.75)">שלחי הודעה, ואם אפשר, צרפי תמונה של האזור באור יום.</p>
+      <a data-reveal="160" href="{{ waLink }}" target="_blank" rel="noopener" style="height:60px;padding:0 40px;display:flex;align-items:center;gap:16px;background:#B09256;color:#FBFAF7;font-size:17px;transition:background .4s" style-hover="background:#F7F3EC;color:#292522">לייעוץ בוואטסאפ<span aria-hidden="true">←</span></a>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const app = this.props.app || { wa: () => '#' };
+    return {
+      waLink: app.wa('היי שיר, אשמח לבדיקת התאמה להסרת איפור קבוע בלייזר.'),
+      reasons: [
+        ['גוון שהשתנה', 'פיגמנט שהפך עם השנים לאפרפר, אדמדם או כחלחל.'],
+        ['צורה שלא מתאימה', 'גבה שעוצבה בעבר בקו שאינו תואם את מבנה הפנים.'],
+        ['טיפול שלא הצליח', 'תוצאה לא אחידה, כהה מדי או לא סימטרית.'],
+        ['רצון בהתחלה חדשה', 'הבהרה כהכנה לטיפול גבות חדש ומדויק יותר.']
+      ].map(([t, d], i) => ({ n: String(i + 1).padStart(2, '0'), t, d, delay: (i % 2) * 110 })),
+      steps: [
+        ['בדיקה וייעוץ', 'הערכת הפיגמנט, העור והציפיות, ותיאום מה ניתן להשיג.'],
+        ['טיפול לייזר', 'מפגש קצר יחסית, בהתאמה אישית של הפרמטרים לאזור.'],
+        ['החלמה בין מפגשים', 'מרווח זמן שמאפשר לעור להתאושש ולגוף לפנות פיגמנט.'],
+        ['הערכה מחודשת', 'בכל מפגש בוחנים יחד את ההתקדמות ומחליטים על ההמשך.']
+      ].map(([t, d], i) => ({ n: String(i + 1).padStart(2, '0'), t, d, delay: i * 100 })),
+      faq: [
+        { q: 'האם הלייזר מסיר את האיפור הקבוע לחלוטין?', a: 'לא ניתן להבטיח הסרה מלאה. במקרים רבים מגיעים להבהרה משמעותית, אך התוצאה תלויה בגורמים אישיים רבים.' },
+        { q: 'כמה טיפולים יידרשו?', a: 'אין מספר קבוע. הערכה ראשונית תינתן בייעוץ, והתוכנית מתעדכנת לאורך הדרך לפי תגובת העור.' },
+        { q: 'האם זה כואב?', a: 'התחושה משתנה מאישה לאישה. במהלך הייעוץ שיר תסביר על התחושה ועל הדרכים להפוך את הטיפול לנוח יותר.' },
+        { q: 'אפשר לעשות טיפול גבות חדש אחרי ההסרה?', a: 'לעיתים קרובות כן, לאחר החלמה מלאה. שיר תמליץ על העיתוי המתאים לך.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

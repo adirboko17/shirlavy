@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Heebo',sans-serif;color:#1C1C1C;background:#FFFFFF">
+  <section data-screen-label="Contact · Hero" style="padding:0">
+    <div style="position:relative;color:#1C1C1C;background:radial-gradient(ellipse 70% 90% at 50% 0%,#F5EEE7 0%,rgba(245,238,231,.55) 45%,#FFFFFF 100%)">
+      <div style="padding:clamp(132px,15vw,196px) clamp(20px,4.5vw,64px) clamp(48px,6vw,80px)">
+        <div style="max-width:860px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px">
+          <span data-reveal="0" style="display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.04em;color:#7A573C"><span aria-hidden="true" style="width:5px;height:5px;border-radius:50%;background:#8F6A4B"></span>יצירת קשר<span aria-hidden="true" style="width:5px;height:5px;border-radius:50%;background:#8F6A4B"></span></span>
+          <h1 data-reveal="80" style="margin:0;font-family:'Heebo',sans-serif;font-weight:200;font-size:clamp(44px,6.4vw,96px);line-height:1.02;letter-spacing:-.04em;text-wrap:balance;color:#1C1C1C">בואי נדבר.</h1>
+          <p data-reveal="160" style="margin:0;font-size:clamp(15px,1.2vw,17px);line-height:1.75;color:#5A5A5A;max-width:540px;text-wrap:pretty">הדרך המהירה ביותר היא וואטסאפ. שיר עונה באופן אישי לכל פנייה.</p>
+          <div data-reveal="240" style="display:flex;flex-wrap:wrap;justify-content:center;gap:24px;margin-top:6px"><a href="{{ waMain }}" target="_blank" rel="noopener" style="height:52px;padding:0 28px;border-radius:999px;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;gap:10px;transition:background .3s" style-hover="background:#6E4F37;color:#FFFFFF">כתבי לשיר בוואטסאפ<span aria-hidden="true">←</span></a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Contact · Quick" style="padding:clamp(16px,3vw,32px) clamp(16px,4vw,48px) 0">
+    <div style="max-width:1240px;margin:0 auto">
+      <span data-reveal="0" style="display:block;border-top:1px solid rgba(28,28,28,.14);padding-top:16px;margin-bottom:8px;font-size:13px;font-weight:500;color:#7A573C">במה אפשר לעזור?</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));column-gap:clamp(24px,4vw,56px)">
+        <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+          <a data-reveal="{{ q.delay }}" href="{{ q.href }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;border-bottom:1px solid rgba(28,28,28,.1);color:#1C1C1C;transition:color .3s" style-hover="color:#7A573C">
+            <span style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font-size:clamp(20px,1.8vw,24px);font-weight:300;letter-spacing:-.01em">{{ q.t }}</span><span style="font-size:14px;color:#5A5A5A">{{ q.d }}</span></span>
+            <span aria-hidden="true" style="flex:none;width:44px;height:44px;border-radius:50%;background:#F5EEE7;color:#7A573C;display:flex;align-items:center;justify-content:center;font-size:16px">←</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Contact · Form" style="padding:clamp(64px,8vw,112px) clamp(16px,4vw,48px) clamp(64px,8vw,112px)">
+    <div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(40px,6vw,96px);align-items:flex-start">
+      <div style="flex:1.1 1 400px;min-width:0;display:flex;flex-direction:column;gap:28px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span data-reveal="0" style="display:block;border-top:1px solid rgba(28,28,28,.14);padding-top:16px;font-size:13px;font-weight:500;color:#7A573C">טופס פנייה</span>
+          <h2 data-reveal="60" style="margin:0;font-family:'Heebo',sans-serif;font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.03em;font-weight:200">או השאירי פרטים</h2>
+        </div>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div ref="{{ okRef }}" role="status" style="border-radius:24px;background:#F5EEE7;padding:clamp(28px,3vw,40px);display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <span style="font-size:28px;font-weight:200;letter-spacing:-.02em">תודה, {{ firstName }}.</span>
+            <span style="font-size:15px;line-height:1.7;color:#5A5A5A">הפנייה התקבלה. שיר תחזור אלייך בהקדם.</span>
+            <span style="font-size:12px;color:#6B6B6B">תצוגת עיצוב: חיבור הטופס יושלם בשלב הפיתוח.</span>
+            <button onClick="{{ reset }}" style="height:44px;padding:0 24px;border-radius:999px;border:1px solid rgba(28,28,28,.2);background:#FFFFFF;color:#1C1C1C;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px">פנייה נוספת</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ submit }}" noValidate="" style="display:flex;flex-direction:column;gap:24px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:24px">
+              <sc-for list="{{ fields }}" as="f" hint-placeholder-count="3">
+                <label style="display:flex;flex-direction:column;gap:4px;grid-column:{{ f.col }}">
+                  <span style="font-size:13px;color:#5A5A5A">{{ f.label }}</span>
+                  <input name="{{ f.name }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.change }}" autoComplete="{{ f.ac }}" inputMode="{{ f.im }}" aria-invalid="{{ f.bad }}" style="height:48px;border:0;border-bottom:1px solid {{ f.line }};border-radius:0;background:transparent;padding:0 2px;font-size:17px;font-family:inherit;color:#1C1C1C;outline:none;width:100%;transition:border-color .3s" style-focus="border-bottom-color:#8F6A4B">
+                  <sc-if value="{{ f.bad }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#A0442E">{{ f.err }}</span></sc-if>
+                </label>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-size:13px;color:#5A5A5A">נושא הפנייה</span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="height:44px;padding:0 18px;border-radius:999px;border:1px solid {{ t.border }};font-size:14px;font-family:inherit;cursor:pointer;white-space:nowrap;flex:none;transition:background .3s,color .3s,border-color .3s;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:13px;color:#5A5A5A">הודעה (לא חובה)</span>
+              <textarea name="msg" rows="3" value="{{ msg }}" onChange="{{ msgChange }}" style="border:0;border-bottom:1px solid rgba(41,37,34,.2);border-radius:0;background:transparent;font-size:17px;font-family:inherit;line-height:1.6;color:#1C1C1C;padding:10px 2px;outline:none;resize:vertical;transition:border-color .3s" style-focus="border-bottom-color:#8F6A4B"></textarea>
+            </label>
+            <button type="submit" style="align-self:flex-start;height:52px;padding:0 40px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;font-family:inherit;display:inline-flex;align-items:center;gap:10px;cursor:pointer;transition:background .3s;margin-top:4px" style-hover="background:#6E4F37;color:#FFFFFF">שליחה<span aria-hidden="true">←</span></button>
+          </form>
+        </sc-if>
+      </div>
+      <div style="flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:28px">
+        <div data-reveal="0" style="position:relative;border-radius:28px;overflow:hidden;background:#F2EBE4;color:#999999;aspect-ratio:4/3"><image-slot id="contact-clinic" shape="rounded" radius="28" placeholder="צילום הקליניקה"></image-slot></div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ info }}" as="i" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid rgba(28,28,28,.1);font-size:15px"><span style="color:#7A573C;font-size:13px;font-weight:500">{{ i.k }}</span><span style="text-align:left">{{ i.v }}</span></div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:10px"><a href="#" aria-label="Instagram" title="Instagram" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"></rect><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"></circle></svg></a><a href="#" aria-label="Facebook" title="Facebook" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.7v3h2.6V21h3.1z"></path></svg></a><a href="#" aria-label="TikTok" title="TikTok" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3h-3.1v12.2a2.7 2.7 0 11-2.7-2.7c.3 0 .6 0 .8.1V9.4a5.8 5.8 0 105 5.8V9.1a7.3 7.3 0 004.3 1.4V7.4A4.3 4.3 0 0116.6 3z"></path></svg></a></div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { name: '', phone: '', email: '', msg: '', topic: 'brows', tried: false, sent: false };
+  okRef = React.createRef();
+  componentDidUpdate() {
+    const ps = this._prev || {}; this._prev = { ...this.state }; if (this.state.sent && !ps.sent && this.okRef.current) this.okRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.16,.8,.2,1)' }); }
+  renderVals() {
+    const app = this.props.app || { wa: () => '#' };
+    const s = this.state;
+    const errs = {
+      name: s.name.trim().length < 2 ? 'נא למלא שם מלא' : '',
+      phone: !/^0\d{8,9}$/.test(s.phone.replace(/[\s-]/g, '')) ? 'נא למלא מספר טלפון תקין' : '',
+      email: s.email && !/^\S+@\S+\.\S+$/.test(s.email) ? 'כתובת האימייל אינה תקינה' : ''
+    };
+    const F = [['name', 'שם מלא', 'text', 'name', 'text'], ['phone', 'טלפון', 'tel', 'tel', 'tel'], ['email', 'אימייל (לא חובה)', 'email', 'email', 'email']];
+    const TOP = [['brows', 'טיפולי גבות'], ['removal', 'הסרת איפור קבוע'], ['aesthetics', 'אסתטיקה'], ['academy', 'האקדמיה'], ['shop', 'הזמנה מהחנות']];
+    return {
+      waMain: app.wa('היי שיר, אשמח לדבר איתך.'), sent: s.sent, notSent: !s.sent, okRef: this.okRef, firstName: s.name.trim().split(' ')[0],
+      quick: [
+        { en: 'TREATMENTS', t: 'ייעוץ לטיפול', d: 'גבות, הסרה או אסתטיקה', href: app.wa('היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול.') },
+        { en: 'ACADEMY', t: 'פרטים על האקדמיה', d: 'מסלולי לימוד ומחזורים', href: app.wa('היי שיר, אשמח לפרטים על האקדמיה.') },
+        { en: 'SHOP', t: 'שאלה על הזמנה', d: 'מוצרים, משלוחים והחזרות', href: app.wa('היי, יש לי שאלה לגבי הזמנה מהחנות.') }
+      ].map((q, i) => ({ ...q, delay: i * 100 })),
+      fields: F.map(([k, label, type, ac, im]) => ({
+        name: k, label, type, ac, im, value: s[k], err: errs[k], bad: s.tried && !!errs[k],
+        line: s.tried && errs[k] ? '#A0442E' : 'rgba(41,37,34,.2)', col: k === 'email' ? '1 / -1' : 'auto',
+        change: e => this.setState({ [k]: e.target.value })
+      })),
+      topics: TOP.map(([k, label]) => { const on = s.topic === k; return { label, on, border: on ? '#8F6A4B' : 'rgba(28,28,28,.14)', bg: on ? '#8F6A4B' : '#FFFFFF', color: on ? '#FFFFFF' : '#1C1C1C', pick: () => this.setState({ topic: k }) }; }),
+      msg: s.msg, msgChange: e => this.setState({ msg: e.target.value }),
+      submit: e => { e.preventDefault(); if (Object.values(errs).some(Boolean)) this.setState({ tried: true }); else this.setState({ sent: true }); },
+      reset: () => this.setState({ name: '', phone: '', email: '', msg: '', tried: false, sent: false }),
+      info: [{ k: 'הקליניקה', v: 'קליניקת בוטיק לנשים בלבד' }, { k: 'כתובת', v: '[כתובת הקליניקה]' }, { k: 'שעות', v: '[שעות פעילות]' }, { k: 'טלפון', v: '[מספר טלפון]' }, { k: 'אימייל', v: '[כתובת אימייל]' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

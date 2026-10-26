@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<article dir="rtl" onMouseEnter="{{ enter }}" onMouseLeave="{{ leave }}" style="display:flex;flex-direction:column;gap:14px;font-family:'Heebo',sans-serif;color:#1C1C1C;min-width:0">
+  <div style="position:relative;border-radius:24px;overflow:hidden;background:#F7F3EE;color:#999999;aspect-ratio:4/5">
+    <div style="position:absolute;inset:14%"><image-slot id="{{ slotId }}" shape="rect" fit="contain" placeholder="תמונת מוצר" style="--frame-bg:transparent"></image-slot></div>
+    <sc-if value="{{ hasTag }}" hint-placeholder-val="{{ false }}">
+      <span style="position:absolute;top:12px;right:12px;height:28px;padding:0 12px;border-radius:999px;background:#FFFFFF;font-size:12px;display:flex;align-items:center;color:#1C1C1C;pointer-events:none">{{ p.tag }}</span>
+    </sc-if>
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ add }}" style="position:absolute;right:12px;left:12px;bottom:12px;height:46px;border-radius:999px;border:0;background:#FFFFFF;color:#1C1C1C;font-size:14px;font-weight:500;cursor:pointer;box-shadow:0 4px 16px rgba(41,37,34,.1);opacity:{{ qaOpacity }};transform:{{ qaShift }};transition:opacity .3s, transform .3s, background .3s" style-hover="background:#8F6A4B;color:#FFFFFF">{{ addLabel }}</button>
+    </sc-if>
+    <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ add }}" aria-label="הוספה לסל" style="position:absolute;left:10px;bottom:10px;width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;color:#1C1C1C;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(41,37,34,.1)">{{ plus }}</button>
+    </sc-if>
+  </div>
+  <button onClick="{{ open }}" style="display:flex;flex-direction:column;gap:4px;width:100%;background:none;border:0;padding:0 4px;text-align:right;font-family:inherit;cursor:pointer;color:#1C1C1C">
+    <span style="font-size:12px;color:#7A573C;letter-spacing:.02em">{{ p.catName }}</span>
+    <span style="width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-size:16px;font-weight:400;line-height:1.4">{{ p.name }}</span><span style="font-size:15px;font-weight:300;white-space:nowrap">{{ p.priceLabel }}</span></span>
+  </button>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:520},&quot;product&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;},&quot;app&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;}}">
+class Component extends DCLogic {
+  state = { hover: false, added: false };
+  renderVals() {
+    const app = this.props.app || {};
+    const p = this.props.product || { id: 'x', name: 'שם המוצר', catName: 'קטגוריה', priceLabel: '0 ₪' };
+    const show = this.state.hover || this.state.added;
+    return {
+      p,
+      slotId: 'p-' + p.id + '-1',
+      hasTag: !!p.tag,
+      mobile: !!app.mobile,
+      desktop: !app.mobile,
+      qaOpacity: show ? 1 : 0,
+      qaShift: show ? 'none' : 'translateY(12px)',
+      addLabel: this.state.added ? 'נוסף לסל ✓' : 'הוספה לסל',
+      plus: this.state.added ? '✓' : '+',
+      enter: () => this.setState({ hover: true }),
+      leave: () => this.setState({ hover: false }),
+      open: () => app.openProduct && app.openProduct(p.id),
+      add: () => {
+        app.addToCart && app.addToCart(p.id, p.variants ? p.variants[0].id : null, 1);
+        this.setState({ added: true });
+        clearTimeout(this.t); this.t = setTimeout(() => this.setState({ added: false }), 1600);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="display:flex;flex-direction:column;gap:10px;font-family:'Heebo',sans-serif">
+  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+    <div style="border-radius:20px;background:{{ line }}">
+      <button onClick="{{ r.toggle }}" aria-expanded="{{ r.open }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px;padding:16px 22px;background:none;border:0;cursor:pointer;text-align:right;color:{{ ink }};font-size:16px;font-weight:500;line-height:1.45">
+        <span>{{ r.q }}</span>
+        <span style="flex:none;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.75);position:relative;display:block">
+          <span style="position:absolute;top:14.5px;right:9px;left:9px;height:1.5px;border-radius:2px;background:#1C1C1C"></span>
+          <span style="position:absolute;top:14.5px;right:9px;left:9px;height:1.5px;border-radius:2px;background:#1C1C1C;transform:{{ r.rot }};transition:transform .35s ease"></span>
+        </span>
+      </button>
+      <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:0 22px 22px 60px;font-size:15px;line-height:1.75;color:{{ soft }};text-wrap:pretty">{{ r.a }}</div>
+      </sc-if>
+    </div>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:700,&quot;height&quot;:500},&quot;items&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;{q:string,a:string}[]&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { open: 0 };
+  renderVals() {
+    const dark = !!this.props.dark;
+    const items = this.props.items ?? [{ q: 'שאלה', a: 'תשובה' }];
+    return {
+      line: dark ? 'rgba(255,255,255,.07)' : '#F7F5F2',
+      ink: dark ? '#F7F3EC' : '#1C1C1C',
+      soft: dark ? 'rgba(247,243,236,.78)' : '#4A4A4A',
+      rows: items.map((it, i) => ({
+        ...it,
+        open: this.state.open === i,
+        rot: this.state.open === i ? 'rotate(0deg)' : 'rotate(90deg)',
+        toggle: () => this.setState(s => ({ open: s.open === i ? -1 : i }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

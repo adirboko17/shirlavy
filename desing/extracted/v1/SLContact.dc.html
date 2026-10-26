@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Assistant',sans-serif;color:#292522;background:#FBFAF7">
+  <section data-screen-label="Contact" style="padding:clamp(120px,15vh,170px) clamp(20px,5vw,80px) clamp(96px,12vw,170px)">
+    <div style="max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(56px,7vw,110px)">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:40px">
+        <div style="display:flex;flex-direction:column;gap:28px">
+          <div data-reveal="0" style="display:flex;align-items:center;gap:16px"><span style="width:44px;height:1px;background:#B09256"></span><span style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#8A7040">CONTACT</span></div>
+          <h1 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(58px,9vw,156px);line-height:.95;letter-spacing:-.025em">בואי נדבר.</h1>
+        </div>
+        <p data-reveal="160" style="margin:0;max-width:400px;font-size:clamp(17px,1.4vw,20px);line-height:1.85;color:#5E554D">הדרך המהירה ביותר היא וואטסאפ. שיר עונה באופן אישי לכל פנייה.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:2px;background:rgba(41,37,34,.08)">
+        <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+          <a data-reveal="{{ q.delay }}" href="{{ q.href }}" target="_blank" rel="noopener" style="background:#FBFAF7;padding:clamp(28px,3vw,44px) 0 clamp(28px,3vw,44px) 36px;display:flex;flex-direction:column;gap:16px;color:#292522;transition:background .4s" style-hover="background:#F7F3EC;color:#292522">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.3em;color:#8A7040">{{ q.en }}</span>
+            <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(26px,2.4vw,34px)">{{ q.t }}</span>
+            <span style="font-size:15px;color:#6B625A">{{ q.d }}</span>
+            <span style="margin-top:8px;font-size:15px;display:flex;gap:10px;align-items:center;color:#292522">שליחת הודעה<span aria-hidden="true">←</span></span>
+          </a>
+        </sc-for>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(48px,7vw,120px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:32px">
+          <h2 data-reveal="0" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(34px,3.6vw,54px);line-height:1.1">או השאירי פרטים</h2>
+          <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+            <div ref="{{ okRef }}" role="status" style="background:#F7F3EC;padding:clamp(32px,4vw,52px);display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+              <img src="assets/monogram-gold.png" alt="" style="width:44px;height:44px">
+              <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:32px">תודה, {{ firstName }}.</span>
+              <span style="font-size:16px;line-height:1.8;color:#5E554D">הפנייה התקבלה. שיר תחזור אלייך בהקדם.</span>
+              <span style="font-size:12px;color:#8C8279">תצוגת עיצוב: חיבור הטופס למערכת יושלם בשלב הפיתוח.</span>
+              <button onClick="{{ reset }}" style="height:44px;padding:0;border:0;border-bottom:1px solid #B09256;background:none;color:#292522;font-size:15px;cursor:pointer">פנייה נוספת</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ submit }}" noValidate="" style="display:flex;flex-direction:column;gap:26px">
+              <sc-for list="{{ fields }}" as="f" hint-placeholder-count="3">
+                <label style="display:flex;flex-direction:column;gap:8px">
+                  <span style="font-size:14px;color:#5E554D">{{ f.label }}</span>
+                  <input name="{{ f.name }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.change }}" autoComplete="{{ f.ac }}" inputMode="{{ f.im }}" aria-invalid="{{ f.bad }}" style="height:54px;border:0;border-bottom:1px solid {{ f.line }};background:transparent;font-size:18px;color:#292522;padding:0;outline:none;border-radius:0" style-focus="border-bottom-color:#B09256">
+                  <sc-if value="{{ f.bad }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#A0442E">{{ f.err }}</span></sc-if>
+                </label>
+              </sc-for>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <span style="font-size:14px;color:#5E554D">נושא הפנייה</span>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+                    <button type="button" onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="height:44px;padding:0 18px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};font-size:14px;cursor:pointer;transition:all .3s">{{ t.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:14px;color:#5E554D">הודעה (לא חובה)</span>
+                <textarea name="msg" rows="3" value="{{ msg }}" onChange="{{ msgChange }}" style="border:0;border-bottom:1px solid rgba(41,37,34,.25);background:transparent;font-size:17px;line-height:1.6;color:#292522;padding:8px 0;outline:none;resize:vertical;border-radius:0" style-focus="border-bottom-color:#B09256"></textarea>
+              </label>
+              <button type="submit" style="align-self:flex-start;height:58px;padding:0 40px;border:0;background:#292522;color:#FBFAF7;font-size:16px;cursor:pointer;transition:background .4s" style-hover="background:#B09256">שליחה</button>
+            </form>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:36px">
+          <div data-reveal="0" style="aspect-ratio:4/3;background:#E8DDD0;color:#6B5D4F"><image-slot id="contact-clinic" shape="rect" placeholder="צילום הקליניקה"></image-slot></div>
+          <dl style="margin:0;display:flex;flex-direction:column;border-top:1px solid rgba(41,37,34,.14)">
+            <sc-for list="{{ info }}" as="i" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:18px 0;border-bottom:1px solid rgba(41,37,34,.14);font-size:16px">
+                <dt style="color:#6B625A">{{ i.k }}</dt><dd style="margin:0">{{ i.v }}</dd>
+              </div>
+            </sc-for>
+          </dl>
+          <div style="display:flex;gap:28px;font-size:15px">
+            <a href="#" style="border-bottom:1px solid #B09256;padding-bottom:4px">Instagram</a>
+            <a href="#" style="border-bottom:1px solid #B09256;padding-bottom:4px">Facebook</a>
+            <a href="#" style="border-bottom:1px solid #B09256;padding-bottom:4px">TikTok</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { name: '', phone: '', email: '', msg: '', topic: 'brows', tried: false, sent: false };
+  okRef = React.createRef();
+  componentDidUpdate() {
+    const ps = this._prev || {}; this._prev = { ...this.state }; if (this.state.sent && !ps.sent && this.okRef.current) this.okRef.current.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.16,.8,.2,1)' }); }
+  renderVals() {
+    const app = this.props.app || { wa: () => '#' };
+    const s = this.state;
+    const errs = {
+      name: s.name.trim().length < 2 ? 'נא למלא שם מלא' : '',
+      phone: !/^0\d{8,9}$/.test(s.phone.replace(/[\s-]/g, '')) ? 'נא למלא מספר טלפון תקין' : '',
+      email: s.email && !/^\S+@\S+\.\S+$/.test(s.email) ? 'כתובת האימייל אינה תקינה' : ''
+    };
+    const F = [['name', 'שם מלא', 'text', 'name', 'text'], ['phone', 'טלפון', 'tel', 'tel', 'tel'], ['email', 'אימייל (לא חובה)', 'email', 'email', 'email']];
+    const TOP = [['brows', 'טיפולי גבות'], ['removal', 'הסרת איפור קבוע'], ['aesthetics', 'אסתטיקה'], ['academy', 'האקדמיה'], ['shop', 'הזמנה מהחנות']];
+    return {
+      sent: s.sent, notSent: !s.sent, okRef: this.okRef, firstName: s.name.trim().split(' ')[0],
+      quick: [
+        { en: 'TREATMENTS', t: 'ייעוץ לטיפול', d: 'גבות, הסרה או אסתטיקה', href: app.wa('היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול.') },
+        { en: 'ACADEMY', t: 'פרטים על האקדמיה', d: 'מסלולי לימוד ומחזורים', href: app.wa('היי שיר, אשמח לפרטים על האקדמיה.') },
+        { en: 'SHOP', t: 'שאלה על הזמנה', d: 'מוצרים, משלוחים והחזרות', href: app.wa('היי, יש לי שאלה לגבי הזמנה מהחנות.') }
+      ].map((q, i) => ({ ...q, delay: i * 100 })),
+      fields: F.map(([k, label, type, ac, im]) => ({
+        name: k, label, type, ac, im, value: s[k], err: errs[k], bad: s.tried && !!errs[k],
+        line: s.tried && errs[k] ? '#A0442E' : 'rgba(41,37,34,.25)',
+        change: e => this.setState({ [k]: e.target.value })
+      })),
+      topics: TOP.map(([k, label]) => { const on = s.topic === k; return { label, on, border: on ? '#292522' : 'rgba(41,37,34,.2)', bg: on ? '#292522' : 'transparent', color: on ? '#FBFAF7' : '#292522', pick: () => this.setState({ topic: k }) }; }),
+      msg: s.msg, msgChange: e => this.setState({ msg: e.target.value }),
+      submit: e => { e.preventDefault(); if (Object.values(errs).some(Boolean)) this.setState({ tried: true }); else this.setState({ sent: true }); },
+      reset: () => this.setState({ name: '', phone: '', email: '', msg: '', tried: false, sent: false }),
+      info: [{ k: 'הקליניקה', v: 'קליניקת בוטיק לנשים בלבד' }, { k: 'כתובת', v: '[כתובת הקליניקה]' }, { k: 'שעות', v: '[שעות פעילות]' }, { k: 'טלפון', v: '[מספר טלפון]' }, { k: 'אימייל', v: '[כתובת אימייל]' }]
+    };
+  }
+}
+</script>
+</body>
+</html>

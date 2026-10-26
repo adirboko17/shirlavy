@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Heebo',sans-serif;color:#1C1C1C;background:#FFFFFF;min-height:100vh">
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:180px 24px 140px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+      <h1 style="margin:0;font-family:'Heebo',sans-serif;font-size:40px;letter-spacing:-.03em;font-weight:300">הסל ריק</h1>
+      <button onClick="{{ goShop }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s" style-hover="background:#6E4F37;color:#FFFFFF">חזרה לחנות</button>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+    <section ref="{{ doneRef }}" data-screen-label="Order confirmation" style="padding:clamp(110px,14vh,140px) 16px 100px">
+      <div style="max-width:620px;margin:0 auto;border-radius:28px;background:#FFFFFF;border:1px solid rgba(41,37,34,.08);padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;padding:clamp(28px,5vw,56px)">
+        <span style="width:64px;height:64px;border-radius:50%;background:#F7F5F2;display:flex;align-items:center;justify-content:center;font-size:24px">✓</span>
+        <h1 style="margin:0;font-family:'Heebo',sans-serif;font-size:clamp(32px,4.4vw,52px);line-height:1.1;letter-spacing:-.03em;font-weight:300">{{ thanks }}<br>ההזמנה התקבלה.</h1>
+        <p style="margin:0;font-size:16px;line-height:1.7;color:#5A5A5A">אישור יישלח אל {{ form.email }}.</p>
+        <div style="width:100%;border-radius:20px;background:#FFFFFF;padding:18px 20px;display:flex;flex-direction:column;gap:10px;font-size:14px;text-align:right">
+          <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">מספר הזמנה</span><span dir="ltr">{{ orderNo }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">תשלום</span><span>{{ paidWith }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">משלוח</span><span>{{ shipLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">כתובת</span><span>{{ addressLine }}</span></div>
+          <div style="display:flex;justify-content:space-between;border-top:1px solid rgba(41,37,34,.08);padding-top:10px;font-size:16px;font-weight:500"><span>סה״כ</span><span>{{ paidTotal }}</span></div>
+        </div>
+        <span style="font-size:12px;color:#8A8A8A">תצוגת עיצוב: לא בוצע חיוב.</span>
+        <button onClick="{{ goShop }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s" style-hover="background:#6E4F37;color:#FFFFFF">להמשך קנייה</button>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Checkout" style="padding:clamp(96px,11vh,112px) clamp(12px,3vw,48px) 96px">
+      <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+        <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1 1 100%;border-radius:22px;background:#F7F5F2">
+            <button onClick="{{ toggleSum }}" aria-expanded="{{ sumOpen }}" style="width:100%;height:58px;padding:0 20px;border:0;background:none;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:#1C1C1C;font-size:14px"><span>{{ sumToggleLabel }}</span><span style="font-size:17px;font-weight:500">{{ total }}</span></button>
+            <sc-if value="{{ sumOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 20px 18px;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span>{{ l.name }} × {{ l.qty }}</span><span>{{ l.total }}</span></div></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <form onSubmit="{{ submit }}" noValidate="" style="flex:1.4 1 520px;min-width:0;display:flex;flex-direction:column;gap:12px">
+          <h1 style="margin:0 0 8px;padding:0 6px;font-family:'Heebo',sans-serif;font-size:clamp(34px,3.8vw,48px);letter-spacing:-.03em;font-weight:300">תשלום</h1>
+          <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+            <div role="alert" style="border-radius:20px;background:#F6E7E1;padding:16px 20px;display:flex;flex-direction:column;gap:4px;color:#7A2E1C">
+              <span style="font-size:15px;font-weight:600">התשלום לא אושר</span>
+              <span style="font-size:14px;line-height:1.6">לא בוצע חיוב. אפשר לנסות שוב, לבדוק את פרטי הכרטיס או לבחור אמצעי תשלום אחר.</span>
+            </div>
+          </sc-if>
+
+          <div style="border-radius:28px;background:#FFFFFF;border:1px solid rgba(41,37,34,.08);padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px">
+            <span style="font-size:13px;color:#5A5A5A;text-align:center">תשלום מהיר</span>
+            <sc-if value="{{ apOn }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ startAP }}" aria-label="תשלום עם Apple Pay" dir="ltr" style="height:54px;border:0;border-radius:999px;background:{{ apBg }};color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:18px;font-weight:500;outline:{{ apRing }};outline-offset:3px">Pay with <span style="font-weight:600">Apple Pay</span></button>
+            </sc-if>
+            <sc-if value="{{ apOff }}" hint-placeholder-val="{{ true }}">
+              <div style="min-height:54px;border-radius:999px;background:#FFFFFF;border:1px dashed rgba(41,37,34,.18);display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:#5A5A5A;padding:8px 18px;text-align:center"><span dir="ltr" style="font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-weight:600;color:#1C1C1C">Apple Pay</span><span>יוצג במכשירי Apple ובדפדפנים תומכים</span></div>
+            </sc-if>
+          </div>
+
+          <fieldset style="margin:0;border-radius:28px;background:#FFFFFF;border:1px solid rgba(41,37,34,.08);padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px">
+            <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">פרטי התקשרות</legend>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:30px;height:30px;border-radius:50%;background:#F7F5F2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">1</span><span style="font-size:19px;font-weight:500">פרטי התקשרות</span></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px">
+              <sc-for list="{{ contactFields }}" as="f" hint-placeholder-count="2">
+                <label style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font-size:13px;color:#5A5A5A">{{ f.label }}</span>
+                  <input name="{{ f.k }}" type="{{ f.type }}" autoComplete="{{ f.ac }}" inputMode="{{ f.im }}" dir="{{ f.dir }}" value="{{ f.value }}" onChange="{{ f.change }}" aria-invalid="{{ f.bad }}" style="height:52px;border-radius:14px;border:1px solid {{ f.line }};background:#FFFFFF;padding:0 16px;font-size:16px;color:#1C1C1C;outline:none;width:100%;text-align:right" style-focus="border-color:#1C1C1C">
+                  <sc-if value="{{ f.bad }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#A0442E">{{ f.err }}</span></sc-if>
+                </label>
+              </sc-for>
+            </div>
+          </fieldset>
+
+          <fieldset style="margin:0;border-radius:28px;background:#FFFFFF;border:1px solid rgba(41,37,34,.08);padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px">
+            <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">משלוח</legend>
+            <div style="display:flex;align-items:center;gap:12px"><span style="width:30px;height:30px;border-radius:50%;background:#F7F5F2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">2</span><span style="font-size:19px;font-weight:500">משלוח</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ shipOpts }}" as="s" hint-placeholder-count="2">
+                <button type="button" role="radio" aria-checked="{{ s.on }}" onClick="{{ s.pick }}" style="display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 18px;border-radius:18px;border:1px solid {{ s.border }};background:#FFFFFF;cursor:pointer;text-align:right;color:#1C1C1C;transition:border-color .3s">
+                  <span style="flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid #1C1C1C;display:flex;align-items:center;justify-content:center"><span style="width:10px;height:10px;border-radius:50%;background:{{ s.dot }}"></span></span>
+                  <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:15px">{{ s.label }}</span><span style="font-size:13px;color:#8A8A8A">{{ s.sub }}</span></span>
+                  <span style="font-size:14px">{{ s.price }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ needsAddress }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px">
+                <sc-for list="{{ addrFields }}" as="f" hint-placeholder-count="7">
+                  <label style="display:flex;flex-direction:column;gap:6px;grid-column:span {{ f.span }};min-width:0">
+                    <span style="font-size:13px;color:#5A5A5A">{{ f.label }}</span>
+                    <input name="{{ f.k }}" type="text" autoComplete="{{ f.ac }}" inputMode="{{ f.im }}" value="{{ f.value }}" onChange="{{ f.change }}" aria-invalid="{{ f.bad }}" style="height:52px;border-radius:14px;border:1px solid {{ f.line }};background:#FFFFFF;padding:0 16px;font-size:16px;color:#1C1C1C;outline:none;width:100%" style-focus="border-color:#1C1C1C">
+                    <sc-if value="{{ f.bad }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#A0442E">{{ f.err }}</span></sc-if>
+                  </label>
+                </sc-for>
+              </div>
+            </sc-if>
+          </fieldset>
+
+          <fieldset style="margin:0;border-radius:28px;background:#FFFFFF;border:1px solid rgba(41,37,34,.08);padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px">
+            <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">תשלום בכרטיס</legend>
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px"><div style="display:flex;align-items:center;gap:12px"><span style="width:30px;height:30px;border-radius:50%;background:#F7F5F2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500">3</span><span style="font-size:19px;font-weight:500">כרטיס אשראי</span></div><span dir="ltr" style="font-size:11px;letter-spacing:.04em;color:#8A8A8A">VISA · MASTERCARD · ISRACARD · AMEX</span></div>
+            <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px">
+              <sc-for list="{{ cardFields }}" as="f" hint-placeholder-count="4">
+                <label style="display:flex;flex-direction:column;gap:6px;grid-column:span {{ f.span }};min-width:0">
+                  <span style="font-size:13px;color:#5A5A5A">{{ f.label }}</span>
+                  <input name="{{ f.k }}" type="text" autoComplete="{{ f.ac }}" inputMode="numeric" dir="ltr" placeholder="{{ f.ph }}" value="{{ f.value }}" onChange="{{ f.change }}" aria-invalid="{{ f.bad }}" style="height:52px;border-radius:14px;border:1px solid {{ f.line }};background:#FFFFFF;padding:0 16px;font-size:16px;color:#1C1C1C;outline:none;width:100%;text-align:right" style-focus="border-color:#1C1C1C">
+                </label>
+              </sc-for>
+            </div>
+            <label style="display:flex;flex-direction:column;gap:6px;max-width:220px">
+              <span style="font-size:13px;color:#5A5A5A">מספר תשלומים</span>
+              <select value="{{ installments }}" onChange="{{ onInst }}" style="height:52px;border-radius:14px;border:1px solid rgba(41,37,34,.12);background:#FFFFFF;padding:0 14px;font-size:15px;color:#1C1C1C">
+                <option value="1">תשלום אחד</option><option value="2">2 תשלומים</option><option value="3">3 תשלומים</option>
+              </select>
+            </label>
+            <sc-if value="{{ cardBad }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#A0442E">נא להשלים את פרטי הכרטיס.</span></sc-if>
+            <span style="font-size:12px;color:#8A8A8A;line-height:1.6">בשלב הפיתוח השדות יוחלפו בשדות המאובטחים של ספק הסליקה, ופרטי הכרטיס לא יעברו דרך שרתי האתר.</span>
+          </fieldset>
+
+          <div style="display:flex;flex-direction:column;gap:14px;padding:8px 6px 0">
+            <button type="button" role="checkbox" aria-checked="{{ terms }}" onClick="{{ toggleTerms }}" style="display:flex;align-items:center;gap:12px;background:none;border:0;padding:4px 0;cursor:pointer;text-align:right;color:#1C1C1C;font-size:14px">
+              <span style="flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid {{ termsLine }};background:{{ termsBg }};color:#FFFFFF;font-size:12px;display:flex;align-items:center;justify-content:center">{{ termsMark }}</span>
+              קראתי ואני מסכימה לתקנון ולמדיניות הפרטיות
+            </button>
+            <button type="submit" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s;height:58px;font-size:16px" style-hover="background:#6E4F37;color:#FFFFFF">{{ payLabel }}</button>
+            <span style="font-size:12px;color:#8A8A8A;text-align:center">תצוגת עיצוב: התשלום אינו פעיל עד לחיבור ספק סליקה.</span>
+          </div>
+        </form>
+
+        <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+          <aside style="flex:1 1 340px;min-width:0;position:sticky;top:100px;border-radius:28px;background:#F7F5F2;padding:clamp(20px,2.6vw,28px);display:flex;flex-direction:column;gap:16px">
+            <h2 style="margin:0;font-size:18px;font-weight:500">סיכום הזמנה</h2>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px;border-radius:18px;background:#FFFFFF">
+                  <div style="position:relative;width:60px;height:60px;border-radius:12px;overflow:hidden;background:#F2EBE4;color:#999999"><image-slot id="{{ l.slot }}" shape="rounded" radius="12" placeholder=" "></image-slot></div>
+                  <div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:14px;font-weight:500">{{ l.name }}</span><span style="font-size:12px;color:#8A8A8A">{{ l.meta }} · ×{{ l.qty }}</span></div>
+                  <span style="font-size:14px;padding-left:6px">{{ l.total }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:6px">
+              <input value="{{ code }}" onChange="{{ onCode }}" placeholder="קוד הטבה" aria-label="קוד הטבה" style="flex:1;min-width:0;height:46px;border-radius:999px;border:0;background:#FFFFFF;padding:0 18px;font-size:14px;outline:none">
+              <button type="button" onClick="{{ applyCode }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s;height:46px;padding:0 20px;font-size:14px" style-hover="background:#6E4F37;color:#FFFFFF">החלה</button>
+            </div>
+            <sc-if value="{{ codeMsgOn }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#5A5A5A;margin-top:-8px;padding:0 8px">{{ codeMsg }}</span></sc-if>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;padding:4px 6px 0">
+              <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">סכום ביניים</span><span>{{ subtotal }}</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:#5A5A5A">משלוח</span><span>{{ shipPrice }}</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(41,37,34,.08);padding-top:12px;margin-top:4px"><span style="font-size:15px">סה״כ</span><span style="font-size:24px;font-weight:500">{{ total }}</span></div>
+              <span style="font-size:12px;color:#8A8A8A">כולל מע״מ.</span>
+            </div>
+          </aside>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center;padding:0 8px 8px">
+      <div ref="{{ sheetRef }}" role="dialog" aria-modal="true" aria-label="Apple Pay" style="width:min(100%,500px);background:#FFFFFF;border-radius:28px;padding:22px 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:16px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Heebo',sans-serif">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span dir="ltr" style="font-size:19px;font-weight:600">Apple Pay</span>
+          <button onClick="{{ closeSheet }}" style="height:40px;padding:0 14px;border-radius:999px;border:0;background:#F2F2F4;color:#0A66D8;font-size:15px;cursor:pointer">ביטול</button>
+        </div>
+        <div style="background:#F4F4F6;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px;font-size:15px">
+          <div style="display:flex;justify-content:space-between"><span style="color:#6B6B70">מוכר</span><span dir="ltr">SHIR LAVY</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#6B6B70">מטבע</span><span dir="ltr">ILS · IL</span></div>
+          <div style="display:flex;justify-content:space-between;font-weight:600"><span>לתשלום</span><span>{{ total }}</span></div>
+        </div>
+        <div style="font-size:13px;line-height:1.65;color:#4A4A50;background:#FBF6EC;border-radius:18px;padding:14px 16px">
+          <strong style="display:block;margin-bottom:4px">גבול אינטגרציה</strong>
+          בגרסה הסופית ייפתח כאן גיליון התשלום המקורי של Apple (ApplePaySession), לאחר אימות דומיין, מזהה סוחר וחיבור לספק סליקה תומך. כרגע זו הדמיה ולא מתבצע חיוב.
+        </div>
+        <button onClick="{{ simulateAP }}" style="height:52px;border:0;border-radius:999px;background:#000000;color:#FFFFFF;font-size:16px;font-weight:500;cursor:pointer">הדמיית אישור תשלום</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+// Integration boundary: payment request shape for ApplePaySession (version 3) — handed to the payment provider in production.
+function buildApplePayRequest(total, lines) {
+  return {
+    countryCode: 'IL', currencyCode: 'ILS',
+    supportedNetworks: ['visa', 'masterCard', 'amex'], merchantCapabilities: ['supports3DS'],
+    requiredShippingContactFields: ['name', 'phone', 'email', 'postalAddress'],
+    lineItems: lines.map(l => ({ label: l.name, amount: (l.unit * l.qty).toFixed(2) })),
+    total: { label: 'SHIR LAVY', amount: total.toFixed(2) }
+  };
+}
+class Component extends DCLogic {
+  state = { email: '', phone: '', fullName: '', city: '', street: '', house: '', apt: '', zip: '', notes: '', card: '', exp: '', cvv: '', idn: '',
+    ship: 'courier', installments: '1', terms: false, tried: false, error: false, done: null, sumOpen: false, sheet: false, ap: false, code: '', codeMsg: '', apFocus: false };
+  sheetRef = React.createRef(); doneRef = React.createRef();
+  componentDidMount() {
+    try { this.setState({ ap: !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()) }); } catch (e) {}
+    if (this.props.app && this.props.app.param === 'applepay') this.setState({ apFocus: true });
+  }
+  componentDidUpdate() {
+    const ps = this._prev || {}; this._prev = { ...this.state };
+    if (this.state.sheet && !ps.sheet && this.sheetRef.current) this.sheetRef.current.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 450, easing: 'cubic-bezier(.16,.8,.2,1)' });
+    if (this.state.error && !ps.error) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  finish(method) {
+    const app = this.props.app;
+    if ((app.paymentResult || 'success') === 'declined') { this.setState({ error: true, sheet: false }); return; }
+    const snap = { lines: app.cart, total: this.totals().total, method };
+    this.setState({ done: snap, sheet: false, error: false });
+    app.clearCart(); window.scrollTo(0, 0);
+  }
+  totals() {
+    const app = this.props.app || { subtotal: 0 };
+    const shipCost = this.state.ship === 'courier' ? 35 : 0;
+    return { sub: app.subtotal || 0, shipCost, total: (app.subtotal || 0) + shipCost };
+  }
+  renderVals() {
+    const app = this.props.app || { cart: [], subtotal: 0, fmt: n => n + ' ₪', mobile: false, go() {}, applePay: 'auto' };
+    const s = this.state; const fmt = app.fmt || (n => n + ' ₪');
+    const t = this.totals();
+    const set = k => e => this.setState({ [k]: e.target.value });
+    const needsAddress = s.ship === 'courier';
+    const E = {
+      email: !/^\S+@\S+\.\S+$/.test(s.email) ? 'נא למלא כתובת אימייל תקינה' : '',
+      phone: !/^0\d{8,9}$/.test(s.phone.replace(/[\s-]/g, '')) ? 'נא למלא מספר נייד תקין' : '',
+      fullName: s.fullName.trim().length < 2 ? 'נא למלא שם מלא' : '',
+      city: needsAddress && !s.city.trim() ? 'נא למלא עיר' : '',
+      street: needsAddress && !s.street.trim() ? 'נא למלא רחוב' : '',
+      house: needsAddress && !s.house.trim() ? 'חובה' : ''
+    };
+    const cardBad = s.card.replace(/\D/g, '').length < 12 || !/^\d{2}\/?\d{2}$/.test(s.exp) || s.cvv.length < 3 || s.idn.replace(/\D/g, '').length < 8;
+    const mk = (k, label, o = {}) => ({ k, label, value: s[k], change: set(k), err: E[k] || '', bad: s.tried && !!E[k], line: s.tried && E[k] ? '#A0442E' : 'rgba(41,37,34,.12)', type: 'text', ac: 'on', im: 'text', dir: 'rtl', span: 'auto', ...o });
+    const apMode = app.applePay || 'auto';
+    const apOn = apMode === 'available' || (apMode === 'auto' && s.ap);
+    const done = s.done;
+    const empty = !done && (!app.cart || app.cart.length === 0);
+    return {
+      isEmpty: empty, isDone: !!done, isForm: !done && !empty,
+      mobile: !!app.mobile, desktop: !app.mobile, goShop: () => app.go('shop'),
+      sumOpen: s.sumOpen, toggleSum: () => this.setState({ sumOpen: !s.sumOpen }), sumToggleLabel: s.sumOpen ? 'הסתרת סיכום ההזמנה ▴' : 'הצגת סיכום ההזמנה ▾',
+      lines: app.cart || [], subtotal: fmt(t.sub), shipPrice: t.shipCost ? fmt(t.shipCost) : 'ללא עלות', total: fmt(t.total),
+      hasError: s.error,
+      apOn, apOff: !apOn, apBg: '#000', apRing: s.apFocus ? '2px solid #A47B58' : 'none',
+      startAP: () => {
+        const req = buildApplePayRequest(t.total, app.cart || []);
+        console.info('[Apple Pay] payment request prepared for provider integration', req);
+        this.setState({ sheet: true });
+      },
+      sheet: s.sheet, sheetRef: this.sheetRef, closeSheet: () => this.setState({ sheet: false }), simulateAP: () => this.finish('Apple Pay'),
+      contactFields: [mk('email', 'אימייל', { type: 'email', ac: 'email', im: 'email', dir: 'ltr' }), mk('phone', 'טלפון נייד', { type: 'tel', ac: 'tel', im: 'tel', dir: 'ltr' })],
+      shipOpts: [['courier', 'שליח עד הבית', '[זמן אספקה משוער]', 35], ['pickup', 'איסוף עצמי מהקליניקה', '[כתובת ושעות איסוף]', 0]].map(([k, label, sub, price]) => ({
+        label, sub, price: price ? fmt(price) : 'ללא עלות', on: s.ship === k, border: s.ship === k ? '#1C1C1C' : 'rgba(41,37,34,.08)', dot: s.ship === k ? '#1C1C1C' : 'transparent', pick: () => this.setState({ ship: k }) })),
+      needsAddress,
+      addrFields: [mk('fullName', 'שם מלא', { ac: 'name', span: 6 }), mk('city', 'עיר / יישוב', { ac: 'address-level2', span: 3 }), mk('street', 'רחוב', { ac: 'address-line1', span: 3 }),
+        mk('house', 'מספר בית', { span: 2, im: 'numeric' }), mk('apt', 'דירה (לא חובה)', { span: 2 }), mk('zip', 'מיקוד (לא חובה)', { ac: 'postal-code', span: 2, im: 'numeric' }), mk('notes', 'הערות לשליח (לא חובה)', { span: 6 })],
+      cardFields: [['card', 'מספר כרטיס', 'cc-number', '0000 0000 0000 0000', 6], ['exp', 'תוקף', 'cc-exp', 'MM/YY', 2], ['cvv', 'CVV', 'cc-csc', '•••', 2], ['idn', 'ת״ז בעל הכרטיס', 'off', '', 2]].map(([k, label, ac, ph, span]) => ({
+        k, label, ac, ph, span, value: s[k], change: set(k), bad: s.tried && cardBad, line: s.tried && cardBad ? '#A0442E' : 'rgba(41,37,34,.12)' })),
+      cardBad: s.tried && cardBad,
+      installments: s.installments, onInst: set('installments'),
+      terms: s.terms, toggleTerms: () => this.setState({ terms: !s.terms }), termsMark: s.terms ? '✓' : '',
+      termsBg: s.terms ? '#1C1C1C' : '#FFFFFF', termsLine: s.tried && !s.terms ? '#A0442E' : '#1C1C1C',
+      payLabel: 'לתשלום ' + fmt(t.total),
+      submit: e => {
+        e.preventDefault();
+        if (Object.values(E).some(Boolean) || cardBad || !s.terms) { this.setState({ tried: true }); return; }
+        this.finish('כרטיס אשראי');
+      },
+      code: s.code, onCode: set('code'), codeMsgOn: !!s.codeMsg, codeMsg: s.codeMsg,
+      applyCode: () => this.setState({ codeMsg: s.code.trim() ? 'קודי הטבה יופעלו לאחר חיבור מערכת ההנחות.' : 'נא להזין קוד.' }),
+      doneRef: this.doneRef,
+      thanks: s.fullName.trim() ? `תודה, ${s.fullName.trim().split(' ')[0]}.` : 'תודה.',
+      form: { email: s.email || 'כתובת האימייל שלך' },
+      orderNo: 'SL-DEMO-' + String(1000 + ((s.email.length * 37) % 9000)),
+      paidWith: done ? done.method : '', paidTotal: done ? fmt(done.total) : '',
+      shipLabel: s.ship === 'courier' ? 'שליח עד הבית' : 'איסוף עצמי',
+      addressLine: s.ship === 'courier' ? [s.street, s.house, s.city].filter(Boolean).join(' ') || '—' : 'הקליניקה'
+    };
+  }
+}
+</script>
+</body>
+</html>

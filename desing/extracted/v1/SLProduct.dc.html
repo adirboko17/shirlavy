@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Assistant',sans-serif;color:#292522;background:#FBFAF7">
+  <section data-screen-label="Product" style="padding:clamp(100px,12vh,130px) clamp(20px,5vw,80px) clamp(72px,8vw,120px)">
+    <div style="max-width:1520px;margin:0 auto">
+      <nav aria-label="פירורי לחם" style="display:flex;flex-wrap:wrap;gap:10px;font-size:14px;color:#6B625A;margin-bottom:clamp(20px,3vw,40px)">
+        <button onClick="{{ goShop }}" style="background:none;border:0;padding:6px 0;cursor:pointer;color:#6B625A;font-size:14px" style-hover="color:#292522">חנות</button><span style="padding:6px 0">/</span>
+        <span style="padding:6px 0">{{ p.catName }}</span><span style="padding:6px 0">/</span><span style="padding:6px 0;color:#292522">{{ p.name }}</span>
+      </nav>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(36px,6vw,110px);align-items:start">
+
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+                  <button onClick="{{ t.pick }}" aria-label="{{ t.label }}" style="position:relative;width:76px;aspect-ratio:4/5;padding:0;border:0;outline:1px solid {{ t.ring }};outline-offset:3px;background:#EFE7DC;color:#7A6B5C;cursor:pointer;overflow:hidden;transition:outline-color .3s"><div style="position:absolute;inset:0;pointer-events:none"><image-slot id="{{ t.id }}" shape="rect" placeholder=" "></image-slot></div></button>
+                </sc-for>
+              </div>
+              <div style="position:relative;aspect-ratio:4/5;background:#EFE7DC;color:#7A6B5C;overflow:hidden">
+                <div style="position:absolute;inset:0;transform:{{ zoomT }};transform-origin:{{ zoomO }};transition:transform .5s cubic-bezier(.16,.8,.2,1)"><image-slot id="{{ mainId }}" shape="rect" placeholder="{{ mainPh }}"></image-slot></div>
+                <sc-if value="{{ zoom }}" hint-placeholder-val="{{ false }}">
+                  <div onMouseMove="{{ zoomMove }}" onClick="{{ toggleZoom }}" style="position:absolute;inset:0;cursor:zoom-out"></div>
+                </sc-if>
+                <button onClick="{{ toggleZoom }}" aria-label="הגדלת תמונה" style="position:absolute;bottom:14px;left:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(251,250,247,.92);color:#292522;cursor:pointer;display:flex;align-items:center;justify-content:center">
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.1"></circle><path d="M11.5 11.5L16 16M5.5 7.5h4M7.5 5.5v4" stroke="currentColor" stroke-width="1.1"></path></svg>
+                </button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:0 calc(-1 * clamp(20px,5vw,80px))">
+              <div onScroll="{{ onSwipe }}" style="display:grid;grid-auto-flow:column;grid-auto-columns:88%;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 20px">
+                <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+                  <div style="scroll-snap-align:center;aspect-ratio:4/5;background:#EFE7DC;color:#7A6B5C"><image-slot id="{{ t.id }}" shape="rect" placeholder="{{ t.label }}"></image-slot></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:center;gap:8px;margin-top:14px">
+                <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4"><span style="width:{{ t.dotW }};height:2px;background:{{ t.dot }};transition:all .4s"></span></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:28px;position:sticky;top:110px;min-width:0">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <span style="font-size:13px;letter-spacing:.12em;color:#8A7040">{{ p.catName }}</span>
+            <h1 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(36px,4vw,60px);line-height:1.08">{{ p.name }}</h1>
+            <div style="display:flex;align-items:baseline;gap:14px"><span style="font-family:'Frank Ruhl Libre',serif;font-size:28px">{{ price }}</span><span style="font-size:13px;color:#6B625A">כולל מע״מ</span></div>
+          </div>
+          <p style="margin:0;font-size:17px;line-height:1.8;color:#5E554D;max-width:520px">{{ p.short }}</p>
+          <sc-if value="{{ hasVariants }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-size:14px;color:#5E554D">{{ variantTitle }}: <span style="color:#292522">{{ variantLabel }}</span></span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ variants }}" as="v" hint-placeholder-count="2">
+                  <button onClick="{{ v.pick }}" aria-pressed="{{ v.on }}" style="min-width:96px;height:48px;padding:0 18px;border:1px solid {{ v.border }};background:{{ v.bg }};color:{{ v.color }};font-size:15px;cursor:pointer;transition:all .3s">{{ v.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noVariants }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;color:#5E554D">גודל: <span style="color:#292522">{{ p.size }}</span></span></sc-if>
+          <div ref="{{ atcRef }}" style="display:flex;gap:10px;align-items:stretch">
+            <div style="display:flex;align-items:center;border:1px solid rgba(41,37,34,.25);height:58px;flex:none">
+              <button onClick="{{ inc }}" aria-label="הוספת יחידה" style="width:46px;height:56px;border:0;background:none;font-size:20px;cursor:pointer;color:#292522">+</button>
+              <span aria-live="polite" style="width:30px;text-align:center;font-size:16px">{{ qty }}</span>
+              <button onClick="{{ dec }}" aria-label="הפחתת יחידה" style="width:46px;height:56px;border:0;background:none;font-size:20px;cursor:pointer;color:#292522">−</button>
+            </div>
+            <button onClick="{{ add }}" style="flex:1;height:58px;border:0;background:#292522;color:#FBFAF7;font-size:16px;letter-spacing:.03em;cursor:pointer;transition:background .4s" style-hover="background:#B09256">הוספה לסל · {{ lineTotal }}</button>
+          </div>
+          <sc-if value="{{ apOn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ express }}" aria-label="קנייה עם Apple Pay" style="height:56px;border:0;border-radius:6px;background:#000;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:18px;font-weight:500" dir="ltr">Buy with <span style="font-weight:600;letter-spacing:-.01em">Apple Pay</span></button>
+          </sc-if>
+          <sc-if value="{{ apOff }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ toCheckout }}" style="height:52px;border:1px solid #292522;background:none;color:#292522;font-size:15px;cursor:pointer;transition:all .4s" style-hover="background:#292522;color:#FBFAF7">קנייה מהירה</button>
+          </sc-if>
+          <span style="font-size:13px;color:#6B625A;margin-top:-14px">{{ apNote }}</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;border-top:1px solid rgba(41,37,34,.12);border-bottom:1px solid rgba(41,37,34,.12);padding:18px 0;font-size:13px;color:#5E554D;text-align:center">
+            <span>משלוח לכל הארץ</span><span>תשלום מאובטח</span><span>שירות אישי</span>
+          </div>
+          <dc-import name="SLFaq" items="{{ details }}" hint-size="100%,300px"></dc-import>
+          <span style="font-size:12px;color:#8C8279">מוצר לדוגמה. התיאור, המחיר והמידע יוחלפו בפרטי המוצר האמיתיים.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F7F3EC;padding:clamp(80px,9vw,140px) clamp(20px,5vw,80px)">
+    <div style="max-width:1520px;margin:0 auto">
+      <h2 data-reveal="0" style="margin:0 0 clamp(28px,3vw,48px);font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(32px,3.6vw,54px)">משלים את השגרה</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax({{ cardMin }},1fr));gap:clamp(14px,2vw,28px)">
+        <sc-for list="{{ related }}" as="r" hint-placeholder-count="4">
+          <div data-reveal="{{ r.delay }}" style="min-width:0"><dc-import name="SLProductCard" product="{{ r }}" app="{{ app }}" hint-size="100%,440px"></dc-import></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ stickyRef }}" style="position:fixed;right:0;left:0;bottom:0;z-index:45;background:rgba(251,250,247,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(41,37,34,.1);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:14px">
+      <div style="display:flex;flex-direction:column;min-width:0;flex:1"><span style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span><span style="font-family:'Frank Ruhl Libre',serif;font-size:18px">{{ lineTotal }}</span></div>
+      <button onClick="{{ add }}" style="flex:none;height:52px;padding:0 26px;border:0;background:#292522;color:#FBFAF7;font-size:15px;cursor:pointer">הוספה לסל</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { img: 0, zoom: false, zx: 50, zy: 50, qty: 1, variant: null, atcVisible: true, slide: 0, pid: null, ap: false };
+  atcRef = React.createRef(); stickyRef = React.createRef();
+  componentDidMount() {
+    try { this.setState({ ap: !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()) }); } catch (e) {}
+    this.io = new IntersectionObserver(([e]) => this.setState({ atcVisible: e.isIntersecting || e.boundingClientRect.top > 0 }), { threshold: 0 });
+    this.atcRef.current && this.io.observe(this.atcRef.current);
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); }
+  componentDidUpdate() {
+    const ps = this._prev || {}; this._prev = { ...this.state };
+    const id = this.props.app && this.props.app.param;
+    if (id !== this.state.pid) this.setState({ pid: id, img: 0, qty: 1, variant: null, zoom: false });
+    if (!ps.atcVisible === false && this.stickyRef.current) {}
+  }
+  renderVals() {
+    const app = this.props.app || { products: [], param: null, mobile: false, fmt: n => n + ' ₪', go() {}, addToCart() {}, applePay: 'auto' };
+    const P = app.products || [];
+    const p = P.find(x => x.id === app.param) || P[0] || { id: 'x', name: '', price: 0, catName: '', short: '' };
+    const fmt = app.fmt || (n => n + ' ₪');
+    const vId = this.state.variant || (p.variants ? p.variants[0].id : null);
+    const v = p.variants ? p.variants.find(x => x.id === vId) : null;
+    const unit = p.price + (v ? v.add : 0);
+    const imgs = ['תמונה ראשית', 'מרקם', 'באריזה', 'בשימוש'];
+    const apMode = app.applePay || 'auto';
+    const apOn = apMode === 'available' || (apMode === 'auto' && this.state.ap);
+    const addNow = () => app.addToCart(p.id, vId, this.state.qty, true);
+    return {
+      app, p, desktop: !app.mobile, mobile: !!app.mobile, cardMin: app.mobile ? '150px' : '240px',
+      goShop: () => app.go('shop'),
+      price: fmt(unit), lineTotal: fmt(unit * this.state.qty),
+      thumbs: imgs.map((label, i) => ({ id: 'p-' + p.id + '-' + (i + 1), label, ring: i === this.state.img ? '#292522' : 'transparent', pick: () => this.setState({ img: i, zoom: false }),
+        dot: i === this.state.slide ? '#292522' : 'rgba(41,37,34,.2)', dotW: i === this.state.slide ? '28px' : '12px' })),
+      mainId: 'p-' + p.id + '-' + (this.state.img + 1), mainPh: imgs[this.state.img],
+      zoom: this.state.zoom, zoomT: this.state.zoom ? 'scale(2)' : 'scale(1)', zoomO: `${this.state.zx}% ${this.state.zy}%`,
+      toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
+      zoomMove: e => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ zx: ((e.clientX - r.left) / r.width) * 100, zy: ((e.clientY - r.top) / r.height) * 100 }); },
+      onSwipe: e => { const el = e.currentTarget; const i = Math.round(Math.abs(el.scrollLeft) / (el.scrollWidth / imgs.length)); if (i !== this.state.slide) this.setState({ slide: Math.min(imgs.length - 1, i) }); },
+      hasVariants: !!p.variants, noVariants: !p.variants,
+      variantTitle: p.cat === 'sets' ? 'אריזה' : 'גודל', variantLabel: v ? v.label : '',
+      variants: (p.variants || []).map(x => { const on = x.id === vId; return { label: x.label, on, border: on ? '#292522' : 'rgba(41,37,34,.2)', bg: on ? '#292522' : 'transparent', color: on ? '#FBFAF7' : '#292522', pick: () => this.setState({ variant: x.id }) }; }),
+      qty: this.state.qty, atcRef: this.atcRef, stickyRef: this.stickyRef,
+      inc: () => this.setState(s => ({ qty: Math.min(10, s.qty + 1) })), dec: () => this.setState(s => ({ qty: Math.max(1, s.qty - 1) })),
+      add: addNow,
+      apOn, apOff: !apOn,
+      apNote: apOn ? (apMode === 'available' && !this.state.ap ? 'תצוגה מקדימה של Apple Pay. בפועל יוצג רק במכשירים ודפדפנים תומכים.' : 'תשלום מהיר ומאובטח עם Apple Pay.') : 'Apple Pay יוצג אוטומטית במכשירי Apple ובדפדפנים תומכים.',
+      express: () => { app.addToCart(p.id, vId, this.state.qty, false); app.go('checkout', 'applepay'); },
+      toCheckout: () => { app.addToCart(p.id, vId, this.state.qty, false); app.go('checkout'); },
+      details: [
+        { q: 'תיאור המוצר', a: p.short + ' [תיאור מלא של המוצר יתווסף כאן, כולל רכיבים מרכזיים ויתרונות מאומתים בלבד.]' },
+        { q: 'אופן השימוש', a: '[הוראות שימוש יתווספו כאן לפי הנחיות היצרן.]' },
+        { q: 'משלוחים והחזרות', a: 'משלוח לכל הארץ. זמני ועלויות המשלוח יוצגו בקופה. [מדיניות ההחזרות תעודכן כאן.]' }
+      ],
+      related: P.filter(x => x.id !== p.id).sort((a, b) => (b.cat === p.cat) - (a.cat === p.cat) || a.rank - b.rank).slice(0, 4).map((x, i) => ({ ...x, delay: i * 90 })),
+      showSticky: !!app.mobile && !this.state.atcVisible
+    };
+  }
+}
+</script>
+</body>
+</html>

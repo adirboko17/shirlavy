@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Heebo',sans-serif;color:#1C1C1C;background:#FFFFFF">
+  <section data-screen-label="Product" style="padding:clamp(96px,11vh,112px) clamp(16px,4vw,48px) clamp(56px,7vw,96px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <nav aria-label="פירורי לחם" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:#8A8A8A;margin-bottom:20px">
+        <button onClick="{{ goShop }}" style="height:40px;padding:0 16px;border-radius:999px;border:0;font-size:14px;cursor:pointer;white-space:nowrap;transition:background .3s, color .3s;height:32px;padding:0 12px;font-size:13px;background:#F7F5F2;color:#1C1C1C">→ חנות</button><span>{{ p.catName }}</span>
+      </nav>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(28px,5vw,72px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+          <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+            <div style="position:relative;border-radius:24px;overflow:hidden;background:#F2EBE4;color:#999999;border-radius:28px;aspect-ratio:1/1">
+              <div style="position:absolute;inset:0;transform:{{ zoomT }};transform-origin:{{ zoomO }};transition:transform .4s ease"><image-slot id="{{ mainId }}" shape="rounded" radius="28" placeholder="{{ mainPh }}"></image-slot></div>
+              <sc-if value="{{ zoom }}" hint-placeholder-val="{{ false }}"><div onMouseMove="{{ zoomMove }}" onClick="{{ toggleZoom }}" style="position:absolute;inset:0;cursor:zoom-out"></div></sc-if>
+              <button onClick="{{ toggleZoom }}" aria-label="הגדלת תמונה" style="position:absolute;bottom:14px;left:14px;width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;color:#1C1C1C;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(41,37,34,.08)">
+                <svg width="17" height="17" viewBox="0 0 18 18" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.3"></circle><path d="M11.5 11.5L16 16M5.5 7.5h4M7.5 5.5v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg>
+              </button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px">
+              <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.pick }}" aria-label="{{ t.label }}" style="position:relative;aspect-ratio:1/1;padding:0;border:0;border-radius:16px;outline:2px solid {{ t.ring }};outline-offset:2px;background:#F2EBE4;color:#999999;cursor:pointer;overflow:hidden"><div style="position:absolute;inset:0;pointer-events:none"><image-slot id="{{ t.id }}" shape="rounded" radius="16" placeholder=" "></image-slot></div></button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:0 -16px">
+              <div onScroll="{{ onSwipe }}" style="display:grid;grid-auto-flow:column;grid-auto-columns:86%;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 16px">
+                <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+                  <div style="position:relative;border-radius:24px;overflow:hidden;background:#F2EBE4;color:#999999;scroll-snap-align:center;aspect-ratio:1/1"><image-slot id="{{ t.id }}" shape="rounded" radius="24" placeholder="{{ t.label }}"></image-slot></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:center;gap:6px;margin-top:12px">
+                <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4"><span style="width:{{ t.dotW }};height:6px;border-radius:3px;background:{{ t.dot }};transition:all .3s"></span></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:22px;position:sticky;top:100px;min-width:0">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <h1 style="margin:0;font-family:'Heebo',sans-serif;font-size:clamp(30px,3.4vw,46px);line-height:1.12;letter-spacing:-.03em;font-weight:300">{{ p.name }}</h1>
+            <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:22px;font-weight:500">{{ price }}</span><span style="font-size:13px;color:#8A8A8A">כולל מע״מ</span></div>
+          </div>
+          <p style="margin:0;font-size:16px;line-height:1.7;color:#5A5A5A;max-width:480px">{{ p.short }}</p>
+          <sc-if value="{{ hasVariants }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-size:14px;color:#5A5A5A">{{ variantTitle }}</span>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ variants }}" as="v" hint-placeholder-count="2">
+                  <button onClick="{{ v.pick }}" aria-pressed="{{ v.on }}" style="height:40px;padding:0 16px;border-radius:999px;border:0;font-size:14px;cursor:pointer;white-space:nowrap;transition:background .3s, color .3s;height:44px;padding:0 20px;border:1px solid {{ v.border }};background:{{ v.bg }};color:{{ v.color }}">{{ v.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noVariants }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;height:40px;padding:0 16px;border-radius:999px;border:0;font-size:14px;cursor:pointer;white-space:nowrap;transition:background .3s, color .3s;height:34px;background:#F7F5F2;display:inline-flex;align-items:center;cursor:default;font-size:13px">{{ p.size }}</span></sc-if>
+          <div ref="{{ atcRef }}" style="display:flex;gap:8px">
+            <div style="display:flex;align-items:center;height:54px;border-radius:999px;background:#F7F5F2;flex:none">
+              <button onClick="{{ inc }}" aria-label="הוספת יחידה" style="width:48px;height:54px;border:0;background:none;font-size:18px;cursor:pointer;color:#1C1C1C">+</button>
+              <span aria-live="polite" style="width:24px;text-align:center;font-size:15px">{{ qty }}</span>
+              <button onClick="{{ dec }}" aria-label="הפחתת יחידה" style="width:48px;height:54px;border:0;background:none;font-size:18px;cursor:pointer;color:#1C1C1C">−</button>
+            </div>
+            <button onClick="{{ add }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s;flex:1;height:54px" style-hover="background:#6E4F37;color:#FFFFFF">הוספה לסל · {{ lineTotal }}</button>
+          </div>
+          <sc-if value="{{ apOn }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ express }}" aria-label="קנייה עם Apple Pay" dir="ltr" style="height:54px;border:0;border-radius:999px;background:#000000;color:#FFFFFF;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:17px;font-weight:500">Buy with <span style="font-weight:600">Apple Pay</span></button>
+          </sc-if>
+          <sc-if value="{{ apOff }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ toCheckout }}" style="height:52px;padding:0 26px;border-radius:999px;border:0;background:#F7F5F2;color:#1C1C1C;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s;height:54px" style-hover="background:#EFEBE5;color:#1C1C1C">קנייה מהירה</button>
+          </sc-if>
+          <span style="font-size:12px;color:#8A8A8A;margin-top:-12px;padding:0 6px">{{ apNote }}</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+            <span style="padding:12px 8px;border-radius:14px;background:#F7F5F2;font-size:12px;text-align:center;color:#4A4A4A">משלוח לכל הארץ</span>
+            <span style="padding:12px 8px;border-radius:14px;background:#F7F5F2;font-size:12px;text-align:center;color:#4A4A4A">תשלום מאובטח</span>
+            <span style="padding:12px 8px;border-radius:14px;background:#F7F5F2;font-size:12px;text-align:center;color:#4A4A4A">שירות אישי</span>
+          </div>
+          <dc-import name="SLFaq" items="{{ details }}" hint-size="100%,260px"></dc-import>
+          <span style="font-size:12px;color:#8A8A8A">מוצר לדוגמה. המידע יוחלף בפרטי המוצר האמיתיים.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)">
+    <div style="max-width:1240px;margin:0 auto">
+      <h2 data-reveal="0" style="margin:0;font-family:'Heebo',sans-serif;font-size:clamp(36px,4.6vw,68px);line-height:1.02;letter-spacing:-.03em;text-wrap:balance;font-size:clamp(26px,2.8vw,36px);margin-bottom:24px;font-weight:200">אולי תאהבי גם</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax({{ cardMin }},1fr));gap:clamp(12px,1.6vw,20px)">
+        <sc-for list="{{ related }}" as="r" hint-placeholder-count="4">
+          <div data-reveal="{{ r.delay }}" style="min-width:0"><dc-import name="SLProductCard" product="{{ r }}" app="{{ app }}" hint-size="100%,420px"></dc-import></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showSticky }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ stickyRef }}" style="position:fixed;right:10px;left:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:45;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:999px;box-shadow:0 10px 30px rgba(41,37,34,.14);padding:8px 8px 8px 8px;padding-right:20px;display:flex;align-items:center;gap:12px">
+      <div style="display:flex;flex-direction:column;min-width:0;flex:1"><span style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</span><span style="font-size:15px;font-weight:500">{{ lineTotal }}</span></div>
+      <button onClick="{{ add }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s;flex:none;height:48px;padding:0 22px" style-hover="background:#6E4F37;color:#FFFFFF">הוספה לסל</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { img: 0, zoom: false, zx: 50, zy: 50, qty: 1, variant: null, atcVisible: true, slide: 0, pid: null, ap: false };
+  atcRef = React.createRef(); stickyRef = React.createRef();
+  componentDidMount() {
+    try { this.setState({ ap: !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()) }); } catch (e) {}
+    this.io = new IntersectionObserver(([e]) => this.setState({ atcVisible: e.isIntersecting || e.boundingClientRect.top > 0 }), { threshold: 0 });
+    this.attach();
+    this.poll = setInterval(() => this.attach(), 250);
+  }
+  attach() {
+    const el = this.atcRef.current;
+    if (el && el !== this.observedEl) { if (this.observedEl) this.io.unobserve(this.observedEl); this.observedEl = el; this.io.observe(el); }
+  }
+  componentWillUnmount() { this.io && this.io.disconnect(); clearInterval(this.poll); }
+  componentDidUpdate() {
+    const ps = this._prev || {}; this._prev = { ...this.state };
+    const id = this.props.app && this.props.app.param;
+    if (id !== this.state.pid) this.setState({ pid: id, img: 0, qty: 1, variant: null, zoom: false });
+    this.attach();
+  }
+  renderVals() {
+    const app = this.props.app || { products: [], param: null, mobile: false, fmt: n => n + ' ₪', go() {}, addToCart() {}, applePay: 'auto' };
+    const P = app.products || [];
+    const p = P.find(x => x.id === app.param) || P[0] || { id: 'x', name: '', price: 0, catName: '', short: '' };
+    const fmt = app.fmt || (n => n + ' ₪');
+    const vId = this.state.variant || (p.variants ? p.variants[0].id : null);
+    const v = p.variants ? p.variants.find(x => x.id === vId) : null;
+    const unit = p.price + (v ? v.add : 0);
+    const imgs = ['תמונה ראשית', 'מרקם', 'באריזה', 'בשימוש'];
+    const apMode = app.applePay || 'auto';
+    const apOn = apMode === 'available' || (apMode === 'auto' && this.state.ap);
+    const addNow = () => app.addToCart(p.id, vId, this.state.qty, true);
+    return {
+      app, p, desktop: !app.mobile, mobile: !!app.mobile, cardMin: app.mobile ? '150px' : '240px',
+      goShop: () => app.go('shop'),
+      price: fmt(unit), lineTotal: fmt(unit * this.state.qty),
+      thumbs: imgs.map((label, i) => ({ id: 'p-' + p.id + '-' + (i + 1), label, ring: i === this.state.img ? '#1C1C1C' : 'transparent', pick: () => this.setState({ img: i, zoom: false }),
+        dot: i === this.state.slide ? '#1C1C1C' : 'rgba(41,37,34,.2)', dotW: i === this.state.slide ? '22px' : '6px' })),
+      mainId: 'p-' + p.id + '-' + (this.state.img + 1), mainPh: imgs[this.state.img],
+      zoom: this.state.zoom, zoomT: this.state.zoom ? 'scale(2)' : 'scale(1)', zoomO: `${this.state.zx}% ${this.state.zy}%`,
+      toggleZoom: () => this.setState(s => ({ zoom: !s.zoom })),
+      zoomMove: e => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ zx: ((e.clientX - r.left) / r.width) * 100, zy: ((e.clientY - r.top) / r.height) * 100 }); },
+      onSwipe: e => { const el = e.currentTarget; const i = Math.round(Math.abs(el.scrollLeft) / (el.scrollWidth / imgs.length)); if (i !== this.state.slide) this.setState({ slide: Math.min(imgs.length - 1, i) }); },
+      hasVariants: !!p.variants, noVariants: !p.variants,
+      variantTitle: p.cat === 'sets' ? 'אריזה' : 'גודל', variantLabel: v ? v.label : '',
+      variants: (p.variants || []).map(x => { const on = x.id === vId; return { label: x.label, on, border: on ? '#1C1C1C' : 'rgba(41,37,34,.12)', bg: on ? '#1C1C1C' : '#FFFFFF', color: on ? '#FFFFFF' : '#1C1C1C', pick: () => this.setState({ variant: x.id }) }; }),
+      qty: this.state.qty, atcRef: this.atcRef, stickyRef: this.stickyRef,
+      inc: () => this.setState(s => ({ qty: Math.min(10, s.qty + 1) })), dec: () => this.setState(s => ({ qty: Math.max(1, s.qty - 1) })),
+      add: addNow,
+      apOn, apOff: !apOn,
+      apNote: apOn ? (apMode === 'available' && !this.state.ap ? 'תצוגה מקדימה של Apple Pay. בפועל יוצג רק במכשירים ודפדפנים תומכים.' : 'תשלום מהיר ומאובטח עם Apple Pay.') : 'Apple Pay יוצג אוטומטית במכשירי Apple ובדפדפנים תומכים.',
+      express: () => { app.addToCart(p.id, vId, this.state.qty, false); app.go('checkout', 'applepay'); },
+      toCheckout: () => { app.addToCart(p.id, vId, this.state.qty, false); app.go('checkout'); },
+      details: [
+        { q: 'תיאור המוצר', a: p.short + ' [תיאור מלא של המוצר יתווסף כאן, כולל רכיבים מרכזיים ויתרונות מאומתים בלבד.]' },
+        { q: 'אופן השימוש', a: '[הוראות שימוש יתווספו כאן לפי הנחיות היצרן.]' },
+        { q: 'משלוחים והחזרות', a: 'משלוח לכל הארץ. זמני ועלויות המשלוח יוצגו בקופה. [מדיניות ההחזרות תעודכן כאן.]' }
+      ],
+      related: P.filter(x => x.id !== p.id).sort((a, b) => (b.cat === p.cat) - (a.cat === p.cat) || a.rank - b.rank).slice(0, 4).map((x, i) => ({ ...x, delay: i * 90 })),
+      showSticky: !!app.mobile && !this.state.atcVisible
+    };
+  }
+}
+</script>
+</body>
+</html>

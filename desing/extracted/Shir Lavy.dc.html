@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHIR LAVY — Aesthetics &amp; Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&amp;display=swap">
+<script src="./image-slot.js"></script>
+<style>
+*{box-sizing:border-box}
+#home-hero-main::part(frame),image-slot[fit="contain"]::part(frame){background:transparent}
+body{margin:0;background:#FFFFFF;color:#1C1C1C;font-family:'Heebo',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:#1C1C1C;text-decoration:none}
+a:hover{color:#8F6A4B}
+button,input,select,textarea{font-family:inherit}
+::selection{background:#F1E6DB;color:#1C1C1C}
+@keyframes slPulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2.4);opacity:0}}
+</style>
+</helmet>
+<div dir="rtl" lang="he" style="min-height:100vh;background:#FFFFFF;color:#1C1C1C;font-family:'Heebo',sans-serif;overflow-x:clip">
+  <div role="note" aria-label="משלוח חינם בקנייה מעל 199 ₪" style="position:relative;z-index:51;height:36px;background:#8F6A4B;color:#FFFFFF;font-size:13px;font-weight:400;letter-spacing:.02em;overflow:hidden;display:flex;align-items:center">
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <div style="width:100%;text-align:center;padding:0 16px">משלוח חינם בקנייה מעל 199 ₪</div>
+    </sc-if>
+    <sc-if value="{{ compact }}" hint-placeholder-val="{{ false }}">
+      <div ref="{{ promoRef }}" aria-hidden="true" style="display:flex;flex:none;will-change:transform"><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span><span style="display:inline-flex;align-items:center;gap:28px;padding-inline-end:28px;white-space:nowrap">משלוח חינם בקנייה מעל 199 ₪<span aria-hidden="true" style="width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7)"></span></span></div>
+    </sc-if>
+  </div>
+
+  <header ref="{{ hdRef }}" style="position:fixed;top:36px;right:0;left:0;z-index:50;padding:12px clamp(12px,2vw,24px);pointer-events:none">
+    <div style="pointer-events:auto;max-width:1320px;margin:0 auto;height:64px;padding:0 10px 0 10px;border-radius:999px;background:{{ headerBg }};border:1px solid {{ headerLine }};backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:space-between;gap:16px;transition:background .4s,border-color .4s">
+      <sc-if value="{{ compact }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openMenu }}" aria-label="פתיחת תפריט" style="width:44px;height:44px;border-radius:50%;border:0;background:{{ hdIconBg }};cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px">
+          <span style="display:block;width:16px;height:1.5px;border-radius:2px;background:{{ hdInk }}"></span><span style="display:block;width:16px;height:1.5px;border-radius:2px;background:{{ hdInk }}"></span>
+        </button>
+        <button onClick="{{ goHome }}" aria-label="SHIR LAVY — דף הבית" dir="ltr" style="background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:center;gap:9px">
+          <sc-if value="{{ onDark }}" hint-placeholder-val="{{ false }}"><img src="assets/monogram-ivory.png" alt="" style="width:28px;height:28px"><img src="assets/name-ivory.png" alt="SHIR LAVY" style="height:13px;width:auto"></sc-if><sc-if value="{{ notDark }}" hint-placeholder-val="{{ true }}"><img src="assets/monogram-gold.png" alt="" style="width:28px;height:28px"><img src="assets/name-gold.png" alt="SHIR LAVY" style="height:13px;width:auto"></sc-if>
+        </button>
+        <button onClick="{{ openCart }}" aria-label="סל הקניות" style="position:relative;width:44px;height:44px;border-radius:50%;border:0;background:{{ hdIconBg }};cursor:pointer;display:flex;align-items:center;justify-content:center;color:{{ hdInk }};transition:background .4s,color .4s"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M4.5 7.5h13l-1 11a1.5 1.5 0 01-1.5 1.4H7a1.5 1.5 0 01-1.5-1.4l-1-11z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path><path d="M8 9.5V6.5a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg>
+          <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;left:-2px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#8F6A4B;color:#FFFFFF;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ count }}</span></sc-if>
+        </button>
+      </sc-if>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goHome }}" aria-label="SHIR LAVY — דף הבית" dir="ltr" style="background:none;border:0;padding:0 12px;cursor:pointer;display:flex;align-items:center;gap:10px;flex:none">
+          <sc-if value="{{ onDark }}" hint-placeholder-val="{{ false }}"><img src="assets/monogram-ivory.png" alt="" style="width:30px;height:30px"><img src="assets/name-ivory.png" alt="SHIR LAVY" style="height:14px;width:auto"></sc-if><sc-if value="{{ notDark }}" hint-placeholder-val="{{ true }}"><img src="assets/monogram-gold.png" alt="" style="width:30px;height:30px"><img src="assets/name-gold.png" alt="SHIR LAVY" style="height:14px;width:auto"></sc-if>
+        </button>
+        <nav aria-label="ניווט ראשי" style="display:flex;align-items:center;gap:2px">
+          <sc-for list="{{ topNav }}" as="n" hint-placeholder-count="6">
+            <div onMouseEnter="{{ n.enter }}" onMouseLeave="{{ n.leave }}" style="position:relative">
+              <button onClick="{{ n.go }}" aria-expanded="{{ n.expanded }}" aria-haspopup="{{ n.popup }}" style="height:40px;padding:0 14px;border-radius:999px;border:0;background:{{ n.line }};cursor:pointer;font-size:14px;font-weight:400;color:{{ hdInk }};white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-family:inherit;transition:background .3s,color .4s" style-hover="background:{{ hdHover }}">{{ n.label }}<sc-if value="{{ n.hasKids }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true" style="transform:{{ n.chev }};transition:transform .3s"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></button>
+              <sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:100%;right:0;padding-top:12px;z-index:5">
+                  <div style="min-width:230px;background:#FFFFFF;border-radius:20px;padding:8px;border:1px solid rgba(41,37,34,.08);box-shadow:0 16px 40px rgba(41,37,34,.12);display:flex;flex-direction:column;gap:2px">
+                    <sc-for list="{{ n.kids }}" as="c" hint-placeholder-count="3">
+                      <button onClick="{{ c.go }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;height:46px;padding:0 14px;border-radius:12px;border:0;background:{{ c.bg }};cursor:pointer;font-size:14px;font-family:inherit;color:#1C1C1C;text-align:right;transition:background .2s" style-hover="background:#F5EEE7">{{ c.label }}<span aria-hidden="true" style="color:#8F6A4B">←</span></button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </nav>
+        <div style="display:flex;align-items:center;gap:8px;flex:none">
+          <button onClick="{{ openCart }}" aria-label="סל הקניות" style="position:relative;width:44px;height:44px;border-radius:50%;border:0;background:{{ hdIconBg }};cursor:pointer;display:flex;align-items:center;justify-content:center;color:{{ hdInk }};transition:background .4s,color .4s"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M4.5 7.5h13l-1 11a1.5 1.5 0 01-1.5 1.4H7a1.5 1.5 0 01-1.5-1.4l-1-11z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path><path d="M8 9.5V6.5a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg>
+            <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;left:-2px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#8F6A4B;color:#FFFFFF;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">{{ count }}</span></sc-if>
+          </button>
+          <a href="{{ waConsult }}" target="_blank" rel="noopener" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:{{ hdCtaBg }};color:{{ hdCtaInk }};font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s, color .3s;height:44px;padding:0 20px;font-size:14px" style-hover="background:#6E4F37;color:#FFFFFF">לתיאום ייעוץ ללא עלות</a>
+        </div>
+      </sc-if>
+    </div>
+  </header>
+
+  <main ref="{{ mainRef }}">
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}"><dc-import name="SLHome" app="{{ app }}" hint-size="100%,4000px"></dc-import></sc-if>
+    <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}"><dc-import name="SLAbout" app="{{ app }}" hint-size="100%,3000px"></dc-import></sc-if>
+    <sc-if value="{{ isAcademy }}" hint-placeholder-val="{{ false }}"><dc-import name="SLAcademy" app="{{ app }}" hint-size="100%,5000px"></dc-import></sc-if>
+    <sc-if value="{{ isBrows }}" hint-placeholder-val="{{ false }}"><dc-import name="SLBrows" app="{{ app }}" hint-size="100%,4000px"></dc-import></sc-if>
+    <sc-if value="{{ isRemoval }}" hint-placeholder-val="{{ false }}"><dc-import name="SLRemoval" app="{{ app }}" hint-size="100%,3000px"></dc-import></sc-if>
+    <sc-if value="{{ isAesthetics }}" hint-placeholder-val="{{ false }}"><dc-import name="SLAesthetics" app="{{ app }}" hint-size="100%,3000px"></dc-import></sc-if>
+    <sc-if value="{{ isShop }}" hint-placeholder-val="{{ false }}"><dc-import name="SLShop" app="{{ app }}" hint-size="100%,3000px"></dc-import></sc-if>
+    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}"><dc-import name="SLProduct" app="{{ app }}" hint-size="100%,2400px"></dc-import></sc-if>
+    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}"><dc-import name="SLCheckout" app="{{ app }}" hint-size="100%,1600px"></dc-import></sc-if>
+    <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}"><dc-import name="SLContact" app="{{ app }}" hint-size="100%,1600px"></dc-import></sc-if>
+  </main>
+
+  <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+  <footer style="padding:0 clamp(12px,2vw,24px) clamp(12px,2vw,24px)">
+    <div style="max-width:1320px;margin:0 auto;background:#F7F5F2;border-radius:32px;padding:clamp(40px,6vw,72px) clamp(24px,5vw,64px) 28px;display:flex;flex-direction:column;gap:clamp(40px,5vw,64px)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:40px">
+        <div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+          <img src="assets/logo-gold.png" alt="SHIR LAVY — Aesthetics &amp; Academy" style="width:132px;height:auto">
+          <span style="font-size:14px;line-height:1.7;color:#5A5A5A;max-width:240px">קליניקת בוטיק לאיפור קבוע ואסתטיקה, ואקדמיה מקצועית לנשים.</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:13px;font-weight:500;color:#7A573C;margin-bottom:8px">ניווט</span>
+          <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+            <button onClick="{{ n.go }}" style="align-self:flex-start;background:none;border:0;padding:5px 0;cursor:pointer;color:#5A5A5A;font-size:14px;text-align:right" style-hover="color:#1C1C1C">{{ n.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:#5A5A5A;line-height:1.6">
+          <span style="font-size:13px;font-weight:500;color:#7A573C;margin-bottom:4px">הקליניקה</span>
+          <span>לנשים בלבד</span><span>[כתובת הקליניקה]</span><span>[שעות פעילות]</span><span>[כתובת אימייל]</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:14px">
+          <span style="font-size:13px;font-weight:500;color:#7A573C;margin-bottom:4px">עקבי אחרינו</span>
+          <div style="display:flex;gap:10px;margin-bottom:8px"><a href="#" aria-label="Instagram" title="Instagram" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"></rect><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"></circle></svg></a><a href="#" aria-label="Facebook" title="Facebook" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.7v3h2.6V21h3.1z"></path></svg></a><a href="#" aria-label="TikTok" title="TikTok" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3h-3.1v12.2a2.7 2.7 0 11-2.7-2.7c.3 0 .6 0 .8.1V9.4a5.8 5.8 0 105 5.8V9.1a7.3 7.3 0 004.3 1.4V7.4A4.3 4.3 0 0116.6 3z"></path></svg></a></div>
+          <a href="{{ waConsult }}" target="_blank" rel="noopener" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s, transform .3s;height:44px;font-size:14px;margin-top:10px;align-self:flex-start" style-hover="background:#6E4F37;color:#FFFFFF">כתבי לנו בוואטסאפ</a>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;border-top:1px solid rgba(164,123,88,.22);padding-top:22px;font-size:13px;color:#8A8A8A">
+        <span>© SHIR LAVY Aesthetics &amp; Academy</span>
+        <span style="display:flex;gap:20px"><a href="#" style="color:#8A8A8A">מדיניות פרטיות</a><a href="#" style="color:#8A8A8A">תקנון</a><a href="#" style="color:#8A8A8A">הצהרת נגישות</a></span>
+      </div>
+    </div>
+  </footer>
+  </sc-if>
+
+  <sc-if value="{{ showFab }}" hint-placeholder-val="{{ false }}">
+    <a href="{{ waConsult }}" target="_blank" rel="noopener" aria-label="שיחה בוואטסאפ" style="position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;width:56px;height:56px;border-radius:50%;background:#8F6A4B;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(41,37,34,.18)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4.5 19.5l1.1-3.6A8 8 0 1112 20a8 8 0 01-3.9-1l-3.6.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+    </a>
+  </sc-if>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ menuRef }}" role="dialog" aria-modal="true" aria-label="תפריט" style="position:fixed;inset:0;z-index:70;background:#FFFFFF;display:flex;flex-direction:column;padding:12px 16px calc(20px + env(safe-area-inset-bottom));overflow-y:auto">
+      <div style="height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px">
+        <button onClick="{{ closeMenu }}" aria-label="סגירת תפריט" style="width:44px;height:44px;border-radius:50%;border:0;background:#F5EEE7;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1C1C1C"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg></button>
+        <img src="assets/monogram-gold.png" alt="" style="width:30px;height:30px">
+        <span style="width:44px"></span>
+      </div>
+      <nav style="display:flex;flex-direction:column;gap:4px;margin-top:20px;flex:1">
+        <sc-for list="{{ mobileNav }}" as="n" hint-placeholder-count="8">
+          <sc-if value="{{ n.isHead }}" hint-placeholder-val="{{ false }}"><span data-mi="1" style="display:block;padding:18px 20px 6px;font-size:13px;font-weight:500;color:#7A573C">{{ n.label }}</span></sc-if>
+          <sc-if value="{{ n.isSub }}" hint-placeholder-val="{{ false }}"><button data-mi="1" onClick="{{ n.go }}" style="display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 20px 0 20px;margin-right:12px;border-radius:16px;border:0;background:{{ n.line }};cursor:pointer;color:#1C1C1C;font-size:18px;font-weight:300;font-family:inherit;text-align:right">{{ n.label }}<span aria-hidden="true" style="font-size:14px;color:#8A8A8A">←</span></button></sc-if>
+          <sc-if value="{{ n.isMain }}" hint-placeholder-val="{{ true }}"><button data-mi="1" onClick="{{ n.go }}" style="display:flex;align-items:center;justify-content:space-between;min-height:58px;padding:0 20px;border-radius:18px;border:0;background:{{ n.line }};cursor:pointer;color:#1C1C1C;font-size:22px;font-weight:300;font-family:inherit;text-align:right">{{ n.label }}<span aria-hidden="true" style="font-size:16px;color:#8A8A8A">←</span></button></sc-if>
+        </sc-for>
+      </nav>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:24px">
+        <a href="{{ waConsult }}" target="_blank" rel="noopener" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s, transform .3s;height:56px">לתיאום ייעוץ ללא עלות</a>
+        <div style="display:flex;justify-content:center;gap:24px;font-size:14px"><div style="display:flex;gap:10px;justify-content:center"><a href="#" aria-label="Instagram" title="Instagram" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.6"></rect><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"></circle><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"></circle></svg></a><a href="#" aria-label="Facebook" title="Facebook" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.7v3h2.6V21h3.1z"></path></svg></a><a href="#" aria-label="TikTok" title="TikTok" style="width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(143,106,75,.35);background:#FFFFFF;color:#7A573C;display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s,border-color .3s,transform .3s" style-hover="background:#8F6A4B;border-color:#8F6A4B;color:#FFFFFF;transform:translateY(-2px)"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 3h-3.1v12.2a2.7 2.7 0 11-2.7-2.7c.3 0 .6 0 .8.1V9.4a5.8 5.8 0 105 5.8V9.1a7.3 7.3 0 004.3 1.4V7.4A4.3 4.3 0 0116.6 3z"></path></svg></a></div></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80">
+      <div ref="{{ scrimRef }}" onClick="{{ closeCart }}" style="position:absolute;inset:0;background:rgba(41,37,34,.28);backdrop-filter:blur(2px)"></div>
+      <aside ref="{{ drawerRef }}" role="dialog" aria-modal="true" aria-label="סל הקניות" style="position:absolute;top:12px;bottom:12px;left:12px;width:min(440px,calc(100vw - 24px));background:#FFFFFF;border-radius:28px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(41,37,34,.16)">
+        <div style="flex:none;padding:20px 22px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:20px;font-weight:500">הסל שלך</span><span style="font-size:14px;color:#8A8A8A">{{ countLabel }}</span></div>
+          <button onClick="{{ closeCart }}" aria-label="סגירה" style="width:40px;height:40px;border-radius:50%;border:0;background:#F5EEE7;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#1C1C1C"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg></button>
+        </div>
+        <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px;text-align:center">
+            <div style="width:72px;height:72px;border-radius:50%;background:#F7F5F2;display:flex;align-items:center;justify-content:center;color:#5A5A5A"><svg width="20" height="20" viewBox="0 0 22 22" fill="none"><path d="M4.5 7.5h13l-1 11a1.5 1.5 0 01-1.5 1.4H7a1.5 1.5 0 01-1.5-1.4l-1-11z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path><path d="M8 9.5V6.5a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path></svg></div>
+            <div style="font-size:20px;font-weight:500">הסל ריק</div>
+            <div style="font-size:15px;color:#5A5A5A">עוד לא הוספת מוצרים.</div>
+            <button onClick="{{ goShop }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s, transform .3s;margin-top:8px" style-hover="background:#6E4F37;color:#FFFFFF">למעבר לחנות</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;overflow-y:auto;padding:0 22px;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+              <div style="display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;padding:10px;border-radius:20px;background:#FFFFFF">
+                <div style="width:76px;height:90px;border-radius:14px;overflow:hidden;background:#F2EBE4;color:#999999"><image-slot id="{{ l.slot }}" shape="rounded" radius="14" placeholder=" "></image-slot></div>
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:0;padding:4px 0">
+                  <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+                    <button onClick="{{ l.open }}" style="background:none;border:0;padding:0;text-align:right;cursor:pointer;font-size:15px;font-weight:500;color:#1C1C1C">{{ l.name }}</button>
+                    <span style="font-size:15px;white-space:nowrap">{{ l.total }}</span>
+                  </div>
+                  <span style="font-size:13px;color:#8A8A8A">{{ l.meta }}</span>
+                  <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between">
+                    <div style="display:flex;align-items:center;height:36px;border-radius:999px;background:#F7F5F2">
+                      <button onClick="{{ l.inc }}" aria-label="הוספת יחידה" style="width:36px;height:36px;border:0;background:none;cursor:pointer;font-size:16px;color:#1C1C1C">+</button>
+                      <span style="width:22px;text-align:center;font-size:14px">{{ l.qty }}</span>
+                      <button onClick="{{ l.dec }}" aria-label="הפחתת יחידה" style="width:36px;height:36px;border:0;background:none;cursor:pointer;font-size:16px;color:#1C1C1C">−</button>
+                    </div>
+                    <button onClick="{{ l.remove }}" style="height:36px;padding:0 6px;background:none;border:0;cursor:pointer;font-size:13px;color:#8A8A8A">הסרה</button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;padding:18px 22px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;border-top:1px solid rgba(41,37,34,.06)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:15px;color:#5A5A5A">סכום ביניים</span><span style="font-size:20px;font-weight:500">{{ subtotal }}</span></div>
+            <span style="font-size:13px;color:#8A8A8A">דמי משלוח יחושבו בתשלום.</span>
+            <button onClick="{{ goCheckout }}" style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font-size:15px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:none;transition:background .3s, transform .3s;height:54px;width:100%" style-hover="background:#6E4F37;color:#FFFFFF">לתשלום</button>
+          </div>
+        </sc-if>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;phone&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;972500000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contact&quot;},&quot;applePayPreview&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;available&quot;,&quot;unavailable&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Checkout preview&quot;},&quot;paymentResult&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;success&quot;,&quot;declined&quot;],&quot;default&quot;:&quot;success&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Checkout preview&quot;}}">
+const PRODUCTS = [
+  { id: 'calm-serum', name: 'סרום הרגעה לאחר טיפול', cat: 'aftercare', price: 149, tag: 'חדש', isNew: true, best: false, rank: 2,
+    short: 'סרום קליל לשגרת הטיפוח שבימים שאחרי הטיפול.', size: '30 מ״ל' },
+  { id: 'brow-balm', name: 'באלם החלמה לגבות', cat: 'aftercare', price: 89, tag: 'הנמכר ביותר', isNew: false, best: true, rank: 1,
+    short: 'באלם עשיר בשכבה דקה, לשמירה על אזור הטיפול.', size: '15 מ״ל' },
+  { id: 'rich-cream', name: 'קרם לחות עשיר', cat: 'skin', price: 219, isNew: false, best: true, rank: 3,
+    short: 'קרם קטיפתי לשגרת בוקר וערב.', variants: [{ id: '50', label: '50 מ״ל', add: 0 }, { id: '100', label: '100 מ״ל', add: 90 }] },
+  { id: 'face-mist', name: 'תרסיס פנים מרענן', cat: 'skin', price: 129, isNew: true, best: false, tag: 'חדש', rank: 5,
+    short: 'ערפל עדין לרענון העור לאורך היום.', size: '100 מ״ל' },
+  { id: 'night-mask', name: 'מסכת לילה משקמת', cat: 'skin', price: 249, isNew: true, best: false, rank: 6,
+    short: 'מסכה עשירה לשימוש פעמיים בשבוע לפני השינה.', size: '50 מ״ל' },
+  { id: 'home-ritual', name: 'ערכת טיפוח ביתית', cat: 'sets', price: 389, isNew: false, best: true, tag: 'ערכה', rank: 4,
+    short: 'שלושה מוצרים משלימים בקופסה אחת.', variants: [{ id: 'classic', label: 'קלאסית', add: 0 }, { id: 'gift', label: 'באריזת מתנה', add: 30 }] },
+  { id: 'brow-brush', name: 'מברשת גבות מקצועית', cat: 'tools', price: 59, isNew: false, best: false, rank: 7,
+    short: 'מברשת כפולה לסירוק ועיצוב הגבה.', size: 'יחידה אחת' },
+  { id: 'student-kit', name: 'ערכת עבודה לסטודנטית', cat: 'tools', price: 690, isNew: false, best: false, rank: 8,
+    short: 'ערכה בסיסית לתרגול, בהתאמה לתוכנית הלימודים.', size: 'ערכה' }
+];
+const CATS = { aftercare: 'טיפוח לאחר טיפול', skin: 'טיפוח העור', tools: 'כלים ואביזרים', sets: 'ערכות' };
+const NAV = [['home', 'ראשי'], ['about', 'נעים להכיר'], ['academy', 'האקדמיה'], ['brows', 'טיפולי גבות'], ['removal', 'הסרת איפור קבוע'], ['aesthetics', 'טיפולי אסתטיקה'], ['shop', 'חנות'], ['contact', 'יצירת קשר']];
+const TOP_NAV = [['home', 'ראשי'], ['about', 'נעים להכיר'], ['treatments', 'טיפולים', [['brows', 'טיפולי גבות'], ['removal', 'הסרת איפור קבוע'], ['aesthetics', 'טיפולי אסתטיקה']]], ['academy', 'האקדמיה'], ['shop', 'חנות'], ['contact', 'יצירת קשר']];
+const fmt = n => n.toLocaleString('he-IL') + ' ₪';
+
+class Component extends DCLogic {
+  state = { page: 'home', param: null, cart: [], cartOpen: false, menuOpen: false, w: typeof window !== 'undefined' ? window.innerWidth : 1280, scrolled: false };
+  mainRef = React.createRef(); hdRef = React.createRef(); promoRef = React.createRef(); menuRef = React.createRef(); drawerRef = React.createRef(); scrimRef = React.createRef();
+
+  componentDidMount() {
+    try {
+      const r = JSON.parse(localStorage.getItem('sl-route') || 'null');
+      if (r && r.page) this.setState({ page: r.page, param: r.param || null });
+      const c = JSON.parse(localStorage.getItem('sl-cart') || 'null');
+      if (Array.isArray(c)) this.setState({ cart: c });
+    } catch (e) {}
+    this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => this.runPromo(), 50);
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    this.onScroll = () => {
+      if (this.hdRef.current) this.hdRef.current.style.top = Math.max(0, 36 - window.scrollY) + 'px';
+      const s = window.scrollY > 30;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+      if (!this.raf) this.raf = requestAnimationFrame(() => { this.raf = 0; this.parallax(); });
+    };
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ cartOpen: false, menuOpen: false }); };
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('keydown', this.onKey);
+    this.io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; this.io.unobserve(el);
+      if (this.reduce) return;
+      const d = parseInt(el.getAttribute('data-reveal'), 10) || 0;
+      el.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }],
+        { duration: 800, delay: d, easing: 'cubic-bezier(.16,.8,.2,1)', fill: 'backwards' });
+    }), { threshold: 0, rootMargin: '0px 0px 6% 0px' });
+    const scan = () => document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => { el.setAttribute('data-rv', '1'); this.io.observe(el); });
+    scan();
+    this.mo = new MutationObserver(() => { clearTimeout(this.st); this.st = setTimeout(() => { scan(); this.parallax(); }, 30); });
+    this.mo.observe(document.body, { childList: true, subtree: true });
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('keydown', this.onKey);
+    this.io && this.io.disconnect(); this.mo && this.mo.disconnect();
+  }
+  componentDidUpdate() {
+    this.runPromo();
+    const ps = this._prev || {}; this._prev = { ...this.state };
+    if (!this.reduce) {
+      const ease = 'cubic-bezier(.16,.8,.2,1)';
+      if (this.state.menuOpen && !ps.menuOpen && this.menuRef.current) {
+        this.menuRef.current.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 400, easing: ease });
+        this.menuRef.current.querySelectorAll('[data-mi]').forEach((el, i) =>
+          el.animate([{ opacity: 0, transform: 'translateY(22px)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: 80 + i * 55, easing: ease, fill: 'backwards' }));
+      }
+      if (this.state.cartOpen && !ps.cartOpen && this.drawerRef.current) {
+        this.drawerRef.current.animate([{ transform: 'translateX(-105%)' }, { transform: 'none' }], { duration: 550, easing: ease });
+        this.scrimRef.current.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500 });
+      }
+    }
+    if (ps.cart !== this.state.cart) try { localStorage.setItem('sl-cart', JSON.stringify(this.state.cart)); } catch (e) {}
+    if (ps.menuOpen !== this.state.menuOpen || ps.cartOpen !== this.state.cartOpen)
+      document.body.style.overflow = (this.state.menuOpen || this.state.cartOpen) ? 'hidden' : '';
+  }
+  parallax() {
+    if (this.reduce) return;
+    const vh = window.innerHeight;
+    document.querySelectorAll('[data-parallax]').forEach(el => {
+      const r = el.parentElement.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      const f = parseFloat(el.getAttribute('data-parallax')) || 0.06;
+      el.style.transform = `translate3d(0,${((r.top + r.height / 2) - vh / 2) * -f}px,0)`;
+    });
+  }
+  go = (page, param = null) => {
+    this.setState({ page, param, menuOpen: false, cartOpen: false });
+    try { localStorage.setItem('sl-route', JSON.stringify({ page, param })); } catch (e) {}
+    window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      const m = this.mainRef.current;
+      if (m && !this.reduce) m.animate([{ opacity: 0, transform: 'translateY(16px)' }, { opacity: 1, transform: 'none' }], { duration: 800, easing: 'cubic-bezier(.16,.8,.2,1)' });
+    });
+  };
+  wa = msg => `https://wa.me/${(this.props.phone ?? '972500000000').replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+  addToCart = (id, variant = null, qty = 1, open = false) => {
+    this.setState(s => {
+      const key = id + '|' + (variant || '');
+      const ex = s.cart.find(c => c.key === key);
+      const cart = ex ? s.cart.map(c => c.key === key ? { ...c, qty: c.qty + qty } : c) : [...s.cart, { key, id, variant, qty }];
+      return { cart, cartOpen: open || s.cartOpen };
+    });
+  };
+  setQty = (key, qty) => this.setState(s => ({ cart: qty <= 0 ? s.cart.filter(c => c.key !== key) : s.cart.map(c => c.key === key ? { ...c, qty } : c) }));
+
+  runPromo() {
+    const el = this.promoRef.current;
+    if (!el || el === this.promoEl || this.reduce) return;
+    this.promoEl = el;
+    const half = el.scrollWidth / 2;
+    el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(' + half + 'px)' }], { duration: half * 28, iterations: Infinity });
+  }
+  renderVals() {
+    const { page, param, cart, w, scrolled } = this.state;
+    const products = PRODUCTS.map(p => ({ ...p, catName: CATS[p.cat], priceLabel: (p.variants ? 'החל מ־' : '') + fmt(p.price) }));
+    const byId = Object.fromEntries(products.map(p => [p.id, p]));
+    const lines = cart.filter(c => byId[c.id]).map(c => {
+      const p = byId[c.id]; const v = p.variants && p.variants.find(x => x.id === c.variant);
+      const unit = p.price + (v ? v.add : 0);
+      return { ...c, unit, name: p.name, slot: 'p-' + p.id + '-1', meta: (v ? v.label : p.size) + ' · ' + fmt(unit), total: fmt(unit * c.qty),
+        inc: () => this.setQty(c.key, c.qty + 1), dec: () => this.setQty(c.key, c.qty - 1), remove: () => this.setQty(c.key, 0),
+        open: () => this.go('product', p.id) };
+    });
+    const sub = lines.reduce((a, l) => a + l.unit * l.qty, 0);
+    const count = lines.reduce((a, l) => a + l.qty, 0);
+    const mobile = w < 760;
+    const compact = w < 1200;
+    const navKey = page === 'product' ? 'shop' : page;
+    const app = {
+      page, param, mobile, w, products, fmt, cart: lines, subtotal: sub, count,
+      go: this.go, wa: this.wa, addToCart: this.addToCart,
+      openProduct: id => this.go('product', id), openCart: () => this.setState({ cartOpen: true }),
+      clearCart: () => this.setState({ cart: [] }),
+      applePay: this.props.applePayPreview ?? 'auto',
+      paymentResult: this.props.paymentResult ?? 'success'
+    };
+    const solid = scrolled || page === 'checkout';
+    const onDark = page === 'home' && !scrolled && !this.state.menuOpen;
+    return {
+      app, compact, wide: !compact, hdRef: this.hdRef, promoRef: this.promoRef,
+      headerBg: onDark ? 'transparent' : (solid ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.75)'),
+      headerLine: onDark ? 'transparent' : 'rgba(41,37,34,.06)',
+      onDark, notDark: !onDark, hdInk: onDark ? '#FFFFFF' : '#1C1C1C', hdIconBg: onDark ? 'rgba(255,255,255,.16)' : '#F5EEE7', hdCtaBg: onDark ? '#FFFFFF' : '#8F6A4B', hdCtaInk: onDark ? '#1C1C1C' : '#FFFFFF', hdHover: onDark ? 'rgba(255,255,255,.12)' : '#F7F5F2',
+      topNav: TOP_NAV.map(([k, label, kids]) => {
+        const activeBg = onDark ? 'rgba(255,255,255,.16)' : '#F5EEE7';
+        const active = kids ? kids.some(c => c[0] === navKey) : navKey === k;
+        const open = !!kids && this.state.drop === k;
+        return { label, hasKids: !!kids, open, expanded: kids ? String(open) : undefined, popup: kids ? 'true' : undefined, chev: open ? 'rotate(180deg)' : 'none',
+          line: active ? activeBg : 'transparent',
+          enter: () => kids && this.setState({ drop: k }), leave: () => kids && this.setState({ drop: null }),
+          go: kids ? () => this.setState({ drop: open ? null : k }) : () => this.go(k),
+          kids: (kids || []).map(([ck, cl]) => ({ label: cl, bg: navKey === ck ? '#F5EEE7' : 'transparent', go: () => { this.setState({ drop: null }); this.go(ck); } })) };
+      }),
+      mobileNav: TOP_NAV.flatMap(([k, label, kids]) => kids
+        ? [{ label, isHead: true }, ...kids.map(([ck, cl]) => ({ label: cl, isSub: true, go: () => this.go(ck), line: navKey === ck ? '#F5EEE7' : 'transparent' }))]
+        : [{ label, isMain: true, go: () => this.go(k), line: navKey === k ? '#F5EEE7' : 'transparent' }]),
+      nav: NAV.map(([k, label], i) => ({ label, num: String(i + 1).padStart(2, '0'), go: () => this.go(k), color: '#1C1C1C', line: navKey === k ? (onDark ? 'rgba(255,255,255,.16)' : '#F5EEE7') : 'transparent' })),
+      ...Object.fromEntries(['home', 'about', 'academy', 'brows', 'removal', 'aesthetics', 'shop', 'product', 'checkout', 'contact'].map(k => ['is' + k[0].toUpperCase() + k.slice(1), page === k])),
+      count, hasItems: count > 0, cartEmpty: count === 0, countLabel: count === 1 ? 'פריט אחד' : count + ' פריטים',
+      lines, subtotal: fmt(sub),
+      menuOpen: this.state.menuOpen, cartOpen: this.state.cartOpen,
+      showFooter: page !== 'checkout',
+      showFab: mobile && !['product', 'checkout', 'shop'].includes(page) && !this.state.menuOpen && !this.state.cartOpen,
+      waConsult: this.wa('היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.'),
+      mainRef: this.mainRef, menuRef: this.menuRef, drawerRef: this.drawerRef, scrimRef: this.scrimRef,
+      goHome: () => this.go('home'), goShop: () => this.go('shop'), goCheckout: () => this.go('checkout'),
+      openMenu: () => this.setState({ menuOpen: true }), closeMenu: () => this.setState({ menuOpen: false }),
+      openCart: () => this.setState({ cartOpen: true }), closeCart: () => this.setState({ cartOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

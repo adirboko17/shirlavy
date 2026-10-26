@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Assistant',sans-serif;color:#292522;background:#FBFAF7">
+
+  <section data-screen-label="Home · Hero" style="position:relative;min-height:100vh;padding:clamp(108px,13vh,150px) clamp(20px,5vw,80px) clamp(48px,6vw,80px);overflow:hidden">
+    <img src="assets/monogram-gold.png" alt="" aria-hidden="true" style="position:absolute;top:12%;left:-8vw;width:min(62vw,820px);opacity:.05;pointer-events:none">
+    <div style="max-width:1520px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;gap:clamp(40px,5vw,96px)">
+      <div style="flex:1 1 540px;min-width:0;display:flex;flex-direction:column;gap:clamp(28px,3.4vw,44px);padding-bottom:clamp(0px,3vw,56px)">
+        <div data-reveal="0" style="display:flex;align-items:center;gap:16px">
+          <span style="width:44px;height:1px;background:#B09256"></span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#8A7040">AESTHETICS &amp; ACADEMY</span>
+        </div>
+        <h1 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(60px,9.4vw,164px);line-height:.98;letter-spacing:-.02em">
+          <span data-reveal="80" style="display:block">היופי שלך.</span>
+          <span data-reveal="220" style="display:block;padding-right:clamp(0px,7vw,140px)"><span style="color:#B09256">בדיוק</span> שלך.</span>
+        </h1>
+        <div data-reveal="360" style="display:flex;flex-wrap:wrap;gap:clamp(24px,4vw,64px);align-items:flex-start">
+          <p style="margin:0;max-width:440px;font-size:clamp(17px,1.35vw,19px);line-height:1.8;color:#5E554D;text-wrap:pretty">קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.</p>
+          <div style="display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+            <button onClick="{{ goBrows }}" style="height:58px;padding:0 36px;border:0;background:#292522;color:#FBFAF7;font-size:16px;letter-spacing:.03em;cursor:pointer;display:flex;align-items:center;gap:18px;transition:background .4s, gap .4s" style-hover="background:#B09256;gap:26px">גלי את הטיפולים<span aria-hidden="true">←</span></button>
+            <button onClick="{{ goAcademy }}" style="height:44px;padding:0;border:0;background:none;color:#292522;font-size:16px;cursor:pointer;border-bottom:1px solid #B09256;transition:color .3s" style-hover="color:#8A7040">הכירי את האקדמיה</button>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1 1 380px;min-width:0;max-width:640px;position:relative;margin-inline-start:auto">
+        <div data-reveal="120" style="position:relative;aspect-ratio:4/5;max-height:76vh;width:100%;overflow:hidden;background:#E8DDD0;color:#6B5D4F">
+          <div data-parallax="0.05" style="position:absolute;inset:-6% 0"><image-slot id="home-hero-main" shape="rect" placeholder="צילום פורטרט ראשי — שיר או צילום ביוטי"></image-slot></div>
+        </div>
+        <div data-reveal="420" style="position:absolute;bottom:-28px;right:-28px;width:38%;aspect-ratio:3/4;border:10px solid #FBFAF7;background:#DDD0BF;color:#6B5D4F">
+          <image-slot id="home-hero-detail" shape="rect" placeholder="תקריב עבודה"></image-slot>
+        </div>
+      </div>
+    </div>
+    <div data-reveal="600" style="max-width:1520px;margin:clamp(72px,8vw,120px) auto 0;display:flex;flex-wrap:wrap;gap:14px 40px;align-items:center;border-top:1px solid rgba(41,37,34,.12);padding-top:22px;font-size:14px;color:#5E554D">
+      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
+        <button onClick="{{ p.go }}" style="display:flex;align-items:center;gap:12px;background:none;border:0;padding:6px 0;cursor:pointer;color:#5E554D;font-size:14px;letter-spacing:.04em" style-hover="color:#292522">
+          <span style="width:6px;height:6px;background:#B09256;transform:rotate(45deg)"></span>{{ p.label }}
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Meet Shir" style="background:#F7F3EC;padding:clamp(96px,13vw,200px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;gap:clamp(48px,7vw,120px);align-items:center">
+      <div data-reveal="0" style="flex:1 1 360px;min-width:0;max-width:560px;position:relative">
+        <div style="aspect-ratio:3/4;background:#E8DDD0;color:#6B5D4F;overflow:hidden;position:relative">
+          <div data-parallax="0.04" style="position:absolute;inset:-5% 0"><image-slot id="home-shir-portrait" shape="rect" placeholder="פורטרט של שיר לביא"></image-slot></div>
+        </div>
+        <div style="position:absolute;bottom:-1px;left:-1px;background:#F7F3EC;padding:22px 26px 0 0;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.32em;color:#8A7040">MEET SHIR</div>
+      </div>
+      <div style="flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:32px">
+        <div data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">01 — המייסדת</div>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04;letter-spacing:-.015em;text-wrap:balance">נעים להכיר,<br>אני שיר לביא</h2>
+        <p data-reveal="160" style="margin:0;max-width:560px;font-size:clamp(17px,1.35vw,19px);line-height:1.85;color:#5E554D;text-wrap:pretty">כבר יותר מעשור אני עוסקת באיפור קבוע ובאסתטיקה, ומעל שבע שנים מלמדת ומכשירה נשים למקצוע. בקליניקה שלי, המיועדת לנשים בלבד, כל טיפול מתחיל בהקשבה ונעשה על ידי באופן אישי, מתוך מטרה אחת: לדייק את מה שכבר יפה בך.</p>
+        <div data-reveal="240" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:28px;border-top:1px solid rgba(41,37,34,.14);padding-top:30px;margin-top:8px">
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:52px;line-height:1;color:#B09256">+10</span><span style="font-size:15px;line-height:1.5;color:#5E554D">שנות ניסיון באיפור קבוע ואסתטיקה</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:52px;line-height:1;color:#B09256">+7</span><span style="font-size:15px;line-height:1.5;color:#5E554D">שנות הוראה והכשרת נשים למקצוע</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:52px;line-height:1;color:#B09256">1:1</span><span style="font-size:15px;line-height:1.5;color:#5E554D">כל טיפול מבוצע על ידי שיר באופן אישי</span></div>
+        </div>
+        <button data-reveal="320" onClick="{{ goAbout }}" style="align-self:flex-start;height:44px;padding:0;border:0;border-bottom:1px solid #B09256;background:none;color:#292522;font-size:16px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:gap .4s" style-hover="gap:20px">לסיפור המלא<span aria-hidden="true">←</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Treatments" style="padding:clamp(96px,13vw,200px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(48px,6vw,88px)">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">02 — טיפולים</div>
+          <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04;letter-spacing:-.015em">טיפולים בהתאמה אישית</h2>
+        </div>
+        <p data-reveal="160" style="margin:0;max-width:380px;font-size:17px;line-height:1.8;color:#5E554D">כל טיפול נבנה סביב מבנה הפנים, סוג העור והמראה שאת רוצה להרגיש בו.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,6vw,96px);align-items:start">
+        <div style="display:flex;flex-direction:column;border-top:1px solid rgba(41,37,34,.14)">
+          <sc-for list="{{ treatments }}" as="t" hint-placeholder-count="4">
+            <button data-reveal="{{ t.delay }}" onMouseEnter="{{ t.hover }}" onFocus="{{ t.hover }}" onClick="{{ t.go }}" style="display:grid;grid-template-columns:52px minmax(0,1fr) 32px;gap:16px;align-items:center;padding:clamp(26px,3vw,40px) 0;border:0;border-bottom:1px solid rgba(41,37,34,.14);background:none;text-align:right;cursor:pointer;color:#292522">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:{{ t.numColor }};transition:color .4s">{{ t.n }}</span>
+              <span style="display:flex;flex-direction:column;gap:10px;min-width:0">
+                <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(26px,2.6vw,38px);line-height:1.15;transform:{{ t.shift }};transition:transform .6s cubic-bezier(.16,.8,.2,1)">{{ t.title }}</span>
+                <span style="font-size:15px;line-height:1.7;color:#6B625A">{{ t.desc }}</span>
+              </span>
+              <span style="font-size:20px;color:{{ t.numColor }};transition:color .4s, transform .5s;transform:{{ t.arrow }}">←</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="position:sticky;top:110px;aspect-ratio:4/5;background:#E8DDD0;color:#6B5D4F;overflow:hidden">
+          <sc-for list="{{ treatments }}" as="t" hint-placeholder-count="1">
+            <div style="position:absolute;inset:0;opacity:{{ t.op }};pointer-events:{{ t.pe }};transform:{{ t.zoom }};transition:opacity .8s, transform 1.4s cubic-bezier(.16,.8,.2,1)"><image-slot id="{{ t.slot }}" shape="rect" placeholder="{{ t.ph }}"></image-slot></div>
+          </sc-for>
+          <div style="position:absolute;bottom:20px;right:20px;padding:8px 14px;background:rgba(251,250,247,.92);font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.24em;color:#292522;pointer-events:none">{{ activeEn }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Academy" style="position:relative;background:#292522;color:#F7F3EC;padding:clamp(96px,13vw,200px) clamp(20px,5vw,80px);overflow:hidden">
+    <img src="assets/monogram-ivory.png" alt="" aria-hidden="true" style="position:absolute;top:-10%;right:-12%;width:min(70vw,900px);opacity:.04;pointer-events:none">
+    <div style="position:relative;max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(56px,7vw,110px)">
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(40px,6vw,100px);align-items:flex-end">
+        <div style="flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:28px">
+          <div data-reveal="0" style="display:flex;align-items:center;gap:16px"><span style="width:44px;height:1px;background:#C9B07E"></span><span style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#C9B07E">THE SHIR LAVY ACADEMY</span></div>
+          <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(46px,6.6vw,108px);line-height:1;letter-spacing:-.02em">המקצוע שלך.<br><span style="color:#C9B07E">העתיד שלך.</span></h2>
+          <p data-reveal="160" style="margin:0;max-width:520px;font-size:clamp(17px,1.35vw,19px);line-height:1.85;color:rgba(247,243,236,.78)">אקדמיה מקצועית לאיפור קבוע, שבה כל סטודנטית לומדת ישירות משיר: יחס אישי, תרגול מעשי ושיטת עבודה שנבנתה לאורך שנים בקליניקה.</p>
+          <button data-reveal="240" onClick="{{ goAcademy }}" style="align-self:flex-start;height:58px;padding:0 36px;border:1px solid #C9B07E;background:none;color:#F7F3EC;font-size:16px;letter-spacing:.03em;cursor:pointer;display:flex;align-items:center;gap:18px;transition:background .4s, gap .4s" style-hover="background:#B09256;gap:26px">גלי את האקדמיה<span aria-hidden="true">←</span></button>
+        </div>
+        <div style="flex:1 1 380px;min-width:0;display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:end">
+          <div data-reveal="120" style="aspect-ratio:3/4;background:#3A342F;color:#BFB3A3"><image-slot id="home-academy-1" shape="rect" placeholder="סטודנטיות בהכשרה"></image-slot></div>
+          <div data-reveal="260" style="aspect-ratio:3/4;background:#3A342F;color:#BFB3A3;margin-bottom:22%"><image-slot id="home-academy-2" shape="rect" placeholder="תקריב תרגול"></image-slot></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));border-top:1px solid rgba(247,243,236,.16)">
+        <sc-for list="{{ academyPoints }}" as="a" hint-placeholder-count="4">
+          <div data-reveal="{{ a.delay }}" style="padding:32px 0 0 28px;display:flex;flex-direction:column;gap:14px">
+            <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:40px;line-height:1;color:#C9B07E">{{ a.big }}</span>
+            <span style="font-size:17px;font-weight:500">{{ a.title }}</span>
+            <span style="font-size:15px;line-height:1.7;color:rgba(247,243,236,.7)">{{ a.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Before After" style="padding:clamp(96px,13vw,200px) clamp(20px,5vw,80px)">
+    <div style="max-width:1400px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(44px,5vw,80px)">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">03 — תוצאות</div>
+          <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04;letter-spacing:-.015em">לפני ואחרי</h2>
+        </div>
+        <p data-reveal="160" style="margin:0;max-width:400px;font-size:15px;line-height:1.8;color:#6B625A">גררי את הידית כדי להשוות. יוצגו כאן תמונות אמיתיות של לקוחות הקליניקה בלבד, לאחר קבלת אישורן.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(28px,4vw,56px)">
+        <div data-reveal="0"><dc-import name="SLCompare" sid="home-ba-1" caption="הדמיית שיער" note="[פרטי טיפול]" hint-size="100%,560px"></dc-import></div>
+        <div data-reveal="120" style="margin-top:clamp(0px,6vw,96px)"><dc-import name="SLCompare" sid="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" hint-size="100%,560px"></dc-import></div>
+        <div data-reveal="240"><dc-import name="SLCompare" sid="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" hint-size="100%,560px"></dc-import></div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:clamp(48px,5vw,72px)">
+        <button onClick="{{ goBrows }}" style="height:44px;padding:0;border:0;border-bottom:1px solid #B09256;background:none;color:#292522;font-size:16px;cursor:pointer">לגלריה המלאה</button>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Shop" style="background:#F7F3EC;padding:clamp(96px,13vw,200px) 0">
+    <div style="max-width:1400px;margin:0 auto;padding:0 clamp(20px,5vw,80px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(44px,5vw,72px)">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">04 — החנות</div>
+        <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(42px,5.6vw,88px);line-height:1.04;letter-spacing:-.015em">הטיפוח שממשיך<br>גם בבית</h2>
+      </div>
+      <button data-reveal="160" onClick="{{ goShop }}" style="height:56px;padding:0 32px;border:1px solid #292522;background:none;color:#292522;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:background .4s, color .4s" style-hover="background:#292522;color:#FBFAF7">לכל המוצרים<span aria-hidden="true">←</span></button>
+    </div>
+    <div style="max-width:1400px;margin:0 auto;padding:0 clamp(20px,5vw,80px)">
+      <div style="display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,1fr);gap:clamp(16px,2vw,28px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;scrollbar-width:none">
+        <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+          <div data-reveal="{{ p.delay }}" style="scroll-snap-align:start;min-width:0"><dc-import name="SLProductCard" product="{{ p }}" app="{{ app }}" hint-size="100%,460px"></dc-import></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Testimonials" style="padding:clamp(96px,13vw,200px) clamp(20px,5vw,80px)">
+    <div style="max-width:1100px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:36px">
+      <div data-reveal="0" style="font-size:14px;letter-spacing:.14em;color:#8A7040">05 — מילים של לקוחות</div>
+      <div data-reveal="80" aria-hidden="true" style="font-family:'Frank Ruhl Libre',serif;font-size:120px;line-height:.5;color:#B09256;height:48px">”</div>
+      <blockquote ref="{{ quoteRef }}" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(26px,3.4vw,48px);line-height:1.35;text-wrap:balance;min-height:3.9em;display:flex;align-items:center">{{ quote.q }}</blockquote>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:16px;font-weight:500">{{ quote.name }}</span>
+        <span style="font-size:14px;color:#6B625A">{{ quote.meta }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:22px">
+        <button onClick="{{ nextQ }}" aria-label="הקודם" style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(41,37,34,.2);background:none;cursor:pointer;color:#292522;font-size:18px" style-hover="border-color:#B09256">→</button>
+        <div style="display:flex;gap:10px">
+          <sc-for list="{{ dots }}" as="d" hint-placeholder-count="3"><button onClick="{{ d.go }}" aria-label="{{ d.label }}" style="width:{{ d.w }};height:2px;border:0;padding:0;background:{{ d.bg }};cursor:pointer;transition:width .5s, background .5s"></button></sc-for>
+        </div>
+        <button onClick="{{ prevQ }}" aria-label="הבא" style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(41,37,34,.2);background:none;cursor:pointer;color:#292522;font-size:18px" style-hover="border-color:#B09256">←</button>
+      </div>
+      <div style="font-size:12px;letter-spacing:.06em;color:#8C8279">תוכן לדוגמה · יוחלף בהמלצות אמיתיות באישור הלקוחות</div>
+    </div>
+  </section>
+
+  <section data-screen-label="Home · Final CTA" style="position:relative;background:#E8DDD0;padding:clamp(110px,14vw,220px) clamp(20px,5vw,80px);overflow:hidden">
+    <img src="assets/monogram-gold.png" alt="" aria-hidden="true" data-parallax="0.08" style="position:absolute;top:50%;left:50%;width:min(110vw,1100px);margin:-550px 0 0 -550px;opacity:.08;pointer-events:none">
+    <div style="position:relative;max-width:900px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:32px">
+      <img data-reveal="0" src="assets/monogram-gold.png" alt="" style="width:54px;height:54px">
+      <h2 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(46px,7vw,116px);line-height:1;letter-spacing:-.02em">כל יופי מתחיל בדיוק.</h2>
+      <p data-reveal="160" style="margin:0;max-width:520px;font-size:clamp(17px,1.35vw,19px);line-height:1.8;color:#5E554D">שיחת ייעוץ אישית וללא עלות, בה נבין יחד מה מתאים לך, לפני כל החלטה.</p>
+      <a data-reveal="240" href="{{ waLink }}" target="_blank" rel="noopener" style="height:60px;padding:0 44px;display:flex;align-items:center;gap:18px;background:#292522;color:#FBFAF7;font-size:17px;letter-spacing:.03em;transition:background .4s, gap .4s" style-hover="background:#B09256;color:#FBFAF7;gap:26px">בואי נדבר<span aria-hidden="true">←</span></a>
+      <span data-reveal="300" style="font-size:13px;letter-spacing:.08em;color:#6B5D4F">ייעוץ ללא עלות · בוואטסאפ</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const QUOTES = [
+  { q: 'כאן יופיע ציטוט אמיתי של לקוחה, במילים שלה ובאישורה, על החוויה בקליניקה.', name: '[שם הלקוחה]', meta: '[סוג הטיפול]' },
+  { q: 'מקום לציטוט שני: מה הרגישה לפני הטיפול, איך היה היחס האישי, ואיך היא מרגישה היום.', name: '[שם הלקוחה]', meta: '[סוג הטיפול]' },
+  { q: 'מקום לציטוט של בוגרת האקדמיה, על הדרך מהשיעור הראשון ועד הלקוחה הראשונה.', name: '[שם הבוגרת]', meta: 'בוגרת האקדמיה' }
+];
+class Component extends DCLogic {
+  state = { t: 0, q: 0 };
+  quoteRef = React.createRef();
+  setQ(i) {
+    const n = (i + QUOTES.length) % QUOTES.length;
+    this.setState({ q: n });
+    const el = this.quoteRef.current;
+    if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+      el.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 700, easing: 'cubic-bezier(.16,.8,.2,1)' });
+  }
+  renderVals() {
+    const app = this.props.app || { go() {}, wa: () => '#', products: [] };
+    const go = p => () => app.go(p);
+    const T = [
+      ['01', 'הדמיית שיער בגבות', 'HAIR STROKE BROWS', 'קווים עדינים בכיוון צמיחת השערה, למראה טבעי ומלא.', 'brows'],
+      ['02', 'הצללת פודרה ושיטה משולבת', 'POWDER & COMBINATION', 'מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.', 'brows'],
+      ['03', 'הסרת איפור קבוע בלייזר', 'LASER REMOVAL', 'טיפול מותאם אישית להבהרת איפור קבוע ישן או לא רצוי.', 'removal'],
+      ['04', 'טיפולי אסתטיקה מתקדמים', 'ADVANCED AESTHETICS', 'הסרת שיער בלייזר, מיצוק ומתיחת העור בטכנולוגיות מתקדמות.', 'aesthetics']
+    ];
+    const qd = QUOTES[this.state.q];
+    return {
+      app,
+      goBrows: go('brows'), goAcademy: go('academy'), goAbout: go('about'), goShop: go('shop'),
+      waLink: app.wa('היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.'),
+      pillars: [['טיפולי גבות', 'brows'], ['הסרת איפור קבוע', 'removal'], ['טיפולי אסתטיקה', 'aesthetics'], ['האקדמיה', 'academy'], ['החנות', 'shop']].map(([label, p]) => ({ label, go: go(p) })),
+      treatments: T.map(([n, title, en, desc, page], i) => {
+        const a = this.state.t === i;
+        return { n, title, desc, en, delay: i * 90, slot: 'home-tr-' + (i + 1), ph: 'תמונה: ' + title,
+          hover: () => this.setState({ t: i }), go: go(page),
+          numColor: a ? '#B09256' : 'rgba(41,37,34,.4)', shift: a ? 'translateX(-10px)' : 'none', arrow: a ? 'translateX(-6px)' : 'none',
+          op: a ? 1 : 0, pe: a ? 'auto' : 'none', zoom: a ? 'scale(1)' : 'scale(1.06)' };
+      }),
+      activeEn: T[this.state.t][2],
+      academyPoints: [
+        { big: '+7', title: 'שנות הוראה', text: 'ניסיון מצטבר בהכשרת נשים למקצוע האיפור הקבוע.' },
+        { big: '1:1', title: 'יחס אישי', text: 'ליווי צמוד, קבוצות קטנות ואפשרות ללמידה פרטנית.' },
+        { big: 'Hands-on', title: 'הכשרה מעשית', text: 'עבודה בידיים כבר מהשלבים הראשונים, לצד שיר.' },
+        { big: 'צפון–דרום', title: 'מכל הארץ', text: 'סטודנטיות שמגיעות מצפון הארץ ועד הדרום.' }
+      ].map((a, i) => ({ ...a, delay: i * 100 })),
+      featured: (app.products || []).slice().sort((a, b) => a.rank - b.rank).slice(0, 4).map((p, i) => ({ ...p, delay: i * 100 })),
+      quote: qd,
+      dots: QUOTES.map((_, i) => ({ go: () => this.setQ(i), label: 'המלצה ' + (i + 1), w: i === this.state.q ? '36px' : '14px', bg: i === this.state.q ? '#B09256' : 'rgba(41,37,34,.2)' })),
+      nextQ: () => this.setQ(this.state.q - 1), prevQ: () => this.setQ(this.state.q + 1),
+      quoteRef: this.quoteRef
+    };
+  }
+}
+</script>
+</body>
+</html>

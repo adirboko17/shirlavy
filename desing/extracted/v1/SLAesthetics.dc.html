@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="font-family:'Assistant',sans-serif;color:#292522;background:#FBFAF7">
+
+  <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Aesthetics · Hero" style="padding:clamp(120px,15vh,170px) clamp(20px,5vw,80px) clamp(64px,8vw,110px)">
+      <div style="max-width:1520px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,5vw,72px)">
+        <div data-reveal="0" style="display:flex;align-items:center;gap:16px"><span style="width:44px;height:1px;background:#B09256"></span><span style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#8A7040">ADVANCED AESTHETICS</span></div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:40px">
+          <h1 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(52px,8vw,140px);line-height:.98;letter-spacing:-.02em;flex:1 1 600px">
+            <span data-reveal="80" style="display:block">טיפולי</span>
+            <span data-reveal="200" style="display:block;color:#B09256;padding-right:clamp(0px,8vw,160px)">אסתטיקה מתקדמים</span>
+          </h1>
+          <p data-reveal="300" style="margin:0;flex:0 1 400px;font-size:clamp(17px,1.4vw,20px);line-height:1.85;color:#5E554D">טכנולוגיות מתקדמות לטיפוח העור והגוף, עם אותה הקפדה, אותו יחס אישי ואותו דיוק.</p>
+        </div>
+      </div>
+    </section>
+    <section style="padding:0 clamp(20px,5vw,80px) clamp(96px,12vw,180px)">
+      <div style="max-width:1520px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(80px,10vw,160px)">
+        <sc-for list="{{ items }}" as="t" hint-placeholder-count="3">
+          <article style="display:flex;flex-wrap:wrap;flex-direction:{{ t.dir }};gap:clamp(36px,6vw,110px);align-items:center">
+            <button data-reveal="0" onClick="{{ t.open }}" aria-label="{{ t.title }}" style="flex:1.3 1 460px;min-width:0;aspect-ratio:16/11;border:0;padding:0;background:#E8DDD0;color:#6B5D4F;cursor:pointer;position:relative;overflow:hidden"><image-slot id="{{ t.slot }}" shape="rect" placeholder="{{ t.ph }}"></image-slot></button>
+            <div style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:24px">
+              <div data-reveal="60" style="display:flex;align-items:baseline;gap:16px"><span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:56px;line-height:1;color:#B09256">{{ t.n }}</span><span style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.3em;color:#8A7040">{{ t.en }}</span></div>
+              <h2 data-reveal="120" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(34px,4vw,62px);line-height:1.08">{{ t.title }}</h2>
+              <p data-reveal="180" style="margin:0;max-width:480px;font-size:17px;line-height:1.85;color:#5E554D">{{ t.short }}</p>
+              <div data-reveal="240" style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+                <button onClick="{{ t.open }}" style="height:54px;padding:0 28px;border:1px solid #292522;background:none;color:#292522;font-size:15px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all .4s" style-hover="background:#292522;color:#FBFAF7">למידע מלא<span aria-hidden="true">←</span></button>
+                <a href="{{ t.wa }}" target="_blank" rel="noopener" style="height:44px;display:flex;align-items:center;border-bottom:1px solid #B09256;color:#292522;font-size:15px">לייעוץ ללא עלות</a>
+              </div>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Aesthetics · Detail" style="padding:clamp(110px,14vh,150px) clamp(20px,5vw,80px) clamp(64px,8vw,110px)">
+      <div style="max-width:1520px;margin:0 auto">
+        <nav aria-label="פירורי לחם" style="display:flex;gap:10px;font-size:14px;color:#6B625A;margin-bottom:clamp(32px,4vw,56px)">
+          <button onClick="{{ back }}" style="background:none;border:0;padding:6px 0;cursor:pointer;color:#6B625A;font-size:14px" style-hover="color:#292522">טיפולי אסתטיקה</button><span style="padding:6px 0">/</span><span style="padding:6px 0;color:#292522">{{ d.title }}</span>
+        </nav>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,6vw,100px);align-items:end">
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <span data-reveal="0" style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:.34em;color:#8A7040">{{ d.en }}</span>
+            <h1 data-reveal="80" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(48px,6.6vw,112px);line-height:1;letter-spacing:-.02em">{{ d.title }}</h1>
+            <p data-reveal="160" style="margin:0;max-width:500px;font-size:clamp(17px,1.4vw,20px);line-height:1.85;color:#5E554D">{{ d.short }}</p>
+            <a data-reveal="240" href="{{ d.wa }}" target="_blank" rel="noopener" style="align-self:flex-start;height:58px;padding:0 34px;display:flex;align-items:center;gap:16px;background:#292522;color:#FBFAF7;font-size:16px;transition:background .4s" style-hover="background:#B09256;color:#FBFAF7">לתיאום ייעוץ ללא עלות<span aria-hidden="true">←</span></a>
+          </div>
+          <div data-reveal="120" style="aspect-ratio:4/5;max-height:72vh;background:#E8DDD0;color:#6B5D4F"><image-slot id="{{ d.slot }}" shape="rect" placeholder="{{ d.ph }}"></image-slot></div>
+        </div>
+      </div>
+    </section>
+    <section style="background:#F7F3EC;padding:clamp(96px,12vw,170px) clamp(20px,5vw,80px)">
+      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(40px,5vw,80px)">
+        <sc-for list="{{ d.blocks }}" as="b" hint-placeholder-count="3">
+          <div data-reveal="{{ b.delay }}" style="display:flex;flex-direction:column;gap:18px;border-top:1px solid #292522;padding-top:28px">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.2em;color:#8A7040">{{ b.n }}</span>
+            <h2 style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(26px,2.4vw,34px)">{{ b.t }}</h2>
+            <p style="margin:0;font-size:16px;line-height:1.85;color:#5E554D">{{ b.d }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <section style="padding:clamp(96px,12vw,170px) clamp(20px,5vw,80px)">
+      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(40px,6vw,100px);align-items:start">
+        <h2 data-reveal="0" style="margin:0;font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(40px,5vw,76px);line-height:1.04">שאלות<br>ותשובות</h2>
+        <dc-import name="SLFaq" items="{{ d.faq }}" hint-size="100%,400px"></dc-import>
+      </div>
+    </section>
+    <section style="background:#292522;color:#F7F3EC;padding:clamp(72px,9vw,130px) clamp(20px,5vw,80px)">
+      <div style="max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.3em;color:#C9B07E">MORE TREATMENTS</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));border-top:1px solid rgba(247,243,236,.16)">
+          <sc-for list="{{ others }}" as="o" hint-placeholder-count="2">
+            <button onClick="{{ o.open }}" style="display:flex;justify-content:space-between;align-items:center;gap:20px;padding:30px 0 30px 32px;border:0;border-bottom:1px solid rgba(247,243,236,.16);background:none;color:#F7F3EC;text-align:right;cursor:pointer;transition:color .35s" style-hover="color:#C9B07E">
+              <span style="font-family:'Frank Ruhl Libre',serif;font-weight:300;font-size:clamp(24px,2.4vw,34px)">{{ o.title }}</span><span aria-hidden="true">←</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = [
+  { id: 'laser', en: 'LASER HAIR REMOVAL', title: 'הסרת שיער בלייזר', ph: 'הסרת שיער בלייזר',
+    short: 'טיפול להפחתת שיער לא רצוי באזורים שונים בגוף, בסדרת מפגשים ובהתאמה לסוג העור והשיער.',
+    blocks: [['מה זה', 'אנרגיית אור ממוקדת המכוונת לזקיק השערה. הטיפול נעשה בסדרה, משום שהשיער צומח במחזורים.'],
+      ['למי זה מתאים', 'ההתאמה תלויה בגוון העור, בצבע השיער ובעובי השערה. היא נבדקת באופן אישי לפני תחילת התהליך.'],
+      ['מה לצפות', 'מספר המפגשים והמרווחים ביניהם משתנים מאישה לאישה. שיר תבנה איתך תוכנית ותעדכן אותה לאורך הדרך.']],
+    faq: [{ q: 'כמה מפגשים נדרשים?', a: 'אין מספר קבוע. ההערכה נעשית בייעוץ ומתעדכנת לפי התגובה לטיפול.' }, { q: 'האם יש הכנה מיוחדת?', a: 'כן, תקבלי הנחיות הכנה מפורטות לפני המפגש הראשון.' }, { q: 'אפשר לטפל בכל עונה?', a: 'ניתן לטפל לאורך השנה, תוך הקפדה על הנחיות חשיפה לשמש.' }] },
+  { id: 'firming', en: 'SKIN FIRMING', title: 'מיצוק העור', ph: 'טיפול מיצוק',
+    short: 'טיפולים מתקדמים התומכים במראה עור מוצק וחיוני יותר, בהתאמה לצורכי העור שלך.',
+    blocks: [['מה זה', 'טיפולים לא פולשניים הפועלים על שכבות העור, במטרה לשפר את מראה המוצקות והגמישות.'],
+      ['למי זה מתאים', 'למי שמרגישה שהעור איבד מעט מגמישותו ומחפשת דרך עדינה לטפל בכך. ההתאמה נקבעת בייעוץ.'],
+      ['מה לצפות', 'השינוי הדרגתי ומשתנה מאישה לאישה. בדרך כלל מומלץ על סדרת טיפולים, בהתאם להערכה האישית.']],
+    faq: [{ q: 'מתי רואים שינוי?', a: 'השינוי הדרגתי ותלוי בעור ובתגובה לטיפול. שיר תתאם איתך ציפיות מראש.' }, { q: 'האם יש זמן החלמה?', a: 'ברוב המקרים ניתן לחזור לשגרה מיד. פרטים מדויקים יינתנו בייעוץ.' }] },
+  { id: 'tightening', en: 'SKIN TIGHTENING', title: 'מתיחת העור וטכנולוגיות מתקדמות', ph: 'טכנולוגיות אסתטיות',
+    short: 'טכנולוגיות אסתטיות לשיפור מראה המרקם והקווים, בגישה זהירה ומותאמת אישית.',
+    blocks: [['מה זה', 'מגוון טכנולוגיות לשיפור מראה העור. הבחירה בטכנולוגיה נעשית לפי מטרת הטיפול ומאפייני העור.'],
+      ['למי זה מתאים', 'לנשים המחפשות שיפור במראה המרקם או הקווים, בלי הליך פולשני. ההתאמה נבדקת באופן אישי.'],
+      ['מה לצפות', 'תוכנית אישית עם תיאום ציפיות כן. התוצאות משתנות ואינן מובטחות מראש.']],
+    faq: [{ q: 'איך בוחרים את הטיפול הנכון?', a: 'בשיחת הייעוץ בוחנים את העור והמטרות, ושיר ממליצה על הכיוון המתאים.' }, { q: 'אפשר לשלב עם טיפולים אחרים?', a: 'לעיתים כן. ההמלצה ניתנת באופן אישי.' }] }
+];
+class Component extends DCLogic {
+  renderVals() {
+    const app = this.props.app || { wa: () => '#', go() {}, param: null };
+    const open = id => () => app.go('aesthetics', id);
+    const cur = T.find(t => t.id === app.param);
+    const wa = t => app.wa(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${t.title}.`);
+    return {
+      isOverview: !cur, isDetail: !!cur,
+      items: T.map((t, i) => ({ ...t, n: String(i + 1).padStart(2, '0'), slot: 'aes-' + t.id, dir: i % 2 ? 'row-reverse' : 'row', open: open(t.id), wa: wa(t) })),
+      d: cur ? { ...cur, slot: 'aes-' + cur.id + '-detail', wa: wa(cur), blocks: cur.blocks.map(([t, d2], i) => ({ n: String(i + 1).padStart(2, '0'), t, d: d2, delay: i * 100 })) }
+             : { title: '', en: '', short: '', blocks: [], faq: [], slot: 'x', ph: '', wa: '#' },
+      others: T.filter(t => t !== cur).map(t => ({ title: t.title, open: open(t.id) })),
+      back: () => app.go('aesthetics')
+    };
+  }
+}
+</script>
+</body>
+</html>

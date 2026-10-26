@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600&amp;display=swap">
+<script src="./image-slot.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#EDEAE6}a{color:#8F6A4B}a:hover{color:#6E4F37}</style>
+</helmet>
+<section style="padding:48px;display:flex;flex-direction:column;gap:56px;font-family:'Heebo',sans-serif">
+  <h1 style="margin:0;font-weight:300;font-size:28px;color:#1C1C1C" dir="rtl">אפשרויות להירו — גררי את התמונה לכל אחת</h1>
+
+  <div id="1a" style="display:flex;flex-direction:column;gap:14px">
+    <span style="align-self:flex-start;background:#1C1C1C;color:#FFFFFF;font-size:14px;padding:4px 12px;border-radius:8px">1a · טיפוגרפי, תמונה רחבה מתחת</span>
+    <div dir="rtl" style="width:1280px;background:#FFFFFF;border-radius:24px;padding:72px 48px 48px;display:flex;flex-direction:column;gap:40px;color:#1C1C1C">
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:end">
+        <h2 style="margin:0;font-weight:200;font-size:112px;line-height:.95;letter-spacing:-.045em">היופי שלך.<br><span style="color:#8F6A4B">בדיוק שלך.</span></h2>
+        <div style="display:flex;flex-direction:column;gap:24px;padding-bottom:10px">
+          <p style="margin:0;font-size:17px;line-height:1.75;color:#5A5A5A;text-wrap:pretty">קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.</p>
+          <div style="display:flex;align-items:center;gap:22px">
+            <button style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font:500 15px 'Heebo';cursor:pointer">גלי את הטיפולים ←</button>
+            <button style="height:44px;padding:0;border:0;border-bottom:1px solid #1C1C1C;background:none;color:#1C1C1C;font:400 15px 'Heebo';cursor:pointer">הכירי את האקדמיה</button>
+          </div>
+        </div>
+      </div>
+      <div style="height:440px;border-radius:24px;overflow:hidden;background:#F2EBE4;color:#999999"><image-slot id="hero-opt-a" shape="rect" placeholder="תמונה רחבה"></image-slot></div>
+    </div>
+  </div>
+
+  <div id="1b" style="display:flex;flex-direction:column;gap:14px">
+    <span style="align-self:flex-start;background:#1C1C1C;color:#FFFFFF;font-size:14px;padding:4px 12px;border-radius:8px">1b · פאנל חום כמו דף "בקרוב"</span>
+    <div dir="rtl" style="width:1280px;background:#FFFFFF;border-radius:24px;padding:16px">
+      <div style="position:relative;overflow:hidden;background:#8F6A4B;border-radius:20px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);min-height:640px;color:#FFFFFF">
+        <img src="assets/monogram-gold.png" alt="" style="position:absolute;width:520px;bottom:-140px;right:-120px;opacity:.12;pointer-events:none">
+        <div style="position:relative;padding:64px 56px;display:flex;flex-direction:column;justify-content:space-between;gap:40px">
+          <span style="font-size:13px;letter-spacing:.3em;color:#F5EEE7">SHIR LAVY · AESTHETICS &amp; ACADEMY</span>
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <h2 style="margin:0;font-weight:200;font-size:96px;line-height:.98;letter-spacing:-.04em">היופי שלך.<br>בדיוק שלך.</h2>
+            <p style="margin:0;font-size:17px;line-height:1.75;color:#FFFFFF;max-width:420px;text-wrap:pretty">קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.</p>
+            <div style="display:flex;align-items:center;gap:22px">
+              <button style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#FFFFFF;color:#1C1C1C;font:500 15px 'Heebo';cursor:pointer">גלי את הטיפולים ←</button>
+              <button style="height:44px;padding:0;border:0;border-bottom:1px solid rgba(255,255,255,.7);background:none;color:#FFFFFF;font:400 15px 'Heebo';cursor:pointer">הכירי את האקדמיה</button>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative;margin:16px;border-radius:16px;overflow:hidden;background:#7A573C;color:#F5EEE7"><image-slot id="hero-opt-b" shape="rect" placeholder="פורטרט / תקריב טיפול"></image-slot></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="1c" style="display:flex;flex-direction:column;gap:14px">
+    <span style="align-self:flex-start;background:#1C1C1C;color:#FFFFFF;font-size:14px;padding:4px 12px;border-radius:8px">1c · שקט, תמונה צרה במרכז</span>
+    <div dir="rtl" style="width:1280px;background:#FFFFFF;border-radius:24px;padding:64px 56px;display:grid;grid-template-columns:minmax(0,1fr) 380px minmax(0,1fr);gap:48px;align-items:center;color:#1C1C1C">
+      <h2 style="margin:0;font-weight:200;font-size:84px;line-height:1;letter-spacing:-.04em">היופי<br>שלך.</h2>
+      <div style="height:540px;border-radius:190px;overflow:hidden;background:#F2EBE4;color:#999999"><image-slot id="hero-opt-c" shape="rect" placeholder="פורטרט אנכי"></image-slot></div>
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <h2 style="margin:0;font-weight:200;font-size:84px;line-height:1;letter-spacing:-.04em;color:#8F6A4B">בדיוק<br>שלך.</h2>
+        <p style="margin:0;font-size:16px;line-height:1.75;color:#5A5A5A;text-wrap:pretty">קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.</p>
+        <div style="display:flex;align-items:center;gap:22px">
+          <button style="height:52px;padding:0 28px;border-radius:999px;border:0;background:#8F6A4B;color:#FFFFFF;font:500 15px 'Heebo';cursor:pointer">גלי את הטיפולים ←</button>
+          <button style="height:44px;padding:0;border:0;border-bottom:1px solid #1C1C1C;background:none;color:#1C1C1C;font:400 15px 'Heebo';cursor:pointer">האקדמיה</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

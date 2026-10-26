@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div dir="rtl" style="display:flex;flex-direction:column;gap:16px;font-family:'Assistant',sans-serif">
+  <div ref="{{ boxRef }}" style="position:relative;width:100%;aspect-ratio:{{ ratio }};background:#E8DDD0;color:#6B5D4F;overflow:hidden;user-select:none">
+    <div style="position:absolute;inset:0"><image-slot id="{{ beforeId }}" shape="rect" placeholder="תמונת לפני — תמונה מאושרת בלבד"></image-slot></div>
+    <div style="position:absolute;inset:0;background:#DDD0BF;clip-path:{{ clip }}"><image-slot id="{{ afterId }}" shape="rect" placeholder="תמונת אחרי — תמונה מאושרת בלבד"></image-slot></div>
+    <div style="position:absolute;top:16px;right:16px;padding:6px 12px;background:rgba(251,250,247,.92);font-size:12px;letter-spacing:.14em;color:#292522;pointer-events:none">לפני</div>
+    <div style="position:absolute;top:16px;left:16px;padding:6px 12px;background:#292522;font-size:12px;letter-spacing:.14em;color:#FBFAF7;pointer-events:none">אחרי</div>
+    <div role="slider" tabindex="0" aria-label="השוואת לפני ואחרי" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pos }}" onPointerDown="{{ down }}" onPointerMove="{{ move }}" onPointerUp="{{ up }}" onKeyDown="{{ key }}" style="position:absolute;top:0;bottom:0;left:{{ left }};width:56px;margin-left:-28px;cursor:ew-resize;touch-action:none;display:flex;align-items:center;justify-content:center;outline:none">
+      <div style="position:absolute;top:0;bottom:0;left:27.5px;width:1px;background:#FBFAF7"></div>
+      <div style="position:relative;width:52px;height:52px;border-radius:50%;background:#FBFAF7;display:flex;align-items:center;justify-content:center;gap:6px;color:#292522;box-shadow:0 6px 24px rgba(41,37,34,.18)">
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M6 1L1 6l5 5" stroke="currentColor" stroke-width="1.2"></path></svg>
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.2"></path></svg>
+      </div>
+    </div>
+  </div>
+  <sc-if value="{{ hasCaption }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid rgba(41,37,34,.14);padding-top:14px">
+      <div style="font-family:'Frank Ruhl Libre',serif;font-size:22px;font-weight:300;color:#292522">{{ caption }}</div>
+      <div style="font-size:13px;color:#6B625A">{{ note }}</div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:600},&quot;sid&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;cmp&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;caption&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;note&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;ratio&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;4/5&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { pos: 50 };
+  boxRef = React.createRef();
+  setFrom(e) {
+    const r = this.boxRef.current.getBoundingClientRect();
+    const p = Math.max(3, Math.min(97, ((e.clientX - r.left) / r.width) * 100));
+    this.setState({ pos: p });
+  }
+  renderVals() {
+    const pos = this.state.pos;
+    const sid = this.props.sid ?? 'cmp';
+    return {
+      pos: Math.round(pos),
+      left: pos + '%',
+      clip: `inset(0 ${100 - pos}% 0 0)`,
+      ratio: this.props.ratio ?? '4/5',
+      beforeId: sid + '-before',
+      afterId: sid + '-after',
+      caption: this.props.caption ?? '',
+      note: this.props.note ?? '',
+      hasCaption: !!this.props.caption,
+      down: e => { e.currentTarget.setPointerCapture(e.pointerId); this.drag = true; this.setFrom(e); },
+      move: e => { if (this.drag) this.setFrom(e); },
+      up: () => { this.drag = false; },
+      key: e => {
+        if (e.key === 'ArrowLeft') this.setState(s => ({ pos: Math.max(3, s.pos - 4) }));
+        if (e.key === 'ArrowRight') this.setState(s => ({ pos: Math.min(97, s.pos + 4) }));
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
