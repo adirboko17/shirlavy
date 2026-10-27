@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { INSTAGRAM_PROFILE_URL } from "@/lib/data";
 import slotMap from "@/lib/slot-map.json";
 
 const slots = slotMap as Record<string, string>;
@@ -331,14 +332,14 @@ export function TtIcon() {
 
 export function Socials() {
   const items = [
-    { label: "Instagram", icon: <IgIcon /> },
-    { label: "Facebook", icon: <FbIcon /> },
-    { label: "TikTok", icon: <TtIcon /> },
+    { label: "Instagram", href: INSTAGRAM_PROFILE_URL, icon: <IgIcon /> },
+    { label: "Facebook", href: "#", icon: <FbIcon /> },
+    { label: "TikTok", href: "#", icon: <TtIcon /> },
   ];
   return (
     <div style={{ display: "flex", gap: 10 }}>
       {items.map((item) => (
-        <a key={item.label} href="#" aria-label={item.label} title={item.label} className="social">
+        <a key={item.label} href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined} aria-label={item.label} title={item.label} className="social">
           {item.icon}
         </a>
       ))}

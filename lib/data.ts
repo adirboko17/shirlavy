@@ -1,5 +1,8 @@
 export const PHONE = "972502444994";
 
+export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/shir_aesthetics/";
+export const INSTAGRAM_HANDLE = "@shir_aesthetics";
+
 export const CATS = {
   needles: "מחטים",
   pigments: "פיגמנטים",
