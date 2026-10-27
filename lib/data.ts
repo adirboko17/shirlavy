@@ -1,128 +1,188 @@
 export const PHONE = "972502444994";
 
 export const CATS = {
-  aftercare: "טיפוח לאחר טיפול",
-  skin: "טיפוח העור",
-  tools: "כלים ואביזרים",
-  sets: "ערכות",
+  needles: "מחטים",
+  pigments: "פיגמנטים",
+  tools: "ציוד וכלי עבודה",
+  aftercare: "טיפוח",
 } as const;
 
 export type Cat = keyof typeof CATS;
-
-export type Variant = { id: string; label: string; add: number };
 
 export type Product = {
   id: string;
   name: string;
   cat: Cat;
-  price: number;
   tag?: string;
   isNew: boolean;
   best: boolean;
   rank: number;
   short: string;
-  size?: string;
-  variants?: Variant[];
 };
 
 export const PRODUCTS: Product[] = [
   {
-    id: "calm-serum",
-    name: "סרום הרגעה לאחר טיפול",
-    cat: "aftercare",
-    price: 149,
-    tag: "חדש",
-    isNew: true,
+    id: "needle-cartridge-1",
+    name: "מחט למכונה",
+    cat: "needles",
+    best: true,
+    isNew: false,
+    rank: 1,
+    short: "מחט למכונת PMU, כפי שמוצג באריזה ובתמונה.",
+  },
+  {
+    id: "needle-cartridge-2",
+    name: "מחט למכונה (זוג)",
+    cat: "needles",
+    isNew: false,
     best: false,
     rank: 2,
-    short: "סרום קליל לשגרת הטיפוח שבימים שאחרי הטיפול.",
-    size: "30 מ״ל",
+    short: "שני מחטים שקופים למכונה, כפי שמוצג בתמונה.",
   },
   {
-    id: "brow-balm",
-    name: "באלם החלמה לגבות",
-    cat: "aftercare",
-    price: 89,
-    tag: "הנמכר ביותר",
+    id: "needle-micro-1",
+    name: "מחט מיקרובליידינג",
+    cat: "needles",
     isNew: false,
-    best: true,
-    rank: 1,
-    short: "באלם עשיר בשכבה דקה, לשמירה על אזור הטיפול.",
-    size: "15 מ״ל",
-  },
-  {
-    id: "rich-cream",
-    name: "קרם לחות עשיר",
-    cat: "skin",
-    price: 219,
-    isNew: false,
-    best: true,
-    rank: 3,
-    short: "קרם קטיפתי לשגרת בוקר וערב.",
-    variants: [
-      { id: "50", label: "50 מ״ל", add: 0 },
-      { id: "100", label: "100 מ״ל", add: 90 },
-    ],
-  },
-  {
-    id: "face-mist",
-    name: "תרסיס פנים מרענן",
-    cat: "skin",
-    price: 129,
-    isNew: true,
     best: false,
-    tag: "חדש",
-    rank: 5,
-    short: "ערפל עדין לרענון העור לאורך היום.",
-    size: "100 מ״ל",
+    rank: 3,
+    short: "להב מיקרובליידינג עם סידור קווים אלכסוני, כפי שמוצג בתמונה.",
   },
   {
-    id: "night-mask",
-    name: "מסכת לילה משקמת",
-    cat: "skin",
-    price: 249,
-    isNew: true,
+    id: "needle-micro-2",
+    name: "מחט מיקרובליידינג (קו ישר)",
+    cat: "needles",
+    isNew: false,
+    best: false,
+    rank: 4,
+    short: "להב מיקרובליידינג עם סידור קווים ישר, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "pigment-bottles-stone",
+    name: "בקבוקי פיגמנט",
+    cat: "pigments",
+    best: true,
+    isNew: false,
+    rank: 5,
+    short: "ארבעה בקבוקי פיגמנט של SHIR LAVY על רקע אבן, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "pigment-bottles-marble",
+    name: "בקבוקי פיגמנט (גוונים חומים)",
+    cat: "pigments",
+    isNew: false,
     best: false,
     rank: 6,
-    short: "מסכה עשירה לשימוש פעמיים בשבוע לפני השינה.",
-    size: "50 מ״ל",
+    short: "ארבעה בקבוקי פיגמנט בגוונים חומים, כפי שמוצג בתמונה.",
   },
   {
-    id: "home-ritual",
-    name: "ערכת טיפוח ביתית",
-    cat: "sets",
-    price: 389,
-    isNew: false,
-    best: true,
-    tag: "ערכה",
-    rank: 4,
-    short: "שלושה מוצרים משלימים בקופסה אחת.",
-    variants: [
-      { id: "classic", label: "קלאסית", add: 0 },
-      { id: "gift", label: "באריזת מתנה", add: 30 },
-    ],
-  },
-  {
-    id: "brow-brush",
-    name: "מברשת גבות מקצועית",
-    cat: "tools",
-    price: 59,
+    id: "pigment-bottles-desk",
+    name: "בקבוקי פיגמנט (שלושה)",
+    cat: "pigments",
     isNew: false,
     best: false,
     rank: 7,
-    short: "מברשת כפולה לסירוק ועיצוב הגבה.",
-    size: "יחידה אחת",
+    short: "שלושה בקבוקי פיגמנט על שולחן העבודה, כפי שמוצג בתמונה.",
   },
   {
-    id: "student-kit",
-    name: "ערכת עבודה לתלמידה",
-    cat: "tools",
-    price: 690,
+    id: "pigment-jars-open",
+    name: "צנצנות פיגמנט",
+    cat: "pigments",
     isNew: false,
     best: false,
     rank: 8,
-    short: "ערכה בסיסית לתרגול, בהתאמה לתוכנית הלימודים.",
-    size: "ערכה",
+    short: "מספר צנצנות פיגמנט, אחת פתוחה, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "pigment-jars-row",
+    name: "צנצנות פיגמנט (שורה)",
+    cat: "pigments",
+    isNew: false,
+    best: false,
+    rank: 9,
+    short: "ארבע צנצנות פיגמנט בשורה, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-applicators",
+    name: "אפליקטורים",
+    cat: "tools",
+    best: true,
+    isNew: false,
+    rank: 10,
+    short: "שקית מקלות למריחה חד-פעמיים, כפי שמוצג באריזה ובתמונה.",
+  },
+  {
+    id: "tool-marker",
+    name: "טוש סימון",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 11,
+    short: "טוש סימון על העור באריזה, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-cups",
+    name: "כוסיות לפיגמנט",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 12,
+    short: "כוסיות/טבעות לפיגמנט, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-stencils",
+    name: "שבלונות לגבות",
+    cat: "tools",
+    isNew: false,
+    best: true,
+    rank: 13,
+    short: "שבלונות דביקות לעיצוב קווי גבה, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-pmu-pen",
+    name: "עט מכונה PMU",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 14,
+    short: "עט מכונה PMU בצבע זהב, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-tweezers-kit",
+    name: "ערכת פינצטות",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 15,
+    short: "ערכת מלקחיים ומספריים במארז עור, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-spoolies",
+    name: "מברשות ספולי",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 16,
+    short: "שקית מברשות ספולי חד-פעמיות, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "tool-cotton-swabs",
+    name: "מקלוני כותנה",
+    cat: "tools",
+    isNew: false,
+    best: false,
+    rank: 17,
+    short: "שקית מקלוני עץ/כותנה, כפי שמוצג בתמונה.",
+  },
+  {
+    id: "aftercare-remover",
+    name: "Remover",
+    cat: "aftercare",
+    tag: "SHIR LAVY",
+    best: true,
+    isNew: false,
+    rank: 18,
+    short: "בקבוק Remover עם dropper, מותג SHIR LAVY Beauty Solutions, כפי שמוצג בתמונה.",
   },
 ];
 
@@ -134,13 +194,16 @@ export function waLink(message: string) {
   return `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
 }
 
-export type RichProduct = Product & { catName: string; priceLabel: string };
+export function shopInquiryLink(productName: string) {
+  return waLink(`היי, אשמח לפרטים והזמנה לגבי ${productName} מהחנות.`);
+}
+
+export type RichProduct = Product & { catName: string };
 
 export function richProducts(): RichProduct[] {
   return PRODUCTS.map((p) => ({
     ...p,
     catName: CATS[p.cat],
-    priceLabel: (p.variants ? "החל מ־" : "") + fmt(p.price),
   }));
 }
 

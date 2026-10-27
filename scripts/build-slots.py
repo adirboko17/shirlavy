@@ -128,40 +128,33 @@ def main() -> None:
         slots[f"brows-g{gal_idx}"] = save_webp(collage_from_ig(fp), f"brows-g{gal_idx}")
         gal_idx += 1
 
-    # Store product photos from Drive (real SKUs where names match)
-    product_map = {
-        "p-brow-balm-1": None,
-        "p-calm-serum-1": None,
-        "p-rich-cream-1": None,
-        "p-home-ritual-1": None,
-        "p-brow-brush-1": "E6BE40E1-D3B5-4FDB-B0F5-47DFB6D30779.jpg",
-        "p-student-kit-1": "49895B10-D9C2-401B-83AB-4C65F64C5A9E.jpg",
-    }
     root = CONTENT / "images/root"
-    hebrew_products = {
-        "p-student-kit-1": "שבלונות 1.jpg",
-        "p-brow-brush-1": "אפליקטור 1.jpg",
+    product_files: dict[str, str] = {
+        "p-needle-cartridge-1-1": "מחט חשמלי 1.jpg",
+        "p-needle-cartridge-2-1": "מחט חשמלי 2.jpg",
+        "p-needle-micro-1-1": "מחט מיקרו 1.jpg",
+        "p-needle-micro-2-1": "מחט מיקרו 2.jpg",
+        "p-pigment-bottles-stone-1": "56EDD4EB-8971-4C6F-A32A-EEED82C1A3B3.jpg",
+        "p-pigment-bottles-marble-1": "EC063987-734F-4395-A262-09A697567942.jpg",
+        "p-pigment-bottles-desk-1": "WhatsApp Image 2026-10-15 at 16.09.00.jpg",
+        "p-pigment-jars-open-1": "2A2A8172-DAC1-4C8C-A13D-B43A707228DC.jpg",
+        "p-pigment-jars-row-1": "ED2F3360-3A6A-444B-8417-B47C371BD27A.jpg",
+        "p-tool-applicators-1": "אפליקטור 1.jpg",
+        "p-tool-marker-1": "טוש סימון.jpg",
+        "p-tool-cups-1": "כוסיות לפיגמנט.jpg",
+        "p-tool-stencils-1": "שבלונות 1.jpg",
+        "p-tool-pmu-pen-1": "43C58476-84DA-4401-BDA9-3AF8BD75F839.jpg",
+        "p-tool-tweezers-kit-1": "49895B10-D9C2-401B-83AB-4C65F64C5A9E.jpg",
+        "p-tool-spoolies-1": "WhatsApp Image 2026-10-15 at 16.09.00 (2).jpg",
+        "p-tool-cotton-swabs-1": "WhatsApp Image 2026-10-15 at 16.09.00 (3).jpg",
+        "p-aftercare-remover-1": "1F9D3EE0-2108-4E59-B80C-C24F592522DC.jpg",
     }
-    for slot_id, fname in {**product_map, **hebrew_products}.items():
-        if not fname:
-            continue
+    for slot_id, fname in product_files.items():
         fp = root / fname
         if fp.exists():
             slots[slot_id] = save_webp(Image.open(fp), slot_id)
 
-    for fp in root.glob("*.jpg"):
-        name = fp.name
-        if re.search(r"^(WhatsApp|IMG_)", name):
-            continue
-        if "לטקס" in name or "שבלונות 2" in name:
-            continue  # older logo on product
-        slug = re.sub(r"[^\w]+", "-", fp.stem)[:40]
-        sid = f"store-{slug}"
-        if sid not in slots:
-            slots[sid] = save_webp(Image.open(fp), sid)
-
-    # Keep existing hero slots if we didn't regenerate
-    for legacy in ["home-hero-main", "home-academy-2", "p-brow-balm-1", "p-calm-serum-1", "p-rich-cream-1", "p-home-ritual-1"]:
+    for legacy in ["home-hero-main", "home-academy-2"]:
         leg_path = OUT / f"{legacy}.webp"
         if legacy not in slots and leg_path.exists():
             slots[legacy] = f"/slots/{legacy}.webp"

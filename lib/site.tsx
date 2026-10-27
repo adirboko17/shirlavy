@@ -8,16 +8,14 @@ import {
   useMemo,
   useState,
 } from "react";
-import { fmt, richProducts, type RichProduct } from "./data";
+import { richProducts, type RichProduct } from "./data";
 
 export type CartItem = { key: string; id: string; variant: string | null; qty: number };
 
 export type CartLine = CartItem & {
-  unit: number;
   name: string;
   slot: string;
   meta: string;
-  total: string;
 };
 
 type SiteValue = {
@@ -25,7 +23,6 @@ type SiteValue = {
   cart: CartItem[];
   lines: CartLine[];
   count: number;
-  subtotal: number;
   mobile: boolean;
   width: number;
   cartOpen: boolean;
@@ -43,20 +40,10 @@ const SiteContext = createContext<SiteValue | null>(null);
 
 export function SiteProvider({ children }: { children: React.ReactNode }) {
   const products = useMemo(() => richProducts(), []);
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [cartOpen, setCartOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [width, setWidth] = useState(1280);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("sl-cart") || "null");
-      if (Array.isArray(saved)) setCart(saved);
-    } catch {
-      /* ignore */
-    }
-    setReady(true);
     const onResize = () => setWidth(window.innerWidth);
     onResize();
     window.addEventListener("resize", onResize);
@@ -64,73 +51,30 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!ready) return;
-    try {
-      localStorage.setItem("sl-cart", JSON.stringify(cart));
-    } catch {
-      /* ignore */
-    }
-  }, [cart, ready]);
-
-  useEffect(() => {
-    document.body.style.overflow = menuOpen || cartOpen ? "hidden" : "";
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen, cartOpen]);
+  }, [menuOpen]);
 
-  const byId = useMemo(() => Object.fromEntries(products.map((p) => [p.id, p])), [products]);
-
-  const lines: CartLine[] = cart
-    .filter((c) => byId[c.id])
-    .map((c) => {
-      const p = byId[c.id];
-      const v = p.variants?.find((x) => x.id === c.variant);
-      const unit = p.price + (v ? v.add : 0);
-      return {
-        ...c,
-        unit,
-        name: p.name,
-        slot: "p-" + p.id + "-1",
-        meta: (v ? v.label : p.size || "") + " · " + fmt(unit),
-        total: fmt(unit * c.qty),
-      };
-    });
-
-  const count = lines.reduce((a, l) => a + l.qty, 0);
-  const subtotal = lines.reduce((a, l) => a + l.unit * l.qty, 0);
-
-  const addToCart = useCallback((id: string, variant: string | null, qty = 1, open = false) => {
-    const key = id + "|" + (variant || "");
-    setCart((prev) => {
-      const ex = prev.find((c) => c.key === key);
-      if (ex) return prev.map((c) => (c.key === key ? { ...c, qty: c.qty + qty } : c));
-      return [...prev, { key, id, variant, qty }];
-    });
-    if (open) setCartOpen(true);
-  }, []);
-
-  const setQty = useCallback((key: string, qty: number) => {
-    setCart((prev) => (qty <= 0 ? prev.filter((c) => c.key !== key) : prev.map((c) => (c.key === key ? { ...c, qty } : c))));
-  }, []);
+  const noop = useCallback(() => {}, []);
 
   const value: SiteValue = {
     products,
-    cart,
-    lines,
-    count,
-    subtotal,
+    cart: [],
+    lines: [],
+    count: 0,
     mobile: width < 760,
     width,
-    cartOpen,
+    cartOpen: false,
     menuOpen,
-    openCart: () => setCartOpen(true),
-    closeCart: () => setCartOpen(false),
+    openCart: noop,
+    closeCart: noop,
     openMenu: () => setMenuOpen(true),
     closeMenu: () => setMenuOpen(false),
-    addToCart,
-    setQty,
-    clearCart: () => setCart([]),
+    addToCart: noop,
+    setQty: noop,
+    clearCart: noop,
   };
 
   return <SiteContext.Provider value={value}>{children}</SiteContext.Provider>;

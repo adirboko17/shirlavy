@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { MENU_ROUTES, NAV, TOP_NAV, fmt, waLink } from "@/lib/data";
+import { MENU_ROUTES, NAV, TOP_NAV, waLink } from "@/lib/data";
 import { useSite } from "@/lib/site";
 import { MenuButton, MobileMenu } from "./mobile-menu";
-import { BagIcon, Slot, Socials } from "./ui";
+import { Socials } from "./ui";
 
 const CONSULT = waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.");
 
@@ -38,10 +38,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       if (next) site.closeMenu();
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        site.closeCart();
-        site.closeMenu();
-      }
+      if (e.key === "Escape") site.closeMenu();
     };
     onScroll();
     onResize();
@@ -65,18 +62,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const iconBg = onDark ? "rgba(255,255,255,.16)" : "#F5EEE7";
   const hoverBg = onDark ? "rgba(255,255,255,.12)" : "#F7F5F2";
   const showFooter = path !== "/checkout";
-  const showFab = !wide && site.width < 760 && !["/shop", "/checkout"].includes(path) && !path.startsWith("/shop/") && !site.menuOpen && !site.cartOpen;
+  const showFab = !wide && site.width < 760 && !["/shop", "/checkout"].includes(path) && !path.startsWith("/shop/") && !site.menuOpen;
 
   return (
     <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C", overflowX: "clip" }}>
-      <div className="promo" role="note" aria-label="משלוח חינם בקנייה מעל 199 ₪">
+      <div className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ">
         {wide ? (
-          <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>משלוח חינם בקנייה מעל 199 ₪</div>
+          <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>הזמנות ומחירים מהחנות — בוואטסאפ</div>
         ) : (
           <div className="promo-track" aria-hidden>
             {Array.from({ length: 8 }).map((_, i) => (
               <span key={i}>
-                משלוח חינם בקנייה מעל 199 ₪
+                הזמנות ומחירים מהחנות — בוואטסאפ
                 <i />
               </span>
             ))}
@@ -153,7 +150,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 })}
               </nav>
               <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "none" }}>
-                <CartButton ink={ink} iconBg={iconBg} count={site.count} onClick={site.openCart} />
                 <a href={CONSULT} target="_blank" rel="noopener noreferrer" className={onDark ? "pill white-pill" : "pill gold"} style={{ height: 44, padding: "0 20px", fontSize: 14 }}>
                   לתיאום ייעוץ ללא עלות
                 </a>
@@ -163,7 +159,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <>
               <MenuButton open={site.menuOpen} ink={ink} bg={iconBg} onClick={() => (site.menuOpen ? site.closeMenu() : site.openMenu())} />
               <Logo onDark={onDark} small />
-              <CartButton ink={ink} iconBg={iconBg} count={site.count} onClick={site.openCart} />
+              <div style={{ width: 44, flex: "none" }} aria-hidden />
             </>
           )}
         </div>
@@ -232,93 +228,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         />
       ) : null}
 
-      {site.cartOpen ? (
-        <div style={{ position: "fixed", inset: 0, zIndex: 80 }}>
-          <div onClick={site.closeCart} style={{ position: "absolute", inset: 0, background: "rgba(41,37,34,.28)", backdropFilter: "blur(2px)" }} />
-          <aside role="dialog" aria-modal="true" aria-label="סל הקניות" className="drawer">
-            <div style={{ flex: "none", padding: "20px 22px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                <span style={{ fontSize: 20, fontWeight: 500 }}>הסל שלך</span>
-                <span style={{ fontSize: 14, color: "#8A8A8A" }}>{site.count === 1 ? "פריט אחד" : `${site.count} פריטים`}</span>
-              </div>
-              <button type="button" onClick={site.closeCart} aria-label="סגירה" className="round" style={{ width: 40, height: 40, background: "#F5EEE7", color: "#1C1C1C" }}>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-                </svg>
-              </button>
-            </div>
-            {site.count === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, padding: 40, textAlign: "center" }}>
-                <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#F7F5F2", display: "flex", alignItems: "center", justifyContent: "center", color: "#5A5A5A" }}>
-                  <BagIcon />
-                </div>
-                <div style={{ fontSize: 20, fontWeight: 500 }}>הסל ריק</div>
-                <div style={{ fontSize: 15, color: "#5A5A5A" }}>עוד לא הוספת מוצרים.</div>
-                <button
-                  type="button"
-                  className="pill gold"
-                  style={{ marginTop: 8 }}
-                  onClick={() => {
-                    site.closeCart();
-                    router.push("/shop");
-                  }}
-                >
-                  למעבר לחנות
-                </button>
-              </div>
-            ) : (
-              <>
-                <div style={{ flex: 1, overflowY: "auto", padding: "0 22px", display: "flex", flexDirection: "column", gap: 10 }}>
-                  {site.lines.map((l) => (
-                    <div key={l.key} style={{ display: "grid", gridTemplateColumns: "76px minmax(0,1fr)", gap: 14, padding: 10, borderRadius: 20 }}>
-                      <div style={{ width: 76, height: 90, borderRadius: 14, overflow: "hidden", background: "#F2EBE4", color: "#999", position: "relative" }}>
-                        <Slot id={l.slot} fit="contain" />
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0, padding: "4px 0" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline" }}>
-                          <button type="button" onClick={() => { site.closeCart(); router.push(`/shop/${l.id}`); }} style={{ background: "none", border: 0, padding: 0, textAlign: "right", cursor: "pointer", fontSize: 15, fontWeight: 500, color: "#1C1C1C", fontFamily: "inherit" }}>
-                            {l.name}
-                          </button>
-                          <span style={{ fontSize: 15, whiteSpace: "nowrap" }}>{l.total}</span>
-                        </div>
-                        <span style={{ fontSize: 13, color: "#8A8A8A" }}>{l.meta}</span>
-                        <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                          <div style={{ display: "flex", alignItems: "center", height: 36, borderRadius: 999, background: "#F7F5F2" }}>
-                            <button type="button" aria-label="הוספת יחידה" onClick={() => site.setQty(l.key, l.qty + 1)} className="qty">+</button>
-                            <span style={{ width: 22, textAlign: "center", fontSize: 14 }}>{l.qty}</span>
-                            <button type="button" aria-label="הפחתת יחידה" onClick={() => site.setQty(l.key, l.qty - 1)} className="qty">−</button>
-                          </div>
-                          <button type="button" onClick={() => site.setQty(l.key, 0)} style={{ height: 36, padding: "0 6px", background: "none", border: 0, cursor: "pointer", fontSize: 13, color: "#8A8A8A", fontFamily: "inherit" }}>
-                            הסרה
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ flex: "none", padding: "18px 22px calc(20px + env(safe-area-inset-bottom))", display: "flex", flexDirection: "column", gap: 12, borderTop: "1px solid rgba(41,37,34,.06)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                    <span style={{ fontSize: 15, color: "#5A5A5A" }}>סכום ביניים</span>
-                    <span style={{ fontSize: 20, fontWeight: 500 }}>{fmt(site.subtotal)}</span>
-                  </div>
-                  <span style={{ fontSize: 13, color: "#8A8A8A" }}>דמי משלוח יחושבו בתשלום.</span>
-                  <button
-                    type="button"
-                    className="pill gold"
-                    style={{ height: 54, width: "100%" }}
-                    onClick={() => {
-                      site.closeCart();
-                      router.push("/checkout");
-                    }}
-                  >
-                    לתשלום
-                  </button>
-                </div>
-              </>
-            )}
-          </aside>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -334,15 +243,3 @@ function Logo({ onDark, small }: { onDark: boolean; small?: boolean }) {
   );
 }
 
-function CartButton({ ink, iconBg, count, onClick }: { ink: string; iconBg: string; count: number; onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick} aria-label="סל הקניות" className="round" style={{ position: "relative", background: iconBg, color: ink, transition: "background .4s, color .4s" }}>
-      <BagIcon />
-      {count > 0 ? (
-        <span style={{ position: "absolute", top: -2, left: -2, minWidth: 18, height: 18, padding: "0 5px", borderRadius: 9, background: "#8F6A4B", color: "#fff", fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {count}
-        </span>
-      ) : null}
-    </button>
-  );
-}
