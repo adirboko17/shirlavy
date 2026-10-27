@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CONTACT_TREATMENT_TOPICS, waLink } from "@/lib/data";
-import { PageHero, SectionLabel, Slot, Socials, h2Style } from "./ui";
+import { PageHero, ResponsiveCarousel, SectionLabel, Slot, Socials, h2Style } from "./ui";
 
 const TOPICS = [
   ...CONTACT_TREATMENT_TOPICS,
@@ -33,14 +33,18 @@ export function ContactPage() {
       <section style={{ padding: "clamp(16px,3vw,32px) clamp(16px,4vw,48px) 0" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionLabel>במה אפשר לעזור?</SectionLabel>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}>
+          <ResponsiveCarousel
+            ariaLabel="קיצורי דרך ליצירת קשר"
+            slideWidth="min(88vw, 320px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}
+          >
             {quick.map(([t, d, msg]) => (
               <a key={t} href={waLink(msg)} target="_blank" rel="noopener noreferrer" className="quick">
                 <span><span style={{ fontSize: "clamp(20px,1.8vw,24px)", fontWeight: 300 }}>{t}</span><span style={{ fontSize: 14, color: "#5A5A5A" }}>{d}</span></span>
                 <span aria-hidden className="round" style={{ background: "#F5EEE7", color: "#7A573C", fontSize: 16 }}>←</span>
               </a>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
       <section style={{ padding: "clamp(64px,8vw,112px) clamp(16px,4vw,48px)" }}>

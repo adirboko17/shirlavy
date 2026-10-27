@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { waLink } from "@/lib/data";
 import { TREATMENT_DISCLAIMER } from "@/lib/content";
-import { Compare, Faq, PageHero, SectionLabel, Slot, h2Style } from "./ui";
+import { Compare, Faq, PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
 import { Cta } from "./about";
 
 const WA = waLink("היי שיר, אשמח לבדיקת התאמה להסרת איפור קבוע בלייזר.");
@@ -29,7 +29,11 @@ export function RemovalPage() {
             <SectionLabel>למה נשים פונות</SectionLabel>
             <h2 style={h2Style()}>סיבות נפוצות להסרה</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="סיבות נפוצות להסרה"
+            slideWidth="min(84vw, 280px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 12 }}
+          >
             {[
               ["גוון שהשתנה", "פיגמנט שהפך עם השנים לאפרפר, אדמדם או כחלחל."],
               ["צורה שלא מתאימה", "גבה שעוצבה בעבר בקו שאינו תואם את מבנה הפנים."],
@@ -42,7 +46,7 @@ export function RemovalPage() {
                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</p>
               </div>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
       <section style={{ background: "#F5EEE7", padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
@@ -78,10 +82,15 @@ export function RemovalPage() {
           <SectionLabel>מהקליניקה</SectionLabel>
           <h2 style={{ ...h2Style(), margin: "16px 0" }}>תמונות טיפול</h2>
           <p style={{ margin: "0 0 28px", color: "#5A5A5A", maxWidth: 380 }}>תמונות אמיתיות של לקוחות, באישורן. כל תוצאה אישית.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            compareSlides
+            ariaLabel="תמונות לפני ואחרי הסרה"
+            slideWidth="min(88vw, 360px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: 12 }}
+          >
             <Compare sid="rm-ba-1" caption="לפני ואחרי סדרת טיפולים" note="[מספר טיפולים]" ratio="1/1" />
             <Compare sid="rm-ba-2" caption="הבהרה לקראת טיפול חדש" note="[מספר טיפולים]" ratio="1/1" />
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
       <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
@@ -121,21 +130,27 @@ export function AestheticsPage() {
         <PageHero kicker="טיפולי אסתטיקה" title="אסתטיקה מתקדמת, בדיוק אישי." text="טכנולוגיות מתקדמות לטיפוח העור והגוף, עם אותה הקפדה ואותו יחס אישי." />
         <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,8vw,112px)" }}>
           <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: 16 }}>
-            {TREATMENTS.map((t, i) => (
-              <article key={t.id} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: "clamp(24px,3vw,40px)", display: "flex", flexWrap: "wrap", flexDirection: i % 2 ? "row-reverse" : "row", gap: "clamp(24px,4vw,56px)", alignItems: "center" }}>
-                <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", flex: "1.2 1 380px", minWidth: 0, aspectRatio: "16/11" }}>
-                  <Slot id={t.id === "laser" ? "aes-clinic" : `aes-${t.id}`} placeholder={t.ph} />
-                </div>
-                <div style={{ flex: "1 1 320px", minWidth: 0, display: "flex", flexDirection: "column", gap: 16 }}>
-                  <h2 style={h2Style("clamp(28px,3vw,42px)")}>{t.title}</h2>
-                  <p style={{ margin: 0, fontSize: 16, lineHeight: 1.75, color: "#5A5A5A", maxWidth: 440 }}>{t.short}</p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    <Link href={`/aesthetics/${t.id}`} className="pill gold">למידע נוסף <span aria-hidden>←</span></Link>
-                    <a href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${t.title}.`)} target="_blank" rel="noopener noreferrer" className="pill ghost">ייעוץ ללא עלות</a>
+            <ResponsiveCarousel
+              ariaLabel="טיפולי אסתטיקה"
+              slideWidth="min(92vw, 420px)"
+              desktopStyle={{ display: "flex", flexDirection: "column", gap: 16 }}
+            >
+              {TREATMENTS.map((t, i) => (
+                <article key={t.id} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: "clamp(24px,3vw,40px)", display: "flex", flexWrap: "wrap", flexDirection: i % 2 ? "row-reverse" : "row", gap: "clamp(24px,4vw,56px)", alignItems: "center" }}>
+                  <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", flex: "1.2 1 380px", minWidth: 0, aspectRatio: "16/11" }}>
+                    <Slot id={t.id === "laser" ? "aes-clinic" : `aes-${t.id}`} placeholder={t.ph} />
                   </div>
-                </div>
-              </article>
-            ))}
+                  <div style={{ flex: "1 1 320px", minWidth: 0, display: "flex", flexDirection: "column", gap: 16 }}>
+                    <h2 style={h2Style("clamp(28px,3vw,42px)")}>{t.title}</h2>
+                    <p style={{ margin: 0, fontSize: 16, lineHeight: 1.75, color: "#5A5A5A", maxWidth: 440 }}>{t.short}</p>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      <Link href={`/aesthetics/${t.id}`} className="pill gold">למידע נוסף <span aria-hidden>←</span></Link>
+                      <a href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${t.title}.`)} target="_blank" rel="noopener noreferrer" className="pill ghost">ייעוץ ללא עלות</a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </ResponsiveCarousel>
           </div>
         </section>
       </div>
@@ -159,7 +174,11 @@ export function AestheticsPage() {
         </div>
       </section>
       <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}>
+        <ResponsiveCarousel
+          ariaLabel={`פרטים על ${cur.title}`}
+          slideWidth="min(84vw, 300px)"
+          desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}
+        >
           {cur.blocks.map(([t, d], i) => (
             <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 22 }}>
               <span style={{ fontSize: 13, fontWeight: 500, color: "#8F6A4B" }}>{String(i + 1).padStart(2, "0")}</span>
@@ -167,7 +186,7 @@ export function AestheticsPage() {
               <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: "#5A5A5A" }}>{d}</p>
             </div>
           ))}
-        </div>
+        </ResponsiveCarousel>
       </section>
       <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
         <div style={{ maxWidth: 820, margin: "0 auto", display: "flex", flexDirection: "column", gap: 28 }}>
@@ -178,13 +197,17 @@ export function AestheticsPage() {
       <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px) clamp(40px,5vw,64px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <span style={{ fontSize: 14, color: "#8A8A8A" }}>טיפולים נוספים</span>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: 12, marginTop: 16 }}>
+          <ResponsiveCarousel
+            ariaLabel="טיפולים נוספים"
+            slideWidth="min(84vw, 320px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: 12, marginTop: 16 }}
+          >
             {TREATMENTS.filter((t) => t.id !== cur.id).map((o) => (
               <Link key={o.id} href={`/aesthetics/${o.id}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", minHeight: 88, padding: "20px 0", borderTop: "1px solid rgba(28,28,28,.14)", color: "#1C1C1C", fontSize: 18 }}>
                 {o.title}<span style={{ fontSize: 13, fontWeight: 500, color: "#8F6A4B" }}>←</span>
               </Link>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
     </div>

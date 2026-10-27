@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { waLink } from "@/lib/data";
-import { PageHero, Reveal, SectionLabel, Slot, h2Style } from "./ui";
+import { PageHero, ResponsiveCarousel, Reveal, SectionLabel, Slot, h2Style } from "./ui";
 
 const CHAPTERS = [
   { big: "+10", bigLabel: "שנות ניסיון באיפור קבוע ואסתטיקה", title: "עשור של דיוק", slot: "about-ch-1", ph: "שיר בעבודה", dir: "row" as const, text: "כבר יותר מעשר שנים אני מתמחה באיפור קבוע לגבות ובטיפולי אסתטיקה מתקדמים. כל שנה הוסיפה עוד שכבה של הבנה: איך עור מגיב, איך פנים משתנות, ואיך לבנות תוצאה שנראית טבעית גם שנים אחרי." },
@@ -54,7 +54,11 @@ export function AboutPage() {
             <SectionLabel>מה מנחה אותי</SectionLabel>
             <h2 style={h2Style()}>הערכים שלי</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="הערכים של שיר"
+            slideWidth="min(84vw, 300px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}
+          >
             {VALUES.map(([t, d]) => (
               <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 22, display: "flex", flexDirection: "column", gap: 10 }}>
                 <span style={{ width: 36, height: 36, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ width: 7, height: 7, borderRadius: "50%", background: "#A47B58" }} /></span>
@@ -62,7 +66,7 @@ export function AboutPage() {
                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</p>
               </div>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
       <Cta title="אשמח להכיר גם אותך.">

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { SHOP_INTRO } from "@/lib/content";
-import { PageHero, SectionLabel, h2Style } from "./ui";
+import { PageHero, ResponsiveCarousel, SectionLabel, h2Style } from "./ui";
 import { ProductCard } from "./product-card";
 
 const CATS = [
@@ -43,9 +43,21 @@ export function ShopPage() {
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionLabel>הנמכרים ביותר</SectionLabel>
           <h2 style={{ ...h2Style("clamp(28px,3vw,42px)"), margin: "12px 0 clamp(24px,3vw,36px)" }}>האהובים של הלקוחות</h2>
-          <div className="hscroll" style={{ gridAutoColumns: "minmax(min(72vw,280px),1fr)" }}>
-            {best.map((p) => <div key={p.id} style={{ scrollSnapAlign: "start", minWidth: 0 }}><ProductCard product={p} /></div>)}
-          </div>
+          {mobile ? (
+            <ResponsiveCarousel ariaLabel="הנמכרים ביותר" slideWidth="min(72vw, 280px)">
+              {best.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </ResponsiveCarousel>
+          ) : (
+            <div className="hscroll" style={{ gridAutoColumns: "minmax(min(72vw,280px),1fr)" }}>
+              {best.map((p) => (
+                <div key={p.id} style={{ scrollSnapAlign: "start", minWidth: 0 }}>
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
       <section ref={gridRef} style={{ padding: "clamp(64px,8vw,112px) clamp(16px,4vw,48px) clamp(48px,6vw,80px)" }}>
@@ -75,9 +87,19 @@ export function ShopPage() {
           </div>
           <div style={{ fontSize: 13, color: "#8A8A8A", marginBottom: 18 }}>{list.length === 1 ? "מוצר אחד" : `${list.length} מוצרים`}</div>
           {list.length ? (
-            <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill,minmax(${mobile ? "150px" : "260px"},1fr))`, gap: "clamp(36px,4vw,56px) clamp(12px,1.6vw,20px)" }}>
-              {list.map((p) => <ProductCard key={p.id} product={p} />)}
-            </div>
+            mobile ? (
+              <ResponsiveCarousel ariaLabel="מוצרים בקטלוג" slideWidth="min(72vw, 280px)">
+                {list.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </ResponsiveCarousel>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(260px,1fr))", gap: "clamp(36px,4vw,56px) clamp(12px,1.6vw,20px)" }}>
+                {list.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            )
           ) : (
             <div style={{ borderTop: "1px solid rgba(28,28,28,.1)", borderBottom: "1px solid rgba(28,28,28,.1)", padding: "72px 24px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, textAlign: "center" }}>
               <span style={{ fontSize: 24, fontWeight: 200 }}>לא נמצאו מוצרים</span>
@@ -89,7 +111,11 @@ export function ShopPage() {
         </div>
       </section>
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}>
+        <ResponsiveCarousel
+          ariaLabel="מידע על החנות"
+          slideWidth="min(84vw, 280px)"
+          desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}
+        >
           {[
             ["משלוח לכל הארץ", "זמני ועלויות המשלוח יוצגו בקופה."],
             ["תשלום מאובטח", "כרטיס אשראי ו־Apple Pay במכשירים תומכים."],
@@ -100,7 +126,7 @@ export function ShopPage() {
               <div style={{ fontSize: 14, lineHeight: 1.6, color: "#5A5A5A" }}>{d}</div>
             </div>
           ))}
-        </div>
+        </ResponsiveCarousel>
       </section>
     </div>
   );

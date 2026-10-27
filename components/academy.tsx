@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { GRADUATE_TESTIMONIALS } from "@/lib/content";
 import { useSite } from "@/lib/site";
-import { PageHero, SectionLabel, Slot, h2Style } from "./ui";
+import { PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
 
 const GAL: [string, string, number][] = [
   ["training", "תלמידות בהכשרה", 2], ["work", "תקריב עבודה", 1], ["space", "סביבת הלמידה", 1], ["work", "תקריב עבודה", 2],
@@ -43,7 +43,11 @@ export function AcademyPage() {
             <SectionLabel>למי זה מתאים</SectionLabel>
             <h2 style={h2Style()}>לכל אישה שרוצה מקצוע בידיים</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="למי האקדמיה מתאימה"
+            slideWidth="min(84vw, 300px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}
+          >
             {[
               ["מתחילות מאפס", "נשים שחולמות על מקצוע חדש ורוצות ללמוד אותו נכון, מהבסיס."],
               ["הסבה מקצועית", "נשים שמחפשות עצמאות, גמישות ומקצוע יצירתי עם ביקוש."],
@@ -54,7 +58,7 @@ export function AcademyPage() {
                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</p>
               </div>
             ))}
-          </div>
+          </ResponsiveCarousel>
           <div style={{ marginTop: 12, borderRadius: 24, background: "#EFEBE5", padding: "clamp(24px,3.4vw,44px)", display: "flex", flexWrap: "wrap", gap: "16px 40px", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: "clamp(22px,2.4vw,32px)", fontWeight: 300, letterSpacing: "-.02em" }}>מתחילה מאפס? זו בדיוק נקודת ההתחלה.</span>
             <span style={{ fontSize: 15, lineHeight: 1.7, color: "#3A3A3A", maxWidth: 420 }}>אין צורך בניסיון קודם. ההכשרה בנויה שלב אחר שלב, עם ליווי אישי של שיר.</span>
@@ -69,12 +73,16 @@ export function AcademyPage() {
             <h2 style={h2Style()}>שתי דרכים ללמוד</h2>
             <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 380 }}>פרטי המסלולים, משכם ומועדי הפתיחה יעודכנו כאן.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,400px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="מסלולי לימוד"
+            slideWidth="min(88vw, 400px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,400px),1fr))", gap: 12 }}
+          >
             {[
               ["מסלול אישי", "למידה פרטנית מול שיר, בקצב שלך ובהתאמה מלאה לנקודת הפתיחה שלך.", [["מבנה", "אחת על אחת"], ["משך", "[יעודכן]"], ["מועדים", "בתיאום אישי"]], "היי שיר, אשמח לשמוע פרטים על המסלול האישי באקדמיה."],
               ["מסלול קבוצתי", "קבוצה קטנה ואינטימית, עם תרגול משותף, למידה הדדית וליווי צמוד.", [["מבנה", "קבוצה קטנה"], ["משך", "[יעודכן]"], ["מחזור קרוב", "[יעודכן]"]], "היי שיר, אשמח לשמוע פרטים על המסלול הקבוצתי באקדמיה."],
             ].map(([title, desc, rows, msg]) => (
-              <article key={title as string} style={{ borderRadius: 28, background: "#fff", border: "1px solid rgba(41,37,34,.08)", padding: "clamp(24px,3vw,40px)", display: "flex", flexDirection: "column", gap: 20 }}>
+              <article key={title as string} style={{ borderRadius: 28, background: "#fff", border: "1px solid rgba(41,37,34,.08)", padding: "clamp(24px,3vw,40px)", display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
                 <h3 style={{ ...h2Style("clamp(28px,3vw,40px)") }}>{title as string}</h3>
                 <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, color: "#5A5A5A" }}>{desc as string}</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -87,7 +95,7 @@ export function AcademyPage() {
                 <a href={waLink(msg as string)} target="_blank" rel="noopener noreferrer" className="pill gold" style={{ marginTop: "auto", alignSelf: "flex-start" }}>לפרטים בוואטסאפ <span aria-hidden>←</span></a>
               </article>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
 
@@ -165,13 +173,23 @@ export function AcademyPage() {
               ))}
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,260px),1fr))", gridAutoFlow: "dense", gap: 12 }}>
-            {gallery.map((g) => (
-              <figure key={g.i} style={{ margin: 0, gridRow: `span ${g.rows}`, position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", minHeight: g.rows === 2 ? 480 : 234 }}>
-                <Slot id={`ac-gal-${g.i}`} placeholder={g.cap} />
-              </figure>
-            ))}
-          </div>
+          {mobile ? (
+            <ResponsiveCarousel ariaLabel="גלריית האקדמיה" slideWidth="min(72vw, 280px)">
+              {gallery.map((g) => (
+                <figure key={g.i} style={{ margin: 0, position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: g.rows === 2 ? "3/4" : "4/5" }}>
+                  <Slot id={`ac-gal-${g.i}`} placeholder={g.cap} />
+                </figure>
+              ))}
+            </ResponsiveCarousel>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,260px),1fr))", gridAutoFlow: "dense", gap: 12 }}>
+              {gallery.map((g) => (
+                <figure key={g.i} style={{ margin: 0, gridRow: `span ${g.rows}`, position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", minHeight: g.rows === 2 ? 480 : 234 }}>
+                  <Slot id={`ac-gal-${g.i}`} placeholder={g.cap} />
+                </figure>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -181,9 +199,13 @@ export function AcademyPage() {
             <SectionLabel>הבוגרות שלנו ממליצות</SectionLabel>
             <h2 style={h2Style()}>מה אומרות הבוגרות</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="המלצות בוגרות"
+            slideWidth="min(88vw, 340px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))", gap: 12 }}
+          >
             {GRADUATE_TESTIMONIALS.map((item) => (
-              <figure key={item.name + item.q.slice(0, 12)} style={{ margin: 0, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+              <figure key={item.name + item.q.slice(0, 12)} style={{ margin: 0, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 24, display: "flex", flexDirection: "column", gap: 16, height: "100%" }}>
                 <blockquote style={{ margin: 0, fontSize: "clamp(19px,1.8vw,24px)", lineHeight: 1.5, fontWeight: 300 }}>&quot;{item.q}&quot;</blockquote>
                 <figcaption>
                   <span style={{ fontSize: 15, fontWeight: 500 }}>{item.name}</span>
@@ -192,7 +214,7 @@ export function AcademyPage() {
                 </figcaption>
               </figure>
             ))}
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
 
