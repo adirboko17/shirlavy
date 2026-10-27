@@ -53,6 +53,11 @@ def ba_from_ig(path: Path, panels: int, before_idx: int, after_idx: int) -> tupl
     return parts[before_idx], parts[after_idx]
 
 
+def collage_from_ig(path: Path) -> Image.Image:
+    """Full before/after collage row from an Instagram screenshot (no split)."""
+    return crop_ig_post(Image.open(path))
+
+
 def main() -> None:
     slots: dict[str, str] = {}
 
@@ -91,8 +96,7 @@ def main() -> None:
         b, a = ba_from_ig(micro_files[0], 3, 0, 2)
         slots["brows-tech-0"] = save_webp(b, "brows-tech-micro")
         slots["home-tr-1"] = slots["brows-tech-0"]
-        slots["home-ba-1-before"] = save_webp(b, "home-ba-1-before")
-        slots["home-ba-1-after"] = save_webp(a, "home-ba-1-after")
+        slots["home-ba-1"] = save_webp(collage_from_ig(micro_files[0]), "home-ba-1")
 
     combo_dir = CONTENT / "images/combined-method-before-after"
     combo_files = sorted(combo_dir.glob("*.jpg"))
@@ -100,8 +104,7 @@ def main() -> None:
         b, a = ba_from_ig(combo_files[0], 3, 0, 2)
         slots["brows-tech-2"] = save_webp(b, "brows-tech-combo")
         slots["home-tr-2"] = slots["brows-tech-2"]
-        slots["home-ba-2-before"] = save_webp(b, "home-ba-2-before")
-        slots["home-ba-2-after"] = save_webp(a, "home-ba-2-after")
+        slots["home-ba-2"] = save_webp(collage_from_ig(combo_files[0]), "home-ba-2")
 
     if len(micro_files) > 1:
         b, a = ba_from_ig(micro_files[1], 3, 0, 1)
@@ -110,25 +113,19 @@ def main() -> None:
     removal_dir = CONTENT / "images/laser-pmu-removal-before-after"
     removal_files = sorted(removal_dir.glob("*.jpg"))
     for i, fp in enumerate(removal_files[:3]):
-        b, a = ba_from_ig(fp, 2 if i == 2 else 3, 0, 1 if i != 2 else 1)
-        slots[f"rm-ba-{i + 1}-before"] = save_webp(b, f"rm-ba-{i + 1}-before")
-        slots[f"rm-ba-{i + 1}-after"] = save_webp(a, f"rm-ba-{i + 1}-after")
+        collage = save_webp(collage_from_ig(fp), f"rm-ba-{i + 1}")
+        slots[f"rm-ba-{i + 1}"] = collage
         if i == 0:
-            slots["home-tr-3"] = slots[f"rm-ba-1-after"]
-            slots["home-ba-3-before"] = slots[f"rm-ba-1-before"]
-            slots["home-ba-3-after"] = slots[f"rm-ba-1-after"]
+            slots["home-tr-3"] = collage
+            slots["home-ba-3"] = collage
 
-    # Brows gallery (micro + combo)
+    # Brows gallery (micro + combo) — full collage per post
     gal_idx = 0
     for fp in micro_files:
-        b, a = ba_from_ig(fp, 3, 0, 2)
-        slots[f"brows-g{gal_idx}-before"] = save_webp(b, f"brows-g{gal_idx}-before")
-        slots[f"brows-g{gal_idx}-after"] = save_webp(a, f"brows-g{gal_idx}-after")
+        slots[f"brows-g{gal_idx}"] = save_webp(collage_from_ig(fp), f"brows-g{gal_idx}")
         gal_idx += 1
     for fp in combo_files:
-        b, a = ba_from_ig(fp, 3, 0, 2)
-        slots[f"brows-g{gal_idx}-before"] = save_webp(b, f"brows-g{gal_idx}-before")
-        slots[f"brows-g{gal_idx}-after"] = save_webp(a, f"brows-g{gal_idx}-after")
+        slots[f"brows-g{gal_idx}"] = save_webp(collage_from_ig(fp), f"brows-g{gal_idx}")
         gal_idx += 1
 
     # Store product photos from Drive (real SKUs where names match)

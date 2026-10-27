@@ -16,8 +16,6 @@ type Props = {
   desktopStyle?: CSSProperties;
   slideWidth?: string;
   gap?: string;
-  /** Slides include before/after Compare widgets (handle uses its own pointer capture). */
-  compareSlides?: boolean;
   ariaLabel?: string;
   /** Force carousel even on desktop (default: mobile only). */
   forceCarousel?: boolean;
@@ -28,7 +26,6 @@ export function ResponsiveCarousel({
   desktopStyle,
   slideWidth = "min(88vw, 360px)",
   gap = "clamp(12px, 1.6vw, 20px)",
-  compareSlides = false,
   ariaLabel,
   forceCarousel = false,
 }: Props) {
@@ -74,10 +71,7 @@ export function ResponsiveCarousel({
   }
 
   return (
-    <div
-      className="resp-carousel"
-      data-compare-carousel={compareSlides ? "true" : undefined}
-    >
+    <div className="resp-carousel">
       <div
         ref={trackRef}
         className="resp-carousel__track"

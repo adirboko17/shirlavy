@@ -264,29 +264,23 @@ export function Faq({ items }: { items: { q: string; a: string }[] }) {
   );
 }
 
-export function Compare({
-  sid,
+/** Single clinic result card — full before/after collage image (no interactive slider). */
+export function ResultPhotoCard({
+  slotId,
   caption,
   note,
-  ratio = "4/5",
+  ratio = "5/4",
+  placeholder = "תוצאה מהקליניקה",
 }: {
-  sid: string;
+  slotId: string;
   caption?: string;
   note?: string;
   ratio?: string;
+  placeholder?: string;
 }) {
-  const boxRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState(50);
-  const drag = useRef(false);
-  const setFrom = (clientX: number) => {
-    const r = boxRef.current?.getBoundingClientRect();
-    if (!r) return;
-    setPos(Math.max(3, Math.min(97, ((clientX - r.left) / r.width) * 100)));
-  };
   return (
-    <div className="compare-widget" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <figure style={{ margin: 0, display: "flex", flexDirection: "column", gap: 12 }}>
       <div
-        ref={boxRef}
         style={{
           position: "relative",
           width: "100%",
@@ -295,113 +289,18 @@ export function Compare({
           background: "#F2EBE4",
           color: "#999",
           overflow: "hidden",
-          userSelect: "none",
         }}
       >
-        <div style={{ position: "absolute", inset: 0 }}>
-          <Slot id={`${sid}-before`} placeholder="לפני" />
-        </div>
-        <div style={{ position: "absolute", inset: 0, background: "#EAE6E0", clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
-          <Slot id={`${sid}-after`} placeholder="אחרי" />
-        </div>
-        <span style={badge("right")}>לפני</span>
-        <span style={{ ...badge("left"), background: "rgba(41,37,34,.85)", color: "#fff" }}>אחרי</span>
-        <div
-          role="slider"
-          tabIndex={0}
-          aria-label="השוואת לפני ואחרי"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(pos)}
-          onPointerDown={(e) => {
-            e.stopPropagation();
-            e.currentTarget.setPointerCapture(e.pointerId);
-            drag.current = true;
-            setFrom(e.clientX);
-          }}
-          onPointerMove={(e) => {
-            if (drag.current) setFrom(e.clientX);
-          }}
-          onPointerUp={(e) => {
-            drag.current = false;
-            try {
-              e.currentTarget.releasePointerCapture(e.pointerId);
-            } catch {
-              /* not captured */
-            }
-          }}
-          onPointerCancel={() => {
-            drag.current = false;
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "ArrowLeft") setPos((p) => Math.max(3, p - 4));
-            if (e.key === "ArrowRight") setPos((p) => Math.min(97, p + 4));
-          }}
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: `${pos}%`,
-            width: 56,
-            marginLeft: -28,
-            cursor: "ew-resize",
-            touchAction: "none",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            outline: "none",
-          }}
-        >
-          <div style={{ position: "absolute", top: 0, bottom: 0, left: 27, width: 2, background: "rgba(255,255,255,.9)" }} />
-          <div
-            style={{
-              position: "relative",
-              width: 44,
-              height: 44,
-              borderRadius: "50%",
-              background: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 5,
-              color: "#1C1C1C",
-              boxShadow: "0 4px 16px rgba(41,37,34,.15)",
-            }}
-          >
-            <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-              <path d="M5 1L1 5l4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-              <path d="M1 1l4 4-4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-        </div>
+        <Slot id={slotId} placeholder={placeholder} fit="contain" />
       </div>
       {caption ? (
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "0 6px" }}>
+        <figcaption style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "0 6px" }}>
           <span style={{ fontSize: 16, fontWeight: 500, color: "#1C1C1C" }}>{caption}</span>
-          <span style={{ fontSize: 13, color: "#8A8A8A" }}>{note}</span>
-        </div>
+          {note ? <span style={{ fontSize: 13, color: "#8A8A8A" }}>{note}</span> : null}
+        </figcaption>
       ) : null}
-    </div>
+    </figure>
   );
-}
-
-function badge(side: "right" | "left"): CSSProperties {
-  return {
-    position: "absolute",
-    top: 14,
-    [side]: 14,
-    height: 30,
-    padding: "0 12px",
-    borderRadius: 999,
-    background: "rgba(255,255,255,.9)",
-    fontSize: 13,
-    display: "flex",
-    alignItems: "center",
-    color: "#1C1C1C",
-    pointerEvents: "none",
-  };
 }
 
 export function IgIcon() {

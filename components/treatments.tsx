@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { waLink } from "@/lib/data";
 import { TREATMENT_DISCLAIMER } from "@/lib/content";
-import { Compare, Faq, PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
+import { Faq, PageHero, ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot, h2Style } from "./ui";
 import { Cta } from "./about";
 
 const WA = waLink("היי שיר, אשמח לבדיקת התאמה להסרת איפור קבוע בלייזר.");
@@ -83,13 +83,12 @@ export function RemovalPage() {
           <h2 style={{ ...h2Style(), margin: "16px 0" }}>תמונות טיפול</h2>
           <p style={{ margin: "0 0 28px", color: "#5A5A5A", maxWidth: 380 }}>תמונות אמיתיות של לקוחות, באישורן. כל תוצאה אישית.</p>
           <ResponsiveCarousel
-            compareSlides
             ariaLabel="תמונות לפני ואחרי הסרה"
             slideWidth="min(88vw, 360px)"
             desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: 12 }}
           >
-            <Compare sid="rm-ba-1" caption="לפני ואחרי סדרת טיפולים" note="[מספר טיפולים]" ratio="1/1" />
-            <Compare sid="rm-ba-2" caption="הבהרה לקראת טיפול חדש" note="[מספר טיפולים]" ratio="1/1" />
+            <ResultPhotoCard slotId="rm-ba-1" caption="לפני ואחרי סדרת טיפולים" note="[מספר טיפולים]" />
+            <ResultPhotoCard slotId="rm-ba-2" caption="הבהרה לקראת טיפול חדש" note="[מספר טיפולים]" />
           </ResponsiveCarousel>
         </div>
       </section>
