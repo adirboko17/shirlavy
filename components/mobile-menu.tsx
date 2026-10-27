@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
-import { MOBILE_NAV } from "@/lib/data";
+import { INSTAGRAM_PROFILE_URL, MOBILE_NAV } from "@/lib/data";
 
 const EASE = "cubic-bezier(.16,.8,.2,1)";
 const reduceMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -9,7 +9,7 @@ const reduceMotion = () => typeof window !== "undefined" && window.matchMedia("(
 const SOCIALS = [
   {
     label: "Instagram",
-    href: "#",
+    href: INSTAGRAM_PROFILE_URL,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
         <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.6" />

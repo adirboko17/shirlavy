@@ -5,6 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
+import type { InstagramWallData } from "@/lib/instagram";
+import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/lib/data";
+import { InstagramPostTile } from "./instagram-post-tile";
 import { ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot } from "./ui";
 
 const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
@@ -27,7 +30,7 @@ const ACADEMY = [
   ["מכל הארץ", "תלמידות שמגיעות מצפון הארץ ועד הדרום."],
 ];
 
-export function HomePage() {
+export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const { products, width } = useSite();
   const videoRef = useRef<HTMLVideoElement>(null);
   const wallRef = useRef<HTMLDivElement>(null);
@@ -71,7 +74,15 @@ export function HomePage() {
       clearTimeout(timer);
       anims.forEach((a) => a.cancel());
     };
-  }, [width]);
+  }, [width, instagram.posts.length]);
+
+  const igPosts = instagram.posts;
+  const igColumns = (() => {
+    const cols = 4;
+    const columns: (typeof igPosts)[] = Array.from({ length: cols }, () => []);
+    igPosts.forEach((p, i) => columns[i % cols].push(p));
+    return columns;
+  })();
 
   const featured = [...products].sort((a, b) => a.rank - b.rank).slice(0, 4);
   const quote = QUOTES[q];
@@ -367,11 +378,11 @@ export function HomePage() {
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 16 }}>
             <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C" }}>הקהילה</span>
-            <span dir="ltr" style={{ fontSize: 13, color: "#5A5A5A" }}>@[שם המשתמש]</span>
+            <span dir="ltr" style={{ fontSize: 13, color: "#5A5A5A" }}>{instagram.handle || INSTAGRAM_HANDLE}</span>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>עקבי אחרינו</h2>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="pill gold">
+            <a href={instagram.profileUrl || INSTAGRAM_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="pill gold">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.5" />
                 <circle cx="12" cy="12" r="3.8" stroke="currentColor" strokeWidth="1.5" />
@@ -382,17 +393,9 @@ export function HomePage() {
           </div>
           {mobile ? (
             <ResponsiveCarousel ariaLabel="פוסטים מהאינסטגרם" slideWidth="min(70vw, 280px)" gap="clamp(8px,1vw,14px)">
-              {[0, 1, 2, 3].flatMap((c) =>
-                [0, 1, 2, 3, 4].map((r) => {
-                  const n = c * 5 + r + 1;
-                  const ar = ["4/5", "1/1", "3/4", "4/5", "1/1"][(r + c) % 5];
-                  return (
-                    <a key={`${c}-${r}`} href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="פוסט באינסטגרם" style={{ position: "relative", display: "block", borderRadius: 16, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: ar }}>
-                      <Slot id={n <= 6 ? `home-ig-${n}` : `home-wall-${n}`} placeholder="פוסט" />
-                    </a>
-                  );
-                }),
-              )}
+              {igPosts.map((post) => (
+                <InstagramPostTile key={post.id} post={post} />
+              ))}
             </ResponsiveCarousel>
           ) : (
             <div
@@ -401,17 +404,11 @@ export function HomePage() {
               onMouseLeave={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.play()))}
               style={{ position: "relative", height: "clamp(520px,72vh,780px)", overflow: "hidden", WebkitMaskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", maskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(8px,1vw,14px)", alignItems: "start" }}
             >
-              {[0, 1, 2, 3].map((c) => (
+              {igColumns.map((colPosts, c) => (
                 <div key={c} data-col="1" style={{ display: "flex", flexDirection: "column", gap: "clamp(8px,1vw,14px)" }}>
-                  {[0, 1, 2, 3, 4].map((r) => {
-                    const n = c * 5 + r + 1;
-                    const ar = ["4/5", "1/1", "3/4", "4/5", "1/1"][(r + c) % 5];
-                    return (
-                      <a key={r} href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="פוסט באינסטגרם" style={{ position: "relative", display: "block", borderRadius: 16, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: ar }}>
-                        <Slot id={n <= 6 ? `home-ig-${n}` : `home-wall-${n}`} placeholder="פוסט" />
-                      </a>
-                    );
-                  })}
+                  {colPosts.map((post) => (
+                    <InstagramPostTile key={post.id} post={post} />
+                  ))}
                 </div>
               ))}
             </div>
