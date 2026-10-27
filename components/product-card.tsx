@@ -1,28 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { shopInquiryLink, type RichProduct } from "@/lib/data";
 import { useSite } from "@/lib/site";
-import type { RichProduct } from "@/lib/data";
 import { Slot } from "./ui";
 
 export function ProductCard({ product }: { product: RichProduct }) {
-  const { mobile, addToCart } = useSite();
   const router = useRouter();
+  const { mobile } = useSite();
   const [hover, setHover] = useState(false);
-  const [added, setAdded] = useState(false);
-  const show = hover || added;
 
-  useEffect(() => {
-    if (!added) return;
-    const t = setTimeout(() => setAdded(false), 1600);
-    return () => clearTimeout(t);
-  }, [added]);
-
-  const add = () => {
-    addToCart(product.id, product.variants ? product.variants[0].id : null, 1);
-    setAdded(true);
-  };
+  const wa = shopInquiryLink(product.name);
 
   return (
     <article
@@ -54,59 +43,37 @@ export function ProductCard({ product }: { product: RichProduct }) {
             {product.tag}
           </span>
         ) : null}
-        {mobile ? (
-          <button
-            type="button"
-            onClick={add}
-            aria-label="הוספה לסל"
-            style={{
-              position: "absolute",
-              left: 10,
-              bottom: 10,
-              width: 44,
-              height: 44,
-              borderRadius: "50%",
-              border: 0,
-              background: "#fff",
-              color: "#1C1C1C",
-              fontSize: 20,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 4px 12px rgba(41,37,34,.1)",
-            }}
-          >
-            {added ? "✓" : "+"}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={add}
-            className="qa"
-            style={{
-              position: "absolute",
-              right: 12,
-              left: 12,
-              bottom: 12,
-              height: 46,
-              borderRadius: 999,
-              border: 0,
-              background: "#fff",
-              color: "#1C1C1C",
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: "pointer",
-              boxShadow: "0 4px 16px rgba(41,37,34,.1)",
-              opacity: show ? 1 : 0,
-              transform: show ? "none" : "translateY(12px)",
-              transition: "opacity .3s, transform .3s, background .3s, color .3s",
-              fontFamily: "inherit",
-            }}
-          >
-            {added ? "נוסף לסל ✓" : "הוספה לסל"}
-          </button>
-        )}
+        <a
+          href={wa}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="qa"
+          style={{
+            position: "absolute",
+            right: mobile ? 10 : 12,
+            left: mobile ? 10 : 12,
+            bottom: mobile ? 10 : 12,
+            height: mobile ? 40 : 46,
+            borderRadius: 999,
+            border: 0,
+            background: "#fff",
+            color: "#1C1C1C",
+            fontSize: mobile ? 13 : 14,
+            fontWeight: 500,
+            cursor: "pointer",
+            boxShadow: "0 4px 16px rgba(41,37,34,.1)",
+            opacity: mobile || hover ? 1 : 0,
+            transform: mobile || hover ? "none" : "translateY(12px)",
+            transition: "opacity .3s, transform .3s",
+            fontFamily: "inherit",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            textDecoration: "none",
+          }}
+        >
+          פנייה בוואטסאפ
+        </a>
       </div>
       <button
         type="button"
@@ -126,10 +93,7 @@ export function ProductCard({ product }: { product: RichProduct }) {
         }}
       >
         <span style={{ fontSize: 12, color: "#7A573C", letterSpacing: ".02em" }}>{product.catName}</span>
-        <span style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
-          <span style={{ fontSize: 16, fontWeight: 400, lineHeight: 1.4 }}>{product.name}</span>
-          <span style={{ fontSize: 15, fontWeight: 300, whiteSpace: "nowrap" }}>{product.priceLabel}</span>
-        </span>
+        <span style={{ fontSize: 16, fontWeight: 400, lineHeight: 1.4 }}>{product.name}</span>
       </button>
     </article>
   );

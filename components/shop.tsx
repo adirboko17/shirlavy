@@ -8,10 +8,10 @@ import { ProductCard } from "./product-card";
 
 const CATS = [
   ["all", "הכל"],
-  ["aftercare", "טיפוח לאחר טיפול"],
-  ["skin", "טיפוח העור"],
-  ["sets", "ערכות"],
-  ["tools", "כלים ואביזרים"],
+  ["needles", "מחטים"],
+  ["pigments", "פיגמנטים"],
+  ["tools", "ציוד וכלי עבודה"],
+  ["aftercare", "טיפוח"],
 ] as const;
 
 export function ShopPage() {
@@ -24,9 +24,7 @@ export function ShopPage() {
   let list = products.filter((p) => (cat === "all" || p.cat === cat) && (!q.trim() || (p.name + " " + p.catName + " " + p.short).includes(q.trim())));
   const sorters: Record<string, (a: (typeof products)[0], b: (typeof products)[0]) => number> = {
     rec: (a, b) => a.rank - b.rank,
-    new: (a, b) => Number(b.isNew) - Number(a.isNew) || a.rank - b.rank,
-    low: (a, b) => a.price - b.price,
-    high: (a, b) => b.price - a.price,
+    name: (a, b) => a.name.localeCompare(b.name, "he"),
   };
   list = list.slice().sort(sorters[sort]);
 
@@ -78,9 +76,7 @@ export function ShopPage() {
                 </label>
                 <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="מיון" style={{ height: 44, padding: "0 16px", borderRadius: 999, border: 0, background: "#F7F5F2", fontSize: 14, color: "#1C1C1C", fontFamily: "inherit" }}>
                   <option value="rec">מומלצים</option>
-                  <option value="new">חדשים</option>
-                  <option value="low">מחיר: מהנמוך</option>
-                  <option value="high">מחיר: מהגבוה</option>
+                  <option value="name">שם (א–ת)</option>
                 </select>
               </div>
             </div>
@@ -107,7 +103,7 @@ export function ShopPage() {
               <button type="button" className="pill gold" onClick={() => { setCat("all"); setQ(""); }}>ניקוי הסינון</button>
             </div>
           )}
-          <div style={{ marginTop: 28, fontSize: 12, color: "#8A8A8A" }}>המוצרים, המחירים והתמונות הם דוגמאות לעיצוב בלבד.</div>
+          <div style={{ marginTop: 28, fontSize: 12, color: "#8A8A8A" }}>למחירים והזמנה — פנייה בוואטסאפ מדף המוצר.</div>
         </div>
       </section>
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)" }}>
@@ -117,8 +113,8 @@ export function ShopPage() {
           desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}
         >
           {[
-            ["משלוח לכל הארץ", "זמני ועלויות המשלוח יוצגו בקופה."],
-            ["תשלום מאובטח", "כרטיס אשראי ו־Apple Pay במכשירים תומכים."],
+            ["משלוח לכל הארץ", "פרטי משלוח יתואמו בוואטסאפ."],
+            ["הזמנה בוואטסאפ", "מחירים וזמינות — בפנייה ישירה לשיר."],
             ["ייעוץ אישי", "לא בטוחה מה מתאים לך? כתבי לנו."],
           ].map(([t, d]) => (
             <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", padding: "20px 0" }}>
