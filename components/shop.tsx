@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useSite } from "@/lib/site";
+import { SHOP_INTRO } from "@/lib/content";
 import { PageHero, SectionLabel, h2Style } from "./ui";
 import { ProductCard } from "./product-card";
 
@@ -31,7 +32,7 @@ export function ShopPage() {
 
   return (
     <div>
-      <PageHero kicker="החנות של שיר לביא" title="טיפוח שממשיך הביתה." text="מוצרים שנבחרו בקליניקה, לשגרת טיפוח שממשיכה את הטיפול גם בבית.">
+      <PageHero kicker="החנות שלנו" title="טיפוח שממשיך הביתה." text={SHOP_INTRO}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 6 }}>
           {CATS.map(([k, label]) => (
             <button key={k} type="button" className="chip shop-jump" onClick={() => { setCat(k); const el = gridRef.current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" }); }}>{label}</button>

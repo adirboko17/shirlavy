@@ -2,22 +2,50 @@
 
 import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
+import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
 import { Compare, Faq, PageHero, SectionLabel, Slot, h2Style } from "./ui";
 import { Cta } from "./about";
 
 const TECH = [
-  { title: "מיקרובליידינג", look: "שערות דקות ומוגדרות", fit: "גבות דלילות, מראה טבעי", text: "יצירת קווים דקים בעבודת יד, המדמים שערות טבעיות. מתאים למי שרוצה למלא ולעצב את הגבה במראה עדין ואוורירי." },
-  { title: "הדמיית שיער", look: "קווים עדינים בכיוון הצמיחה", fit: "מי שרוצה גבה מלאה וטבעית", text: "בניית קווים עדינים בכיוון צמיחת השערה הטבעית, כך שהגבה נראית מלאה יותר ושומרת על אופייה. כל קו מתוכנן ביחס למבנה הפנים." },
-  { title: "הצללת פודרה", look: "רך, מוצלל ומוגדר", fit: "מי שאוהבת מראה מאופר עדין", text: "הצללה הדרגתית היוצרת מראה רך של גבה מאופרת בעדינות. ניתן לבנות עוצמה מתונה או מודגשת יותר, לפי הטעם האישי." },
-  { title: "שיטה משולבת", look: "שערות בחזית, הצללה בגוף הגבה", fit: "מי שרוצה עומק עם טבעיות", text: "שילוב של הדמיית שיער בתחילת הגבה עם הצללה עדינה לאורכה. התוצאה מלאה ומוגדרת, ועדיין נראית טבעית." },
+  {
+    title: BROW_TECHNIQUES.microblading.title,
+    look: BROW_TECHNIQUES.microblading.look,
+    fit: BROW_TECHNIQUES.microblading.fit,
+    text: BROW_TECHNIQUES.microblading.paragraphs.slice(1).join(" "),
+  },
+  {
+    title: BROW_TECHNIQUES.powder.title,
+    look: BROW_TECHNIQUES.powder.look,
+    fit: BROW_TECHNIQUES.powder.fit,
+    text: BROW_TECHNIQUES.powder.paragraphs.join(" "),
+  },
+  {
+    title: BROW_TECHNIQUES.combined.title,
+    look: BROW_TECHNIQUES.combined.look,
+    fit: BROW_TECHNIQUES.combined.fit,
+    text: BROW_TECHNIQUES.combined.paragraphs.join(" "),
+  },
 ];
-const GAL = [["hair", "הדמיית שיער"], ["powder", "הצללת פודרה"], ["combo", "שיטה משולבת"], ["hair", "הדמיית שיער"], ["combo", "שיטה משולבת"], ["powder", "הצללת פודרה"]] as const;
-const FILTERS = [["all", "הכל"], ["hair", "הדמיית שיער"], ["powder", "פודרה"], ["combo", "משולבת"]] as const;
+
+const GAL = [
+  ["micro", "מיקרובליידינג"],
+  ["micro", "מיקרובליידינג"],
+  ["micro", "מיקרובליידינג"],
+  ["combo", "שיטה משולבת"],
+  ["combo", "שיטה משולבת"],
+  ["combo", "שיטה משולבת"],
+] as const;
+const FILTERS = [
+  ["all", "הכל"],
+  ["micro", "מיקרובליידינג"],
+  ["powder", "פודרה"],
+  ["combo", "משולבת"],
+] as const;
 const WA = waLink("היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול גבות.");
 
 export function BrowsPage() {
   const galRef = useRef<HTMLElement>(null);
-  const [tech, setTech] = useState(1);
+  const [tech, setTech] = useState(0);
   const [f, setF] = useState("all");
   const [lb, setLb] = useState(-1);
   const t = TECH[tech];
@@ -38,7 +66,8 @@ export function BrowsPage() {
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ marginBottom: "clamp(28px,4vw,48px)", display: "flex", flexDirection: "column", gap: 16 }}>
             <SectionLabel>טכניקות</SectionLabel>
-            <h2 style={h2Style()}>ארבע טכניקות, התאמה אחת</h2>
+            <h2 style={h2Style()}>שלוש טכניקות, התאמה אחת</h2>
+            <p style={{ margin: 0, fontSize: 14, color: "#8A8A8A" }}>{TREATMENT_DISCLAIMER}</p>
           </div>
           <div role="tablist" style={{ display: "flex", flexWrap: "wrap", gap: 6, padding: 6, borderRadius: 999, background: "#F7F5F2", width: "fit-content", maxWidth: "100%", marginBottom: 20 }}>
             {TECH.map((x, i) => (
@@ -86,36 +115,13 @@ export function BrowsPage() {
         </div>
       </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,360px),1fr))", gap: "clamp(24px,4vw,56px)" }}>
-          <div>
-            <SectionLabel>אחרי הטיפול</SectionLabel>
-            <h2 style={{ ...h2Style(), marginTop: 16 }}>הימים שאחרי</h2>
-            <p style={{ margin: "16px 0 0", fontSize: 15, lineHeight: 1.75, color: "#5A5A5A", maxWidth: 400 }}>הנחיות כלליות בלבד. בסיום הטיפול תקבלי הנחיות אישיות ומפורטות.</p>
-          </div>
-          <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {[
-              "להימנע מהרטבה ממושכת של אזור הגבה בימים הראשונים.",
-              "לא לגרד, לקלף או לשפשף את האזור בזמן ההחלמה.",
-              "להימנע מחשיפה ישירה לשמש, בריכה וסאונה בתקופת ההחלמה.",
-              "להשתמש רק במוצרים שהומלצו בקליניקה.",
-              "לפנות לשיר בכל שאלה, בכל שלב.",
-            ].map((item) => (
-              <li key={item} style={{ display: "flex", gap: 14, alignItems: "center", padding: "16px 0", borderTop: "1px solid rgba(28,28,28,.14)", fontSize: 15, lineHeight: 1.55 }}>
-                <span style={{ flex: "none", width: 8, height: 8, borderRadius: "50%", background: "#A47B58" }} />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <section ref={galRef} style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 20, marginBottom: "clamp(28px,4vw,48px)" }}>
             <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
               <SectionLabel>לפני ואחרי</SectionLabel>
               <h2 style={h2Style()}>גלריית עבודות</h2>
+              <p style={{ margin: 0, fontSize: 12, color: "#8A8A8A" }}>תמונות מסרגלת אינסטגרם — חלקן נחתכו להסרת ממשק וכיתוב; ייתכן שייר של לוגו ישן בחלק מהן.</p>
             </div>
             <div role="tablist" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {FILTERS.map(([k, label]) => (

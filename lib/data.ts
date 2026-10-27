@@ -115,7 +115,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "student-kit",
-    name: "ערכת עבודה לסטודנטית",
+    name: "ערכת עבודה לתלמידה",
     cat: "tools",
     price: 690,
     isNew: false,
@@ -151,6 +151,7 @@ export const NAV = [
   ["/brows", "טיפולי גבות"],
   ["/removal", "הסרת איפור קבוע"],
   ["/aesthetics", "טיפולי אסתטיקה"],
+  ["/medical-aesthetics", "אסתטיקה רפואית"],
   ["/shop", "חנות"],
   ["/contact", "יצירת קשר"],
 ] as const;
@@ -168,6 +169,7 @@ export const TOP_NAV: {
       { href: "/brows", label: "טיפולי גבות" },
       { href: "/removal", label: "הסרת איפור קבוע" },
       { href: "/aesthetics", label: "טיפולי אסתטיקה" },
+      { href: "/medical-aesthetics", label: "אסתטיקה רפואית" },
     ],
   },
   { href: "/academy", label: "האקדמיה" },
