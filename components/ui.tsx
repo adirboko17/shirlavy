@@ -284,7 +284,7 @@ export function Compare({
     setPos(Math.max(3, Math.min(97, ((clientX - r.left) / r.width) * 100)));
   };
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div className="compare-widget" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <div
         ref={boxRef}
         style={{
@@ -314,6 +314,7 @@ export function Compare({
           aria-valuemax={100}
           aria-valuenow={Math.round(pos)}
           onPointerDown={(e) => {
+            e.stopPropagation();
             e.currentTarget.setPointerCapture(e.pointerId);
             drag.current = true;
             setFrom(e.clientX);
@@ -321,7 +322,15 @@ export function Compare({
           onPointerMove={(e) => {
             if (drag.current) setFrom(e.clientX);
           }}
-          onPointerUp={() => {
+          onPointerUp={(e) => {
+            drag.current = false;
+            try {
+              e.currentTarget.releasePointerCapture(e.pointerId);
+            } catch {
+              /* not captured */
+            }
+          }}
+          onPointerCancel={() => {
             drag.current = false;
           }}
           onKeyDown={(e) => {
@@ -446,6 +455,8 @@ export function BagIcon() {
     </svg>
   );
 }
+
+export { ResponsiveCarousel } from "./responsive-carousel";
 
 export function h2Style(size = "clamp(36px,4.6vw,68px)"): CSSProperties {
   return {

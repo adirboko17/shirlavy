@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
-import { Compare, Faq, PageHero, SectionLabel, Slot, h2Style } from "./ui";
+import { Compare, Faq, PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
 import { Cta } from "./about";
 
 const TECH = [
@@ -98,20 +98,24 @@ export function BrowsPage() {
             <h2 style={h2Style()}>מה מצפה לך</h2>
             <p style={{ margin: 0, color: "#5A5A5A", lineHeight: 1.75, maxWidth: 380 }}>שיר מתאימה כל טיפול למבנה הפנים, לגבה הטבעית, לסוג העור ולהעדפות שלך.</p>
           </div>
-          <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="מה מצפה לך בטיפול"
+            slideWidth="min(84vw, 300px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: 12 }}
+          >
             {[
               ["ייעוץ ראשוני", "שיחה ללא עלות על הציפיות, ההיסטוריה של הגבות והמראה הרצוי."],
               ["מדידה ותכנון", "מיפוי מבנה הפנים ושרטוט מוקדם של הגבה, לאישורך."],
               ["התאמת גוון", "בחירת פיגמנט בהתאם לגוון העור, השיער והטעם האישי."],
               ["טיפול וביקורת", "הטיפול עצמו, ולאחריו מפגש ביקורת לדיוק ולהשלמה במידת הצורך."],
             ].map(([t2, d], i) => (
-              <li key={t2} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 22 }}>
+              <article key={t2} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 22 }}>
                 <span style={{ fontSize: 13, fontWeight: 500, color: "#8F6A4B" }}>{i + 1}</span>
                 <h3 style={{ margin: "14px 0 10px", fontWeight: 300, fontSize: "clamp(21px,1.9vw,26px)" }}>{t2}</h3>
                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</p>
-              </li>
+              </article>
             ))}
-          </ol>
+          </ResponsiveCarousel>
         </div>
       </section>
 
@@ -129,7 +133,11 @@ export function BrowsPage() {
               ))}
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 12 }}>
+          <ResponsiveCarousel
+            ariaLabel="גלריית לפני ואחרי"
+            slideWidth="min(88vw, 340px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 12 }}
+          >
             {items.map((g) => (
               <figure key={g.i} style={{ margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, aspectRatio: "2/1.2" }}>
@@ -142,7 +150,7 @@ export function BrowsPage() {
                 </figcaption>
               </figure>
             ))}
-          </div>
+          </ResponsiveCarousel>
           <p style={{ margin: "20px 0 0", fontSize: 13, color: "#8A8A8A" }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן. התוצאות משתנות מאישה לאישה.</p>
         </div>
       </section>

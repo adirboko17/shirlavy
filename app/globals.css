@@ -283,6 +283,60 @@ img { max-width: 100%; }
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
+
+.resp-carousel {
+  margin-inline: calc(-1 * clamp(16px, 4vw, 48px));
+  padding-inline: clamp(16px, 4vw, 48px);
+}
+.resp-carousel__track {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  padding-bottom: 4px;
+  direction: rtl;
+}
+.resp-carousel[data-compare-carousel="true"] .compare-widget {
+  touch-action: pan-y;
+}
+.resp-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+.resp-carousel__slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-width: 0;
+}
+.resp-carousel__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-bottom: 2px;
+}
+.resp-carousel__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: rgba(28, 28, 28, 0.18);
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.resp-carousel__dot.is-active {
+  background: #8f6a4b;
+  transform: scale(1.15);
+}
+.resp-carousel[data-compare-carousel="true"] .compare-widget [role="slider"] {
+  touch-action: none;
+}
 .story { display: flex; flex-direction: column; gap: 16px; text-align: right; color: #1c1c1c; transition: opacity 0.3s; }
 .story:hover { opacity: 0.85; }
 .menu {

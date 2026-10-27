@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
-import { Compare, SectionLabel, Slot } from "./ui";
+import { Compare, ResponsiveCarousel, SectionLabel, Slot } from "./ui";
 
 const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
 
@@ -36,6 +36,7 @@ export function HomePage() {
   const [t, setT] = useState(0);
   const [q, setQ] = useState(0);
   const narrow = (width || 1200) < 760;
+  const mobile = (width || 1200) < 760;
 
   useEffect(() => {
     const video = videoRef.current;
@@ -279,9 +280,13 @@ export function HomePage() {
               מה אומרות <span style={{ fontWeight: 500 }}>הבוגרות</span>
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: "clamp(16px,2vw,24px)" }}>
+          <ResponsiveCarousel
+            ariaLabel="המלצות בוגרות"
+            slideWidth="min(88vw, 340px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: "clamp(16px,2vw,24px)" }}
+          >
             {GRADUATE_TESTIMONIALS.slice(0, 3).map((item) => (
-              <blockquote key={item.name} style={{ margin: 0, padding: "24px 0", borderTop: "1px solid rgba(28,28,28,.14)", display: "flex", flexDirection: "column", gap: 14 }}>
+              <blockquote key={item.name} style={{ margin: 0, padding: "24px 0", borderTop: "1px solid rgba(28,28,28,.14)", display: "flex", flexDirection: "column", gap: 14, height: "100%" }}>
                 <p style={{ margin: 0, fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.55, fontWeight: 300 }}>&quot;{item.q}&quot;</p>
                 <footer style={{ fontSize: 14, color: "#5A5A5A" }}>
                   <strong style={{ fontWeight: 500, color: "#1C1C1C" }}>{item.name}</strong>
@@ -289,7 +294,7 @@ export function HomePage() {
                 </footer>
               </blockquote>
             ))}
-          </div>
+          </ResponsiveCarousel>
           <Link href="/academy" className="text-link">עוד המלצות מהאקדמיה <span aria-hidden>←</span></Link>
         </div>
       </section>
@@ -301,11 +306,16 @@ export function HomePage() {
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
             <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>גררי כדי להשוות. יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}>
+          <ResponsiveCarousel
+            compareSlides
+            ariaLabel="תוצאות לפני ואחרי"
+            slideWidth="min(88vw, 360px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
+          >
             <Compare sid="home-ba-1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
             <Compare sid="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" />
             <Compare sid="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" />
-          </div>
+          </ResponsiveCarousel>
         </div>
       </section>
 
@@ -316,13 +326,21 @@ export function HomePage() {
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>טיפוח שממשיך בבית</h2>
             <Link href="/shop" className="text-link">לכל המוצרים <span aria-hidden>←</span></Link>
           </div>
-          <div className="hscroll">
-            {featured.map((p) => (
-              <div key={p.id} style={{ scrollSnapAlign: "start", minWidth: 0 }}>
-                <ProductCard product={p} />
-              </div>
-            ))}
-          </div>
+          {mobile ? (
+            <ResponsiveCarousel ariaLabel="מוצרים מומלצים" slideWidth="min(72vw, 280px)">
+              {featured.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </ResponsiveCarousel>
+          ) : (
+            <div className="hscroll">
+              {featured.map((p) => (
+                <div key={p.id} style={{ scrollSnapAlign: "start", minWidth: 0 }}>
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -363,26 +381,42 @@ export function HomePage() {
               עקבי באינסטגרם
             </a>
           </div>
-          <div
-            ref={wallRef}
-            onMouseEnter={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.pause()))}
-            onMouseLeave={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.play()))}
-            style={{ position: "relative", height: "clamp(520px,72vh,780px)", overflow: "hidden", WebkitMaskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", maskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(8px,1vw,14px)", alignItems: "start" }}
-          >
-            {[0, 1, 2, 3].map((c) => (
-              <div key={c} data-col="1" style={{ display: "flex", flexDirection: "column", gap: "clamp(8px,1vw,14px)" }}>
-                {[0, 1, 2, 3, 4].map((r) => {
+          {mobile ? (
+            <ResponsiveCarousel ariaLabel="פוסטים מהאינסטגרם" slideWidth="min(70vw, 280px)" gap="clamp(8px,1vw,14px)">
+              {[0, 1, 2, 3].flatMap((c) =>
+                [0, 1, 2, 3, 4].map((r) => {
                   const n = c * 5 + r + 1;
                   const ar = ["4/5", "1/1", "3/4", "4/5", "1/1"][(r + c) % 5];
                   return (
-                    <a key={r} href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="פוסט באינסטגרם" style={{ position: "relative", display: "block", borderRadius: 16, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: ar }}>
+                    <a key={`${c}-${r}`} href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="פוסט באינסטגרם" style={{ position: "relative", display: "block", borderRadius: 16, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: ar }}>
                       <Slot id={n <= 6 ? `home-ig-${n}` : `home-wall-${n}`} placeholder="פוסט" />
                     </a>
                   );
-                })}
-              </div>
-            ))}
-          </div>
+                }),
+              )}
+            </ResponsiveCarousel>
+          ) : (
+            <div
+              ref={wallRef}
+              onMouseEnter={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.pause()))}
+              onMouseLeave={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.play()))}
+              style={{ position: "relative", height: "clamp(520px,72vh,780px)", overflow: "hidden", WebkitMaskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", maskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(8px,1vw,14px)", alignItems: "start" }}
+            >
+              {[0, 1, 2, 3].map((c) => (
+                <div key={c} data-col="1" style={{ display: "flex", flexDirection: "column", gap: "clamp(8px,1vw,14px)" }}>
+                  {[0, 1, 2, 3, 4].map((r) => {
+                    const n = c * 5 + r + 1;
+                    const ar = ["4/5", "1/1", "3/4", "4/5", "1/1"][(r + c) % 5];
+                    return (
+                      <a key={r} href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="פוסט באינסטגרם" style={{ position: "relative", display: "block", borderRadius: 16, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: ar }}>
+                        <Slot id={n <= 6 ? `home-ig-${n}` : `home-wall-${n}`} placeholder="פוסט" />
+                      </a>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>

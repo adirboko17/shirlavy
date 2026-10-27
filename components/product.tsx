@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { fmt } from "@/lib/data";
 import { useSite } from "@/lib/site";
-import { Faq, Slot, h2Style } from "./ui";
+import { Faq, ResponsiveCarousel, Slot, h2Style } from "./ui";
 import { ProductCard } from "./product-card";
 
 const IMGS = ["תמונה ראשית", "מרקם", "באריזה", "בשימוש"];
@@ -146,9 +146,19 @@ export function ProductPage() {
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <h2 style={{ ...h2Style("clamp(26px,2.8vw,36px)"), marginBottom: 24 }}>אולי תאהבי גם</h2>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fill,minmax(${mobile ? "150px" : "240px"},1fr))`, gap: "clamp(12px,1.6vw,20px)" }}>
-            {related.map((r) => <ProductCard key={r.id} product={r} />)}
-          </div>
+          {mobile ? (
+            <ResponsiveCarousel ariaLabel="מוצרים קשורים" slideWidth="min(72vw, 280px)">
+              {related.map((r) => (
+                <ProductCard key={r.id} product={r} />
+              ))}
+            </ResponsiveCarousel>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "clamp(12px,1.6vw,20px)" }}>
+              {related.map((r) => (
+                <ProductCard key={r.id} product={r} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
       {mobile && !atcVisible ? (
