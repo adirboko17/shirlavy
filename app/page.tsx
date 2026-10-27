@@ -5,6 +5,6 @@ import { getInstagramWallData } from "@/lib/instagram";
 export const metadata: Metadata = { title: "SHIR LAVY — Aesthetics & Academy" };
 
 export default async function Page() {
-  const instagram = await getInstagramWallData(11);
+  const instagram = await getInstagramWallData();
   return <HomePage instagram={instagram} />;
 }
