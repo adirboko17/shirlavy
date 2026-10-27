@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { waLink } from "@/lib/data";
+import { CONTACT_TREATMENT_TOPICS, waLink } from "@/lib/data";
 import { PageHero, SectionLabel, Slot, Socials, h2Style } from "./ui";
 
 const TOPICS = [
-  ["brows", "טיפולי גבות"],
-  ["removal", "הסרת איפור קבוע"],
-  ["aesthetics", "אסתטיקה"],
+  ...CONTACT_TREATMENT_TOPICS,
   ["academy", "האקדמיה"],
   ["shop", "הזמנה מהחנות"],
 ] as const;
@@ -22,7 +20,7 @@ export function ContactPage() {
     email: form.email && !/^\S+@\S+\.\S+$/.test(form.email) ? "כתובת האימייל אינה תקינה" : "",
   };
   const quick = [
-    ["ייעוץ לטיפול", "גבות, הסרה או אסתטיקה", "היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול."],
+    ["ייעוץ לטיפול", "גבות, הסרה, אסתטיקה ואסתטיקה רפואית", "היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול."],
     ["פרטים על האקדמיה", "מסלולי לימוד ומחזורים", "היי שיר, אשמח לפרטים על האקדמיה."],
     ["שאלה על הזמנה", "מוצרים, משלוחים והחזרות", "היי, יש לי שאלה לגבי הזמנה מהחנות."],
   ];

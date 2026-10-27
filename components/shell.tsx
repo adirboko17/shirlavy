@@ -3,25 +3,15 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { NAV, TOP_NAV, fmt, waLink } from "@/lib/data";
+import { MENU_ROUTES, NAV, TOP_NAV, fmt, waLink } from "@/lib/data";
 import { useSite } from "@/lib/site";
 import { MenuButton, MobileMenu } from "./mobile-menu";
 import { BagIcon, Slot, Socials } from "./ui";
 
 const CONSULT = waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.");
 
-const MENU_ROUTES: Record<string, string> = {
-  home: "/",
-  about: "/about",
-  brows: "/brows",
-  removal: "/removal",
-  aesthetics: "/aesthetics",
-  academy: "/academy",
-  shop: "/shop",
-  contact: "/contact",
-};
-
 function activeMenuKey(path: string) {
+  if (path.startsWith("/medical-aesthetics")) return "medical-aesthetics";
   if (path.startsWith("/aesthetics")) return "aesthetics";
   if (path.startsWith("/shop")) return "shop";
   if (path === "/") return "home";

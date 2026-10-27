@@ -1,26 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { MOBILE_NAV } from "@/lib/data";
 
 const EASE = "cubic-bezier(.16,.8,.2,1)";
 const reduceMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-export const MOBILE_NAV = [
-  { key: "home", label: "ראשי" },
-  { key: "about", label: "נעים להכיר" },
-  {
-    key: "treatments",
-    label: "טיפולים",
-    kids: [
-      { key: "brows", label: "טיפולי גבות" },
-      { key: "removal", label: "הסרת איפור קבוע" },
-      { key: "aesthetics", label: "אסתטיקה" },
-    ],
-  },
-  { key: "academy", label: "האקדמיה" },
-  { key: "shop", label: "חנות" },
-  { key: "contact", label: "יצירת קשר" },
-];
 
 const SOCIALS = [
   {
@@ -142,7 +126,7 @@ export function MobileMenu({
       >
         <nav style={{ display: "flex", flexDirection: "column" }}>
           {MOBILE_NAV.map((item) =>
-            item.kids ? (
+            "kids" in item && item.kids ? (
               <div key={item.key} data-mi="" style={{ display: "flex", flexDirection: "column", gap: 10, padding: "12px 16px 14px" }}>
                 <span style={{ fontSize: 20, fontWeight: 300 }}>{item.label}</span>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
