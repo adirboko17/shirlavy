@@ -8,6 +8,7 @@ export type InstagramWallPost = {
   imageUrl: string | null;
   slotId?: string;
   aspectRatio: string;
+  isVideo: boolean;
 };
 
 export type InstagramWallData = {
@@ -41,10 +42,12 @@ type BeholdFeed = {
 
 const ASPECTS = ["4/5", "1/1", "3/4", "4/5", "1/1"] as const;
 
-const FALLBACK_SLOTS = Array.from({ length: 9 }, (_, i) => ({
-  slotId: i < 6 ? `home-ig-${i + 1}` : `home-wall-${i + 1}`,
-  aspectRatio: ASPECTS[i % ASPECTS.length],
-}));
+const FALLBACK_COUNT = 11;
+
+function fallbackSlotId(i: number): string {
+  if (i < 6) return `home-ig-${i + 1}`;
+  return `home-wall-${((i - 6) % 5) + 1}`;
+}
 
 function aspectFromSizes(sizes?: BeholdPost["sizes"]): string | null {
   const s = sizes?.medium || sizes?.large;
@@ -80,6 +83,7 @@ function toWallPost(post: BeholdPost, index: number): InstagramWallPost {
     permalink: post.permalink,
     imageUrl: displayUrl(post),
     aspectRatio: aspectFromSizes(post.sizes) || ASPECTS[index % ASPECTS.length],
+    isVideo: post.mediaType === "VIDEO",
   };
 }
 
@@ -88,17 +92,18 @@ export function fallbackInstagramWall(): InstagramWallData {
     handle: "@shir_aesthetics",
     profileUrl: INSTAGRAM_PROFILE_URL,
     fromFeed: false,
-    posts: FALLBACK_SLOTS.map((f, i) => ({
+    posts: Array.from({ length: FALLBACK_COUNT }, (_, i) => ({
       id: `fallback-${i}`,
       permalink: INSTAGRAM_PROFILE_URL,
       imageUrl: null,
-      slotId: f.slotId,
-      aspectRatio: f.aspectRatio,
+      slotId: fallbackSlotId(i),
+      aspectRatio: ASPECTS[i % ASPECTS.length],
+      isVideo: false,
     })),
   };
 }
 
-export async function getInstagramWallData(limit = 9): Promise<InstagramWallData> {
+export async function getInstagramWallData(limit = 11): Promise<InstagramWallData> {
   try {
     const res = await fetch(BEHOLD_FEED_URL, {
       next: { revalidate: 3600 },

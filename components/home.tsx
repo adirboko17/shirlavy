@@ -7,7 +7,7 @@ import { ProductCard } from "./product-card";
 import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
 import type { InstagramWallData } from "@/lib/instagram";
 import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/lib/data";
-import { InstagramPostTile } from "./instagram-post-tile";
+import { InstagramWall } from "./instagram-wall";
 import { ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot } from "./ui";
 
 const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
@@ -33,7 +33,6 @@ const ACADEMY = [
 export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const { products, width } = useSite();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const wallRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(true);
   const [vOk, setVOk] = useState<boolean | null>(null);
   const [t, setT] = useState(0);
@@ -51,38 +50,6 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
     }
     video.play().catch(() => setPlaying(false));
   }, []);
-
-  useEffect(() => {
-    const root = wallRef.current;
-    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const anims: Animation[] = [];
-    const timer = setTimeout(() => {
-      root.querySelectorAll<HTMLElement>("[data-col]").forEach((c, i) => {
-        const d = c.scrollHeight - root.clientHeight;
-        if (d <= 0) return;
-        anims.push(
-          c.animate([{ transform: "translateY(0)" }, { transform: `translateY(-${d}px)` }], {
-            duration: d * 45,
-            iterations: Infinity,
-            direction: i % 2 ? "alternate-reverse" : "alternate",
-            easing: "ease-in-out",
-          }),
-        );
-      });
-    }, 600);
-    return () => {
-      clearTimeout(timer);
-      anims.forEach((a) => a.cancel());
-    };
-  }, [width, instagram.posts.length]);
-
-  const igPosts = instagram.posts;
-  const igColumns = (() => {
-    const cols = 4;
-    const columns: (typeof igPosts)[] = Array.from({ length: cols }, () => []);
-    igPosts.forEach((p, i) => columns[i % cols].push(p));
-    return columns;
-  })();
 
   const featured = [...products].sort((a, b) => a.rank - b.rank).slice(0, 4);
   const quote = QUOTES[q];
@@ -391,28 +358,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
               עקבי באינסטגרם
             </a>
           </div>
-          {mobile ? (
-            <ResponsiveCarousel ariaLabel="פוסטים מהאינסטגרם" slideWidth="min(70vw, 280px)" gap="clamp(8px,1vw,14px)">
-              {igPosts.map((post) => (
-                <InstagramPostTile key={post.id} post={post} />
-              ))}
-            </ResponsiveCarousel>
-          ) : (
-            <div
-              ref={wallRef}
-              onMouseEnter={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.pause()))}
-              onMouseLeave={() => wallRef.current?.querySelectorAll<HTMLElement>("[data-col]").forEach((c) => c.getAnimations().forEach((a) => a.play()))}
-              style={{ position: "relative", height: "clamp(520px,72vh,780px)", overflow: "hidden", WebkitMaskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", maskImage: "linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent)", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(45%,200px),1fr))", gap: "clamp(8px,1vw,14px)", alignItems: "start" }}
-            >
-              {igColumns.map((colPosts, c) => (
-                <div key={c} data-col="1" style={{ display: "flex", flexDirection: "column", gap: "clamp(8px,1vw,14px)" }}>
-                  {colPosts.map((post) => (
-                    <InstagramPostTile key={post.id} post={post} />
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
+          <InstagramWall posts={instagram.posts} />
         </div>
       </section>
     </div>
