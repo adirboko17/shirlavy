@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
-import { Compare, ResponsiveCarousel, SectionLabel, Slot } from "./ui";
+import { ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot } from "./ui";
 
 const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
 
@@ -304,17 +304,16 @@ export function HomePage() {
           <SectionLabel>לפני ואחרי</SectionLabel>
           <div>
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
-            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>גררי כדי להשוות. יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
+            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
           </div>
           <ResponsiveCarousel
-            compareSlides
             ariaLabel="תוצאות לפני ואחרי"
             slideWidth="min(88vw, 360px)"
             desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
           >
-            <Compare sid="home-ba-1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
-            <Compare sid="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" />
-            <Compare sid="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" />
           </ResponsiveCarousel>
         </div>
       </section>

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
-import { Compare, Faq, PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
+import { Faq, PageHero, ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot, h2Style } from "./ui";
 import { Cta } from "./about";
 
 const TECH = [
@@ -139,16 +139,12 @@ export function BrowsPage() {
             desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 12 }}
           >
             {items.map((g) => (
-              <figure key={g.i} style={{ margin: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, aspectRatio: "2/1.2" }}>
-                  <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", background: "#F2EBE4" }}><Slot id={`brows-g${g.i}-before`} placeholder="לפני" /></div>
-                  <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", background: "#F2EBE4" }}><Slot id={`brows-g${g.i}-after`} placeholder="אחרי" /></div>
-                </div>
-                <figcaption style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2px 6px 4px" }}>
-                  <span style={{ fontSize: 15, fontWeight: 500 }}>{g.label}</span>
+              <div key={g.i} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <ResultPhotoCard slotId={`brows-g${g.i}`} caption={g.label} ratio="5/4" placeholder={g.label} />
+                <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 6px" }}>
                   <button type="button" className="chip" style={{ height: 36, background: "#F5EEE7" }} onClick={() => setLb(g.i)}>הגדלה</button>
-                </figcaption>
-              </figure>
+                </div>
+              </div>
             ))}
           </ResponsiveCarousel>
           <p style={{ margin: "20px 0 0", fontSize: 13, color: "#8A8A8A" }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן. התוצאות משתנות מאישה לאישה.</p>
@@ -176,13 +172,13 @@ export function BrowsPage() {
       </Cta>
 
       {lbItem ? (
-        <div role="dialog" aria-modal="true" aria-label="השוואת לפני ואחרי" style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(41,37,34,.55)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+        <div role="dialog" aria-modal="true" aria-label="תמונת תוצאה" style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(41,37,34,.55)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
           <div style={{ width: "min(100%,560px)", background: "#fff", borderRadius: 28, padding: 14, display: "flex", flexDirection: "column", gap: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 6px 0" }}>
               <span style={{ fontSize: 14, color: "#8A8A8A" }}>{cur + 1} / {items.length}</span>
               <button type="button" aria-label="סגירה" className="round" style={{ width: 40, height: 40, background: "#F7F5F2" }} onClick={() => setLb(-1)}>✕</button>
             </div>
-            <Compare sid={`brows-g${lbItem.i}`} caption={lbItem.label} note="[פרטי הטיפול]" ratio="1/1" />
+            <ResultPhotoCard slotId={`brows-g${lbItem.i}`} caption={lbItem.label} note="[פרטי הטיפול]" ratio="5/4" />
             <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
               <button type="button" className="pill ghost" onClick={() => setLb(items[(cur - 1 + items.length) % items.length].i)}>→ הקודם</button>
               <button type="button" className="pill ghost" onClick={() => setLb(items[(cur + 1) % items.length].i)}>הבא ←</button>
