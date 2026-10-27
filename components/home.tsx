@@ -4,18 +4,16 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
+import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
 import { Compare, SectionLabel, Slot } from "./ui";
 
-const QUOTES = [
-  { q: "כאן יופיע ציטוט אמיתי של לקוחה, במילים שלה ובאישורה, על החוויה בקליניקה.", name: "[שם הלקוחה]", meta: "[סוג הטיפול]" },
-  { q: "מקום לציטוט שני: מה הרגישה לפני הטיפול, איך היה היחס האישי, ואיך היא מרגישה היום.", name: "[שם הלקוחה]", meta: "[סוג הטיפול]" },
-  { q: "מקום לציטוט של בוגרת האקדמיה, על הדרך מהשיעור הראשון ועד הלקוחה הראשונה.", name: "[שם הבוגרת]", meta: "בוגרת האקדמיה" },
-];
+const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
 
 const TREATMENTS = [
-  ["01", "הדמיית שיער בגבות", "HAIR STROKE BROWS", "קווים עדינים בכיוון צמיחת השערה, למראה טבעי ומלא.", "/brows"],
+  ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית — קווים בכיוון צמיחת השערה.", "/brows"],
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
   ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להבהרת איפור קבוע ישן או לא רצוי.", "/removal"],
+  // TODO: replace home-tr-4 with high-res clinic photo when available (currently low-res WhatsApp crop)
   ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק ומתיחת העור בטכנולוגיות מתקדמות.", "/aesthetics"],
 ] as const;
 
@@ -25,7 +23,7 @@ const ACADEMY = [
   ["שנות הוראה", "ניסיון מצטבר בהכשרת נשים למקצוע האיפור הקבוע."],
   ["יחס אישי", "ליווי צמוד, קבוצות קטנות ואפשרות ללמידה פרטנית."],
   ["הכשרה מעשית", "עבודה בידיים כבר מהשלבים הראשונים, לצד שיר."],
-  ["מכל הארץ", "סטודנטיות שמגיעות מצפון הארץ ועד הדרום."],
+  ["מכל הארץ", "תלמידות שמגיעות מצפון הארץ ועד הדרום."],
 ];
 
 export function HomePage() {
@@ -37,7 +35,6 @@ export function HomePage() {
   const [t, setT] = useState(0);
   const [q, setQ] = useState(0);
   const narrow = (width || 1200) < 760;
-  const desk = (width || 1200) >= 900;
 
   useEffect(() => {
     const video = videoRef.current;
@@ -253,7 +250,7 @@ export function HomePage() {
               העתיד שלך.
             </h2>
             <p style={{ margin: 0, fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 440, textWrap: "pretty" }}>
-              אקדמיה לאיפור קבוע שבה כל סטודנטית לומדת ישירות משיר, עם יחס אישי ותרגול מעשי.
+              אקדמיה לאיפור קבוע שבה כל תלמידה לומדת ישירות משיר, עם יחס אישי ותרגול מעשי.
             </p>
             <div style={{ display: "flex", flexDirection: "column", borderBottom: "1px solid rgba(122,87,60,.28)" }}>
               {ACADEMY.map(([title, text]) => (
@@ -268,36 +265,31 @@ export function HomePage() {
             </Link>
           </div>
           <div style={{ position: "relative", width: "100%", aspectRatio: "4/5", maxHeight: "70vh", borderRadius: 24, overflow: "hidden", background: "#E9DED3", color: "#7A573C" }}>
-            <Slot id="home-academy-1" placeholder="סטודנטיות בהכשרה" />
+            <Slot id="home-academy-1" placeholder="תלמידות בהכשרה" />
           </div>
         </div>
       </section>
 
       <section style={{ padding: "clamp(72px,10vw,140px) clamp(16px,4vw,48px) 0" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
-          <SectionLabel>סיפורי הצלחה</SectionLabel>
+          <SectionLabel>הבוגרות שלנו ממליצות</SectionLabel>
           <div>
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>
-              הבוגרות של <span style={{ fontWeight: 500 }}>האקדמיה</span>
+              מה אומרות <span style={{ fontWeight: 500 }}>הבוגרות</span>
             </h2>
-            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>נשים שהתחילו כאן את הדרך המקצועית שלהן.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: "clamp(24px,3vw,40px)", alignItems: "start" }}>
-            {[0, 1, 2].map((i) => (
-              <Link key={i} href="/academy" className="story" style={{ marginTop: desk ? ["0", "72px", "28px"][i] : 0 }}>
-                <div style={{ position: "relative", width: "100%", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: "4/5" }}>
-                  <Slot id={`home-story-${i + 1}`} placeholder="פורטרט בוגרת" />
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 14 }}>
-                  <span style={{ fontSize: "clamp(20px,1.8vw,26px)", fontWeight: 300, letterSpacing: "-.02em" }}>[שם הבוגרת]</span>
-                  <span style={{ fontSize: 13, color: "#5A5A5A" }}>[עיר · שנת סיום]</span>
-                </div>
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.7, color: "#5A5A5A" }}>[משפט קצר של הבוגרת על הדרך שלה מההכשרה ועד העבודה עם לקוחות משלה]</p>
-                <span style={{ fontSize: 14, color: "#8F6A4B" }}>לסיפור המלא ←</span>
-              </Link>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: "clamp(16px,2vw,24px)" }}>
+            {GRADUATE_TESTIMONIALS.slice(0, 3).map((item) => (
+              <blockquote key={item.name} style={{ margin: 0, padding: "24px 0", borderTop: "1px solid rgba(28,28,28,.14)", display: "flex", flexDirection: "column", gap: 14 }}>
+                <p style={{ margin: 0, fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.55, fontWeight: 300 }}>&quot;{item.q}&quot;</p>
+                <footer style={{ fontSize: 14, color: "#5A5A5A" }}>
+                  <strong style={{ fontWeight: 500, color: "#1C1C1C" }}>{item.name}</strong>
+                  <span> · {item.meta}</span>
+                </footer>
+              </blockquote>
             ))}
           </div>
-          <span style={{ fontSize: 12, color: "#6A6A6A" }}>תוכן לדוגמה — יוחלף בסיפורים אמיתיים של בוגרות</span>
+          <Link href="/academy" className="text-link">עוד המלצות מהאקדמיה <span aria-hidden>←</span></Link>
         </div>
       </section>
 
@@ -309,7 +301,7 @@ export function HomePage() {
             <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>גררי כדי להשוות. יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}>
-            <Compare sid="home-ba-1" caption="הדמיית שיער" note="[פרטי טיפול]" />
+            <Compare sid="home-ba-1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
             <Compare sid="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" />
             <Compare sid="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" />
           </div>
@@ -350,7 +342,6 @@ export function HomePage() {
               <button type="button" aria-label="הבא" className="round ghost" onClick={() => setQuote(q + 1)}>←</button>
             </div>
           </div>
-          <span style={{ fontSize: 12, color: "#6A6A6A" }}>תוכן לדוגמה — יוחלף בהמלצות אמיתיות באישור הלקוחות</span>
         </div>
       </section>
 

@@ -200,7 +200,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14, color: "#5A5A5A", lineHeight: 1.6 }}>
                 <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C", marginBottom: 4 }}>הקליניקה</span>
                 <span>לנשים בלבד</span>
-                <span>[כתובת הקליניקה]</span>
                 <span>[שעות פעילות]</span>
                 <span>[כתובת אימייל]</span>
               </div>
