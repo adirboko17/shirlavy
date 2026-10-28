@@ -1,9 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
 import { RenovationGate } from "@/components/renovation-gate";
+import { loadShop } from "@/lib/storely";
+import { ShabbatGate } from "@/components/shabbat-gate";
 
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
@@ -27,14 +30,17 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const shop = await loadShop((await headers()).get("host"));
   return (
     <html lang="he" dir="rtl" className={heebo.variable}>
       <body className={heebo.className}>
-        <SiteProvider>
-          <RenovationGate>
-            <Shell>{children}</Shell>
-          </RenovationGate>
+        <SiteProvider shop={shop}>
+          <ShabbatGate>
+            <RenovationGate>
+              <Shell>{children}</Shell>
+            </RenovationGate>
+          </ShabbatGate>
         </SiteProvider>
       </body>
     </html>

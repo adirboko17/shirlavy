@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { MENU_ROUTES, NAV, TOP_NAV, waLink } from "@/lib/data";
 import { useSite } from "@/lib/site";
 import { MenuButton, MobileMenu } from "./mobile-menu";
+import { CartDrawer } from "./cart-drawer";
+import { StorePopups } from "./store-popups";
 import { Socials } from "./ui";
 
 const CONSULT = waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.");
@@ -66,14 +68,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C", overflowX: "clip" }}>
-      <div className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ">
+      <div className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ, האתר שומר שבת">
         {wide ? (
-          <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>הזמנות ומחירים מהחנות — בוואטסאפ</div>
+          <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>הזמנות מהחנות באתר · האתר שומר שבת</div>
         ) : (
           <div className="promo-track" aria-hidden>
             {Array.from({ length: 8 }).map((_, i) => (
               <span key={i}>
-                הזמנות ומחירים מהחנות — בוואטסאפ
+                הזמנות מהחנות באתר · האתר שומר שבת
                 <i />
               </span>
             ))}
@@ -153,13 +155,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 <a href={CONSULT} target="_blank" rel="noopener noreferrer" className={onDark ? "pill white-pill" : "pill gold"} style={{ height: 44, padding: "0 20px", fontSize: 14 }}>
                   לתיאום ייעוץ ללא עלות
                 </a>
+                <CartButton ink={ink} bg={iconBg} count={site.count} onClick={site.openCart} />
               </div>
             </>
           ) : (
             <>
               <MenuButton open={site.menuOpen} ink={ink} bg={iconBg} onClick={() => (site.menuOpen ? site.closeMenu() : site.openMenu())} />
               <Logo onDark={onDark} small />
-              <div style={{ width: 44, flex: "none" }} aria-hidden />
+              <CartButton ink={ink} bg={iconBg} count={site.count} onClick={site.openCart} />
             </>
           )}
         </div>
@@ -199,10 +202,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 12, borderTop: "1px solid rgba(164,123,88,.22)", paddingTop: 22, fontSize: 13, color: "#8A8A8A" }}>
               <span>© SHIR LAVY Aesthetics & Academy</span>
-              <span style={{ display: "flex", gap: 20 }}>
-                <a href="#" style={{ color: "#8A8A8A" }}>מדיניות פרטיות</a>
-                <a href="#" style={{ color: "#8A8A8A" }}>תקנון</a>
-                <a href="#" style={{ color: "#8A8A8A" }}>הצהרת נגישות</a>
+              <span style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+                {site.shop.policies.some((policy) => policy.footer) ? site.shop.policies.filter((policy) => policy.footer).map((policy) => (
+                  <Link key={policy.id} href={`/policies/${policy.id}`} style={{ color: "#8A8A8A" }}>{policy.title}</Link>
+                )) : (
+                  <>
+                    <a href="#" style={{ color: "#8A8A8A" }}>מדיניות פרטיות</a>
+                    <a href="#" style={{ color: "#8A8A8A" }}>תקנון</a>
+                    <a href="#" style={{ color: "#8A8A8A" }}>הצהרת נגישות</a>
+                  </>
+                )}
+                {site.shop.events.length ? <Link href="/events" style={{ color: "#8A8A8A" }}>אירועים</Link> : null}
               </span>
             </div>
           </div>
@@ -217,6 +227,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </a>
       ) : null}
 
+      <CartDrawer />
+      <StorePopups />
+
       {!wide ? (
         <MobileMenu
           open={site.menuOpen}
@@ -229,6 +242,19 @@ export function Shell({ children }: { children: React.ReactNode }) {
       ) : null}
 
     </div>
+  );
+}
+
+function CartButton({ ink, bg, count, onClick }: { ink: string; bg: string; count: number; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={count ? `עגלה, ${count} פריטים` : "עגלה"} style={{ width: 44, height: 44, border: 0, borderRadius: 999, background: bg, color: ink, cursor: "pointer", position: "relative", fontFamily: "inherit" }}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M6 7h15l-1.5 9h-12L5 4H3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="9" cy="20" r="1.2" fill="currentColor" />
+        <circle cx="18" cy="20" r="1.2" fill="currentColor" />
+      </svg>
+      {count > 0 ? <span style={{ position: "absolute", top: 4, left: 4, minWidth: 16, height: 16, borderRadius: 999, background: "#8F6A4B", color: "#fff", fontSize: 10, display: "grid", placeItems: "center" }}>{count}</span> : null}
+    </button>
   );
 }
 

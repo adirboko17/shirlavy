@@ -6,25 +6,20 @@ import { SHOP_INTRO } from "@/lib/content";
 import { PageHero, ResponsiveCarousel, SectionLabel, h2Style } from "./ui";
 import { ProductCard } from "./product-card";
 
-const CATS = [
-  ["all", "הכל"],
-  ["needles", "מחטים"],
-  ["pigments", "פיגמנטים"],
-  ["tools", "ציוד וכלי עבודה"],
-  ["aftercare", "טיפוח"],
-] as const;
-
 export function ShopPage() {
-  const { products, mobile } = useSite();
+  const { products, mobile, shop } = useSite();
+  const cats = [["all", "הכל"], ...shop.collections.map((collection) => [collection.id, collection.title])] as [string, string][];
   const gridRef = useRef<HTMLElement>(null);
   const [cat, setCat] = useState("all");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("rec");
   const best = products.filter((p) => p.best);
-  let list = products.filter((p) => (cat === "all" || p.cat === cat) && (!q.trim() || (p.name + " " + p.catName + " " + p.short).includes(q.trim())));
+  const selected = shop.collections.find((collection) => collection.id === cat);
+  let list = products.filter((p) => (cat === "all" || selected?.productIds.includes(p.id) || p.cat === cat) && (!q.trim() || (p.name + " " + p.catName + " " + p.short).includes(q.trim())));
   const sorters: Record<string, (a: (typeof products)[0], b: (typeof products)[0]) => number> = {
     rec: (a, b) => a.rank - b.rank,
     name: (a, b) => a.name.localeCompare(b.name, "he"),
+    price: (a, b) => a.price - b.price,
   };
   list = list.slice().sort(sorters[sort]);
 
@@ -32,12 +27,12 @@ export function ShopPage() {
     <div>
       <PageHero kicker="החנות שלנו" title="טיפוח שממשיך הביתה." text={SHOP_INTRO}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginTop: 6 }}>
-          {CATS.map(([k, label]) => (
+          {cats.map(([k, label]) => (
             <button key={k} type="button" className="chip shop-jump" onClick={() => { setCat(k); const el = gridRef.current; if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: "smooth" }); }}>{label}</button>
           ))}
         </div>
       </PageHero>
-      <section style={{ padding: "clamp(24px,4vw,48px) clamp(16px,4vw,48px) 0" }}>
+      {best.length ? <section style={{ padding: "clamp(24px,4vw,48px) clamp(16px,4vw,48px) 0" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionLabel>הנמכרים ביותר</SectionLabel>
           <h2 style={{ ...h2Style("clamp(28px,3vw,42px)"), margin: "12px 0 clamp(24px,3vw,36px)" }}>האהובים של הלקוחות</h2>
@@ -57,7 +52,7 @@ export function ShopPage() {
             </div>
           )}
         </div>
-      </section>
+      </section> : null}
       <section ref={gridRef} style={{ padding: "clamp(64px,8vw,112px) clamp(16px,4vw,48px) clamp(48px,6vw,80px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionLabel>קטלוג</SectionLabel>
@@ -65,7 +60,7 @@ export function ShopPage() {
           <div style={{ position: "sticky", top: 84, zIndex: 10, margin: "0 calc(-1 * clamp(16px,4vw,48px)) clamp(24px,3vw,36px)", padding: "10px clamp(16px,4vw,48px)", background: "rgba(255,255,255,.94)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(28,28,28,.08)" }}>
             <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
               <div role="tablist" aria-label="קטגוריות" style={{ display: "flex", gap: "clamp(14px,2vw,28px)", overflowX: "auto", flex: "1 1 auto", minWidth: 0 }}>
-                {CATS.map(([k, label]) => (
+                {cats.map(([k, label]) => (
                   <button key={k} type="button" role="tab" aria-selected={cat === k} onClick={() => setCat(k)} style={{ height: 44, padding: 0, border: 0, borderBottom: `1.5px solid ${cat === k ? "#8F6A4B" : "transparent"}`, background: "transparent", fontSize: 14, fontWeight: cat === k ? 500 : 400, cursor: "pointer", whiteSpace: "nowrap", color: cat === k ? "#1C1C1C" : "#6B6B6B", fontFamily: "inherit" }}>{label}</button>
                 ))}
               </div>
@@ -77,6 +72,7 @@ export function ShopPage() {
                 <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="מיון" style={{ height: 44, padding: "0 16px", borderRadius: 999, border: 0, background: "#F7F5F2", fontSize: 14, color: "#1C1C1C", fontFamily: "inherit" }}>
                   <option value="rec">מומלצים</option>
                   <option value="name">שם (א–ת)</option>
+                  <option value="price">מחיר</option>
                 </select>
               </div>
             </div>
@@ -103,7 +99,7 @@ export function ShopPage() {
               <button type="button" className="pill gold" onClick={() => { setCat("all"); setQ(""); }}>ניקוי הסינון</button>
             </div>
           )}
-          <div style={{ marginTop: 28, fontSize: 12, color: "#8A8A8A" }}>למחירים והזמנה — פנייה בוואטסאפ מדף המוצר.</div>
+          <div style={{ marginTop: 28, fontSize: 12, color: "#8A8A8A" }}>המחיר הסופי, כולל משלוח והנחה, מחושב בקופה.</div>
         </div>
       </section>
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)" }}>
@@ -113,8 +109,8 @@ export function ShopPage() {
           desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}
         >
           {[
-            ["משלוח לכל הארץ", "פרטי משלוח יתואמו בוואטסאפ."],
-            ["הזמנה בוואטסאפ", "מחירים וזמינות — בפנייה ישירה לשיר."],
+            ["משלוח", shop.shipping.length ? shop.shipping.map((method) => method.name).join(" · ") : "אפשרויות המשלוח מופיעות בקופה."],
+            ["מחירים מהחנות", "הסכום לתשלום מחושב בשרת לפי העגלה."],
             ["ייעוץ אישי", "לא בטוחה מה מתאים לך? כתבי לנו."],
           ].map(([t, d]) => (
             <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", padding: "20px 0" }}>

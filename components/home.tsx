@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
+import { StoreQuiz } from "./store-quiz";
 import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
 import type { InstagramWallData } from "@/lib/instagram";
 import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/lib/data";
@@ -303,7 +304,9 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>טיפוח שממשיך בבית</h2>
             <Link href="/shop" className="text-link">לכל המוצרים <span aria-hidden>←</span></Link>
           </div>
-          {mobile ? (
+          {featured.length === 0 ? (
+            <p style={{ margin: 0, color: "#5A5A5A" }}>המוצרים מהחנות יופיעו כאן.</p>
+          ) : mobile ? (
             <ResponsiveCarousel ariaLabel="מוצרים מומלצים" slideWidth="min(72vw, 280px)">
               {featured.map((p) => (
                 <ProductCard key={p.id} product={p} />
@@ -320,6 +323,8 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           )}
         </div>
       </section>
+
+      <StoreQuiz />
 
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,3.5vw,44px)" }}>
