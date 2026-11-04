@@ -10,16 +10,13 @@ const GAL: [string, string, number][] = [
   ["training", "תלמידות בהכשרה", 2], ["work", "תקריב עבודה", 1], ["space", "סביבת הלמידה", 1], ["work", "תקריב עבודה", 2],
   ["achieve", "הישגי תלמידות", 1], ["training", "תרגול על מודל", 1], ["graduation", "רגע סיום ההכשרה", 2], ["space", "עמדת עבודה", 1], ["achieve", "עבודת בוגרת", 1],
 ];
-const INT = [["track-personal", "מסלול אישי"], ["track-group", "מסלול קבוצתי"], ["zero", "אני מתחילה מאפס"], ["advanced", "השתלמות למקצועניות"]] as const;
 const FILTERS = [["all", "הכל"], ["training", "בהכשרה"], ["work", "עבודות"], ["space", "הסטודיו"], ["achieve", "הישגים"], ["graduation", "סיום"]] as const;
 
 export function AcademyPage() {
   const tracksRef = useRef<HTMLElement>(null);
   const { mobile } = useSite();
   const [gf, setGf] = useState("all");
-  const [interest, setInterest] = useState("track-personal");
   const gallery = GAL.map((g, i) => ({ cat: g[0], cap: g[1], rows: g[2], i })).filter((g) => gf === "all" || g.cat === gf);
-  const intLabel = INT.find((x) => x[0] === interest)?.[1] ?? "";
 
   return (
     <div>
@@ -215,20 +212,6 @@ export function AcademyPage() {
               </figure>
             ))}
           </ResponsiveCarousel>
-        </div>
-      </section>
-
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px) clamp(40px,5vw,64px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", background: "#8F6A4B", color: "#fff", borderRadius: 32, padding: "clamp(44px,7vw,96px) clamp(24px,5vw,64px)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 22 }}>
-          <h2 style={{ ...h2Style(), color: "#fff" }}>מוכנה להתחיל?</h2>
-          <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "rgba(251,250,247,.72)", maxWidth: 440 }}>בחרי מה מעניין אותך, ונשלח לשיר הודעה מוכנה בוואטסאפ.</p>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-            {INT.map(([k, label]) => {
-              const on = interest === k;
-              return <button key={k} type="button" aria-pressed={on} className="chip" onClick={() => setInterest(k)} style={{ height: 44, border: `1px solid ${on ? "rgba(255,255,255,.5)" : "rgba(255,255,255,.14)"}`, background: on ? "rgba(255,255,255,.12)" : "transparent", color: "#fff" }}>{label}</button>;
-            })}
-          </div>
-          <a href={waLink(`היי שיר, אשמח לפרטים על האקדמיה. מה שמעניין אותי: ${intLabel}.`)} target="_blank" rel="noopener noreferrer" className="pill white-pill" style={{ height: 56 }}>שליחת פנייה בוואטסאפ <span aria-hidden>←</span></a>
         </div>
       </section>
     </div>

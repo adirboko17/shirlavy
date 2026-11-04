@@ -3,7 +3,7 @@
 import type { InstagramWallPost } from "@/lib/instagram";
 import { IgIcon, Slot } from "./ui";
 
-export function InstagramPostTile({ post }: { post: InstagramWallPost }) {
+export function InstagramPostTile({ post, fill = false }: { post: InstagramWallPost; fill?: boolean }) {
   return (
     <a
       href={post.permalink}
@@ -12,7 +12,7 @@ export function InstagramPostTile({ post }: { post: InstagramWallPost }) {
       aria-label={post.isVideo ? "סרטון באינסטגרם" : "פוסט באינסטגרם"}
       className="ig-tile"
     >
-      <span className="ig-tile__media" style={{ aspectRatio: post.aspectRatio.replace("/", " / ") }}>
+      <span className="ig-tile__media" style={fill ? undefined : { aspectRatio: post.aspectRatio.replace("/", " / ") }}>
         {post.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={post.imageUrl} alt="" loading="lazy" decoding="async" draggable={false} />

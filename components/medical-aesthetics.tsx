@@ -2,8 +2,7 @@
 
 import { waLink } from "@/lib/data";
 import { MEDICAL_AESTHETICS_COPY } from "@/lib/content";
-import { PageHero, SectionLabel, Slot, h2Style } from "./ui";
-import { Cta } from "./about";
+import { PageHero, SectionLabel, Slot } from "./ui";
 
 const WA = waLink("היי, אשמח לפרטים על טיפולי אסתטיקה רפואית ותיאום תור.");
 
@@ -33,12 +32,6 @@ export function MedicalAestheticsPage() {
           </div>
         </div>
       </section>
-
-      <Cta title="ייעוץ רפואי מקצועי, בקצב שלך.">
-        <a href={WA} target="_blank" rel="noopener noreferrer" className="pill white-pill" style={{ height: 56 }}>
-          צרו קשר בווטסאפ <span aria-hidden>←</span>
-        </a>
-      </Cta>
     </div>
   );
 }

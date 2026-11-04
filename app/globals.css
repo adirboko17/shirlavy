@@ -464,52 +464,39 @@ textarea.line-input { height: auto; }
   .addr > * { grid-column: auto !important; }
 }
 
-.ig-wall {
-  position: relative;
-  height: clamp(520px, 72vh, 780px);
-  overflow: hidden;
+.ig-bento {
   display: grid;
-  gap: clamp(8px, 1vw, 14px);
-  align-items: start;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  height: clamp(460px, 44vw, 600px);
+  gap: clamp(10px, 1.1vw, 14px);
+  grid-template-columns: minmax(0, 0.58fr) minmax(0, 0.58fr) minmax(0, 0.92fr) minmax(0, 1.22fr);
+  grid-template-rows: 1.5fr 1fr;
+  grid-template-areas:
+    "promo promo portrait archive"
+    "small-a small-b portrait folder";
 }
-.ig-wall--six {
-  height: clamp(420px, 50vh, 560px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+.ig-bento__cell {
+  min-width: 0;
+  min-height: 0;
 }
-.ig-wall--static {
-  height: auto;
-  overflow: visible;
-  -webkit-mask-image: none;
-  mask-image: none;
+.ig-bento .ig-tile {
+  height: 100%;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(48, 32, 18, 0.08);
 }
-.ig-wall--static .ig-wall__col,
-.ig-wall--static .ig-wall__track {
-  display: contents;
-}
-.ig-wall[data-cols="4"] {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-.ig-wall[data-cols="3"] {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.ig-wall[data-cols="2"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-.ig-wall[data-cols="1"] {
-  grid-template-columns: minmax(0, 1fr);
-}
-.ig-wall__col {
-  overflow: hidden;
+.ig-bento .ig-tile__media {
   height: 100%;
 }
-.ig-wall__track {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(8px, 1vw, 14px);
-  will-change: transform;
+@media (max-width: 900px) {
+  .ig-bento {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 52vw 62vw 40vw 44vw;
+    grid-template-areas:
+      "promo promo"
+      "portrait archive"
+      "small-a small-b"
+      "folder folder";
+  }
 }
 .ig-tile {
   position: relative;

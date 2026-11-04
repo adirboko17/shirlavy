@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
 import { Faq, PageHero, ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot, h2Style } from "./ui";
-import { Cta } from "./about";
 
 const TECH = [
   {
@@ -166,10 +165,6 @@ export function BrowsPage() {
           ]} />
         </div>
       </section>
-
-      <Cta title="הגבה המדויקת שלך מתחילה בשיחה.">
-        <a href={WA} target="_blank" rel="noopener noreferrer" className="pill white-pill" style={{ height: 56 }}>לתיאום ייעוץ ללא עלות <span aria-hidden>←</span></a>
-      </Cta>
 
       {lbItem ? (
         <div role="dialog" aria-modal="true" aria-label="תמונת תוצאה" style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(41,37,34,.55)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>

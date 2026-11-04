@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { waLink } from "@/lib/data";
-import { PageHero, ResponsiveCarousel, Reveal, SectionLabel, Slot, h2Style } from "./ui";
+import { PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
 
 const CHAPTERS = [
   { big: "+10", bigLabel: "שנות ניסיון באיפור קבוע ואסתטיקה", title: "עשור של דיוק", slot: "about-ch-1", ph: "שיר בעבודה", dir: "row" as const, text: "כבר יותר מעשר שנים אני מתמחה באיפור קבוע לגבות ובטיפולי אסתטיקה מתקדמים. כל שנה הוסיפה עוד שכבה של הבנה: איך עור מגיב, איך פנים משתנות, ואיך לבנות תוצאה שנראית טבעית גם שנים אחרי." },
@@ -69,23 +67,6 @@ export function AboutPage() {
           </ResponsiveCarousel>
         </div>
       </section>
-      <Cta title="אשמח להכיר גם אותך.">
-        <a href={waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.")} target="_blank" rel="noopener noreferrer" className="pill white-pill">לתיאום ייעוץ ללא עלות <span aria-hidden>←</span></a>
-        <Link href="/academy" className="pill ghost-light" style={{ background: "#fff", color: "#1C1C1C" }}>לאקדמיה</Link>
-      </Cta>
     </div>
-  );
-}
-
-export function Cta({ title, text, children }: { title: string; text?: string; children: React.ReactNode }) {
-  return (
-    <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px) clamp(40px,5vw,64px)" }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", position: "relative", overflow: "hidden", background: "#8F6A4B", color: "#fff", borderRadius: "clamp(24px,3vw,40px)", padding: "clamp(64px,9vw,128px) clamp(24px,5vw,64px)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 20 }}>
-        <img src="/assets/monogram-gold.png" alt="" aria-hidden style={{ position: "absolute", width: "clamp(300px,36vw,520px)", top: "50%", left: "50%", transform: "translate(-50%,-50%)", opacity: 0.1, pointerEvents: "none" }} />
-        <h2 style={{ ...h2Style(), color: "#fff", position: "relative" }}>{title}</h2>
-        {text ? <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "#fff", maxWidth: 460, position: "relative" }}>{text}</p> : null}
-        <Reveal delay={120} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, position: "relative" }}>{children}</Reveal>
-      </div>
-    </section>
   );
 }

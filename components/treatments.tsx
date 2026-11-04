@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { waLink } from "@/lib/data";
 import { TREATMENT_DISCLAIMER } from "@/lib/content";
 import { Faq, PageHero, ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot, h2Style } from "./ui";
-import { Cta } from "./about";
 
 const WA = waLink("היי שיר, אשמח לבדיקת התאמה להסרת איפור קבוע בלייזר.");
 
@@ -106,9 +105,6 @@ export function RemovalPage() {
           ]} />
         </div>
       </section>
-      <Cta title="נתחיל בבדיקה אישית." text="שלחי הודעה, ואם אפשר צרפי תמונה של האזור באור יום.">
-        <a href={WA} target="_blank" rel="noopener noreferrer" className="pill white-pill" style={{ height: 56 }}>לייעוץ בוואטסאפ <span aria-hidden>←</span></a>
-      </Cta>
     </div>
   );
 }
