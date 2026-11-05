@@ -13,7 +13,6 @@ export function ShopPage() {
   const [cat, setCat] = useState("all");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("rec");
-  const best = products.filter((p) => p.best);
   const selected = shop.collections.find((collection) => collection.id === cat);
   let list = products.filter((p) => (cat === "all" || selected?.productIds.includes(p.id) || p.cat === cat) && (!q.trim() || (p.name + " " + p.catName + " " + p.short).includes(q.trim())));
   const sorters: Record<string, (a: (typeof products)[0], b: (typeof products)[0]) => number> = {
@@ -32,27 +31,6 @@ export function ShopPage() {
           ))}
         </div>
       </PageHero>
-      {best.length ? <section style={{ padding: "clamp(24px,4vw,48px) clamp(16px,4vw,48px) 0" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <SectionLabel>הנמכרים ביותר</SectionLabel>
-          <h2 style={{ ...h2Style("clamp(28px,3vw,42px)"), margin: "12px 0 clamp(24px,3vw,36px)" }}>האהובים של הלקוחות</h2>
-          {mobile ? (
-            <ResponsiveCarousel ariaLabel="הנמכרים ביותר" slideWidth="min(72vw, 280px)">
-              {best.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </ResponsiveCarousel>
-          ) : (
-            <div className="hscroll" style={{ gridAutoColumns: "minmax(min(72vw,280px),1fr)" }}>
-              {best.map((p) => (
-                <div key={p.id} style={{ scrollSnapAlign: "start", minWidth: 0 }}>
-                  <ProductCard product={p} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section> : null}
       <section ref={gridRef} style={{ padding: "clamp(64px,8vw,112px) clamp(16px,4vw,48px) clamp(48px,6vw,80px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
           <SectionLabel>קטלוג</SectionLabel>
