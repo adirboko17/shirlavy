@@ -288,11 +288,12 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           <ResponsiveCarousel
             ariaLabel="תוצאות לפני ואחרי"
             slideWidth="min(88vw, 360px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
           >
-            <ResultPhotoCard slotId="home-ba-1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
-            <ResultPhotoCard slotId="home-ba-2" caption="שיטה משולבת" note="[פרטי טיפול]" />
-            <ResultPhotoCard slotId="home-ba-3" caption="הסרה בלייזר" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-1" ratio="1/1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-2" ratio="1/1" caption="שיטה משולבת" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-3" ratio="1/1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
+            <ResultPhotoCard slotId="home-ba-4" ratio="1/1" caption="שיטה משולבת" note="[פרטי טיפול]" />
           </ResponsiveCarousel>
         </div>
       </section>
