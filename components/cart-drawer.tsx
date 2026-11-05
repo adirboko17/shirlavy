@@ -1,8 +1,7 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
-import { formatMoney, requiredPolicyIds } from "@/lib/shop-model";
+import { formatMoney, requiredPolicyIds, type CartLine, type Currency } from "@/lib/shop-model";
 import { useSite } from "@/lib/site";
 
 export function CartDrawer() {
@@ -12,42 +11,45 @@ export function CartDrawer() {
   const policies = site.shop.policies.filter((policy) => policy.cart !== "hidden");
   const needed = requiredPolicyIds(site.shop.policies, "cart");
   const ready = needed.every((id) => site.acceptedPolicies.includes(id));
+  const subtotal = cartSubtotal(site.cart);
+  const count = site.cart.reduce((sum, line) => sum + line.quantity, 0);
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 70 }}>
-      <button type="button" aria-label="סגירת העגלה" onClick={site.closeCart} style={{ position: "absolute", inset: 0, border: 0, background: "rgba(28,28,28,.35)", cursor: "pointer" }} />
-      <aside style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "min(420px, 100%)", background: "#fff", display: "flex", flexDirection: "column", boxShadow: "-16px 0 40px rgba(41,37,34,.12)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "22px 22px 12px" }}>
-          <h2 style={{ margin: 0, fontWeight: 400, fontSize: 22 }}>העגלה</h2>
-          <button type="button" onClick={site.closeCart} aria-label="סגירה" style={{ border: 0, background: "#F7F5F2", width: 40, height: 40, borderRadius: 999, cursor: "pointer", fontFamily: "inherit" }}>×</button>
-        </div>
-        <div style={{ flex: 1, overflow: "auto", padding: "8px 22px 22px", display: "flex", flexDirection: "column", gap: 18 }}>
+    <div className="cart-drawer">
+      <button type="button" aria-label="סגירת העגלה" onClick={site.closeCart} className="cart-drawer__backdrop" />
+      <aside className="cart-drawer__panel" aria-label="העגלה">
+        <header className="cart-drawer__head">
+          <div>
+            <h2>העגלה</h2>
+            {count > 0 ? <p>{count === 1 ? "פריט אחד" : `${count} פריטים`}</p> : null}
+          </div>
+          <button type="button" onClick={site.closeCart} aria-label="סגירה">×</button>
+        </header>
+        <div className="cart-drawer__body">
           {site.cart.length === 0 ? (
-            <p style={{ color: "#5A5A5A" }}>העגלה ריקה.</p>
-          ) : site.cart.map((line) => (
-            <div key={line.key} style={{ display: "grid", gridTemplateColumns: "72px 1fr", gap: 12 }}>
-              <div style={{ width: 72, height: 90, borderRadius: 14, overflow: "hidden", background: "#F7F3EE" }}>
-                {line.image ? <img src={line.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : null}
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
-                <strong style={{ fontWeight: 500 }}>{line.name}</strong>
-                {line.detail ? <span style={{ fontSize: 13, color: "#6B6B6B" }}>{line.detail}</span> : null}
-                <span>{formatMoney(line.unitPrice, currency)}{line.bundle ? "" : line.quantity > 1 ? ` × ${line.quantity}` : ""}</span>
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <button type="button" aria-label="הפחתה" onClick={() => site.setQty(line.key, line.quantity - (line.bundleQty || 1))} style={qtyBtn}>−</button>
-                  <span>{line.quantity}</span>
-                  <button type="button" aria-label="הוספה" onClick={() => site.setQty(line.key, line.quantity + (line.bundleQty || 1))} style={qtyBtn}>+</button>
-                  <button type="button" onClick={() => site.removeLine(line.key)} style={{ border: 0, background: "transparent", color: "#8A8A8A", cursor: "pointer", fontFamily: "inherit" }}>הסרה</button>
-                </div>
-              </div>
+            <div className="cart-drawer__empty">
+              <p>העגלה עדיין ריקה.</p>
+              <Link href="/shop" onClick={site.closeCart} className="pill gold">לחנות</Link>
             </div>
-          ))}
-          {policies.map((policy) => (
-            <PolicyRow key={policy.id} id={policy.id} title={policy.title} mode={policy.cart} />
+          ) : site.cart.map((line) => (
+            <CartLineRow key={line.key} line={line} currency={currency} />
           ))}
         </div>
-        <div style={{ padding: 22, borderTop: "1px solid rgba(28,28,28,.08)" }}>
-          {site.cart.length > 0 ? (
+        {site.cart.length > 0 ? (
+          <footer className="cart-drawer__foot">
+            <div className="cart-drawer__totals">
+              <span>סכום ביניים</span>
+              <strong>{formatMoney(subtotal, currency)}</strong>
+            </div>
+            <p>המשלוח וההנחה מחושבים בקופה.</p>
+            {policies.length ? (
+              <div className="cart-drawer__policies">
+                {policies.map((policy) => (
+                  <PolicyRow key={policy.id} id={policy.id} title={policy.title} mode={policy.cart} />
+                ))}
+              </div>
+            ) : null}
+            {!ready ? <p className="cart-drawer__hint">כדי להמשיך יש לאשר את התנאים.</p> : null}
             <Link
               href={ready ? "/checkout" : "#"}
               aria-disabled={!ready}
@@ -55,18 +57,50 @@ export function CartDrawer() {
                 if (!ready) event.preventDefault();
                 else site.closeCart();
               }}
-              className="pill gold"
-              style={{ height: 52, width: "100%", opacity: ready ? 1 : 0.45, pointerEvents: ready ? "auto" : "none" }}
+              className="pill gold cart-drawer__pay"
+              style={{ opacity: ready ? 1 : 0.45, pointerEvents: ready ? "auto" : "none" }}
             >
               המשך לתשלום
             </Link>
-          ) : (
-            <Link href="/shop" onClick={site.closeCart} className="pill gold" style={{ height: 52, width: "100%" }}>לחנות</Link>
-          )}
-        </div>
+          </footer>
+        ) : null}
       </aside>
     </div>
   );
+}
+
+function CartLineRow({ line, currency }: { line: CartLine; currency: Currency }) {
+  const site = useSite();
+  const step = line.bundleQty || 1;
+  const total = line.unitPrice * line.quantity;
+  return (
+    <article className="cart-line">
+      <div className="cart-line__photo">
+        {line.image ? <img src={line.image} alt="" /> : null}
+      </div>
+      <div className="cart-line__body">
+        <div className="cart-line__top">
+          <div>
+            <strong>{line.name}</strong>
+            {line.detail ? <span>{line.detail}</span> : null}
+          </div>
+          <b>{formatMoney(total, currency)}</b>
+        </div>
+        <div className="cart-line__actions">
+          <div className="qty">
+            <button type="button" aria-label="הפחתה" onClick={() => site.setQty(line.key, line.quantity - step)}>−</button>
+            <span>{line.quantity}</span>
+            <button type="button" aria-label="הוספה" onClick={() => site.setQty(line.key, line.quantity + step)}>+</button>
+          </div>
+          <button type="button" className="cart-line__remove" onClick={() => site.removeLine(line.key)}>הסרה</button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function cartSubtotal(lines: CartLine[]) {
+  return lines.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
 }
 
 export function PolicyRow({ id, title, mode }: { id: string; title: string; mode: "hidden" | "link" | "checkbox" }) {
@@ -74,23 +108,13 @@ export function PolicyRow({ id, title, mode }: { id: string; title: string; mode
   if (mode === "hidden") return null;
   const href = `/policies/${id}`;
   if (mode === "link") {
-    return <Link href={href} style={{ fontSize: 14, color: "#7A573C" }}>{title}</Link>;
+    return <Link href={href} className="policy-link">{title}</Link>;
   }
   const checked = site.acceptedPolicies.includes(id);
   return (
-    <label style={{ display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, lineHeight: 1.5 }}>
-      <input type="checkbox" checked={checked} onChange={(event) => site.togglePolicy(id, event.target.checked)} style={{ marginTop: 3 }} />
-      <span>קראתי ואני מסכים ל<Link href={href} style={{ color: "#7A573C" }}>{title}</Link></span>
+    <label className="policy-check">
+      <input type="checkbox" checked={checked} onChange={(event) => site.togglePolicy(id, event.target.checked)} />
+      <span>קראתי ואני מסכימה ל<Link href={href}>{title}</Link></span>
     </label>
   );
 }
-
-const qtyBtn: CSSProperties = {
-  width: 32,
-  height: 32,
-  borderRadius: 999,
-  border: 0,
-  background: "#F7F5F2",
-  cursor: "pointer",
-  fontFamily: "inherit",
-};

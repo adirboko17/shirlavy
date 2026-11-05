@@ -1,11 +1,10 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatMoney, formatShippingPrice, isPickupZone, requiredPolicyIds, storefrontLine, type Currency } from "@/lib/shop-model";
 import { useSite, writeCustomerDraft } from "@/lib/site";
-import { PolicyRow } from "./cart-drawer";
+import { PolicyRow, cartSubtotal } from "./cart-drawer";
 import { h2Style } from "./ui";
 
 type Quote = {
@@ -129,87 +128,133 @@ export function CheckoutPage() {
     site.clearCart();
   }
 
+  const currency = site.shop.currency;
+  const subtotal = cartSubtotal(site.cart);
+  const canPay = !pending && !!quote && policiesReady && site.shop.shipping.length > 0;
+
   if (orderNumber) {
     return (
-      <section style={{ padding: "clamp(120px,14vh,140px) 16px 80px" }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center", display: "flex", flexDirection: "column", gap: 16 }}>
-          <h1 style={h2Style("clamp(28px,3.2vw,40px)")}>ההזמנה התקבלה</h1>
-          <p style={{ margin: 0, color: "#5A5A5A" }}>מספר ההזמנה הוא {orderNumber}.</p>
-          <Link href="/shop" className="text-link">חזרה לחנות</Link>
-        </div>
+      <section className="checkout-done">
+        <h1 style={h2Style("clamp(32px,4vw,48px)")}>ההזמנה התקבלה</h1>
+        <p>מספר ההזמנה הוא {orderNumber}.</p>
+        <Link href="/shop" className="pill gold">חזרה לחנות</Link>
       </section>
     );
   }
 
   return (
-    <section style={{ padding: "clamp(120px,14vh,140px) clamp(16px,4vw,48px) clamp(64px,8vw,96px)" }}>
-      <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", flexDirection: "column", gap: 22 }}>
-        <h1 style={h2Style("clamp(28px,3.2vw,40px)")}>תשלום</h1>
-        {site.cart.length === 0 ? (
-          <div>
-            <p style={{ color: "#5A5A5A" }}>העגלה ריקה.</p>
-            <Link href="/shop" className="text-link">לחנות</Link>
-          </div>
-        ) : (
-          <>
-            {site.cart.map((line) => (
-              <div key={line.key} style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <span>{line.name}{line.detail ? ` · ${line.detail}` : ""} × {line.quantity}</span>
-                <span>{formatMoney(line.unitPrice, site.shop.currency)}</span>
-              </div>
-            ))}
-            <fieldset style={{ border: 0, padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 8 }}>
-              <legend style={{ fontWeight: 500, marginBottom: 8 }}>משלוח</legend>
-              {site.shop.shipping.length === 0 ? <p style={{ color: "#8A3A3A" }}>אין אפשרות משלוח כרגע, ואי אפשר להמשיך לתשלום.</p> : site.shop.shipping.map((method) => (
-                <label key={method.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 14px", borderRadius: 16, background: shippingName === method.name ? "#F5EEE7" : "#F7F5F2" }}>
-                  <span style={{ display: "flex", gap: 8 }}>
-                    <input type="radio" name="shipping" checked={shippingName === method.name} onChange={() => setShippingName(method.name)} />
-                    {method.name}
-                  </span>
-                  <span>{formatShippingPrice(method.price, site.shop.currency)}</span>
-                </label>
-              ))}
-            </fieldset>
-            <div style={{ display: "grid", gap: 10 }}>
-              <input value={name} onChange={(event) => setName(event.target.value)} placeholder="שם מלא" aria-label="שם מלא" style={field} />
-              <input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="טלפון" aria-label="טלפון" style={field} />
-              <input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="אימייל" aria-label="אימייל" style={field} />
-              {pickup ? null : (
-                <>
-                  <input value={city} onChange={(event) => setCity(event.target.value)} placeholder="עיר" aria-label="עיר" style={field} />
-                  <input value={street} onChange={(event) => setStreet(event.target.value)} placeholder="רחוב ומספר" aria-label="רחוב" style={field} />
-                  <input value={zip} onChange={(event) => setZip(event.target.value)} placeholder="מיקוד" aria-label="מיקוד" style={field} />
-                </>
-              )}
-              <input value={code} onChange={(event) => setCode(event.target.value)} placeholder="קוד הנחה" aria-label="קוד הנחה" style={field} />
-              <input value={giftCode} onChange={(event) => setGiftCode(event.target.value)} placeholder="קוד מתנה" aria-label="קוד מתנה" style={field} />
+    <section className="checkout-page">
+      <div className="checkout">
+        <div className="checkout__main">
+          <h1 style={h2Style("clamp(32px,4vw,48px)")}>קופה</h1>
+          {site.cart.length === 0 ? (
+            <div className="checkout-empty">
+              <p>העגלה ריקה.</p>
+              <Link href="/shop" className="pill gold">לחנות</Link>
             </div>
-            {quote ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 15 }}>
-                {quote.discount > 0 ? <span>הנחה {formatMoney(quote.discount, quote.currency)}</span> : null}
-                <span>משלוח {quote.shipping == null ? "" : formatShippingPrice(quote.shipping, quote.currency)}</span>
-                <strong style={{ fontSize: 20, fontWeight: 500 }}>לתשלום {formatMoney(quote.total, quote.currency)}</strong>
-              </div>
-            ) : null}
-            {quote?.bundleBlocked ? <p style={{ margin: 0, color: "#8A3A3A" }}>הקוד לא חל כי המוצר הנדרש נקנה בבאנדל.</p> : null}
-            {checkoutPolicies.map((policy) => <PolicyRow key={policy.id} id={policy.id} title={policy.title} mode={policy.checkout} />)}
-            {reason ? <p style={{ margin: 0, color: "#8A3A3A" }}>{reason}</p> : null}
-            <button type="button" className="pill gold" style={{ height: 54, alignSelf: "flex-start" }} disabled={pending || !quote || !policiesReady || !site.shop.shipping.length} onClick={() => void pay()}>
-              {pending ? "שומרים את ההזמנה..." : "אישור ותשלום"}
-            </button>
-          </>
-        )}
+          ) : (
+            <>
+              <section className="checkout-block">
+                <h2>פרטי קשר</h2>
+                <div className="checkout-grid">
+                  <Field label="שם מלא" value={name} onChange={setName} autoComplete="name" />
+                  <Field label="טלפון" value={phone} onChange={setPhone} autoComplete="tel" inputMode="tel" />
+                  <Field label="אימייל" value={email} onChange={setEmail} autoComplete="email" type="email" className="checkout-grid__wide" />
+                </div>
+              </section>
+              <section className="checkout-block">
+                <h2>משלוח</h2>
+                {site.shop.shipping.length === 0 ? (
+                  <p className="checkout-error">אין אפשרות משלוח כרגע, ואי אפשר להמשיך לתשלום.</p>
+                ) : (
+                  <div className="ship-list">
+                    {site.shop.shipping.map((method) => (
+                      <label key={method.name} className={`ship-option${shippingName === method.name ? " is-on" : ""}`}>
+                        <input type="radio" name="shipping" checked={shippingName === method.name} onChange={() => setShippingName(method.name)} />
+                        <span>{method.name}</span>
+                        <b>{formatShippingPrice(method.price, currency)}</b>
+                      </label>
+                    ))}
+                  </div>
+                )}
+                {pickup ? <p className="checkout-note">איסוף עצמי, בלי כתובת למשלוח.</p> : site.shop.shipping.length > 0 ? (
+                  <div className="checkout-grid">
+                    <Field label="עיר" value={city} onChange={setCity} autoComplete="address-level2" />
+                    <Field label="מיקוד" value={zip} onChange={setZip} autoComplete="postal-code" />
+                    <Field label="רחוב ומספר" value={street} onChange={setStreet} autoComplete="street-address" className="checkout-grid__wide" />
+                  </div>
+                ) : null}
+              </section>
+              {checkoutPolicies.length ? (
+                <section className="checkout-block">
+                  {checkoutPolicies.map((policy) => <PolicyRow key={policy.id} id={policy.id} title={policy.title} mode={policy.checkout} />)}
+                </section>
+              ) : null}
+              {reason ? <p className="checkout-error">{reason}</p> : null}
+              {!policiesReady && checkoutPolicies.length ? <p className="checkout-note">כדי לשלם יש לאשר את התנאים.</p> : null}
+              <button type="button" className="pill gold checkout-pay" disabled={!canPay} onClick={() => void pay()}>
+                {pending ? "שומרים את ההזמנה..." : quote ? `תשלום ${formatMoney(quote.total, quote.currency)}` : "אישור ותשלום"}
+              </button>
+            </>
+          )}
+        </div>
+        {site.cart.length > 0 ? (
+          <aside className="checkout__summary">
+            <h2>ההזמנה</h2>
+            <ul className="summary-lines">
+              {site.cart.map((line) => (
+                <li key={line.key}>
+                  <span className="summary-lines__photo">
+                    {line.image ? <img src={line.image} alt="" /> : null}
+                    <i>{line.quantity}</i>
+                  </span>
+                  <span className="summary-lines__name">
+                    <strong>{line.name}</strong>
+                    {line.detail ? <small>{line.detail}</small> : null}
+                  </span>
+                  <b>{formatMoney(line.unitPrice * line.quantity, currency)}</b>
+                </li>
+              ))}
+            </ul>
+            <div className="summary-codes">
+              <Field label="קוד הנחה" value={code} onChange={setCode} />
+              <Field label="קוד מתנה" value={giftCode} onChange={setGiftCode} />
+            </div>
+            {quote?.bundleBlocked ? <p className="checkout-error">הקוד לא חל כי המוצר הנדרש נקנה בבאנדל.</p> : null}
+            <dl className="summary-totals">
+              <div><dt>סכום ביניים</dt><dd>{formatMoney(subtotal, currency)}</dd></div>
+              {quote && quote.discount > 0 ? <div><dt>הנחה</dt><dd>−{formatMoney(quote.discount, quote.currency)}</dd></div> : null}
+              <div><dt>משלוח</dt><dd>{quote ? (quote.shipping == null ? "—" : formatShippingPrice(quote.shipping, quote.currency)) : "בחרי משלוח"}</dd></div>
+              <div className="is-total"><dt>לתשלום</dt><dd>{quote ? formatMoney(quote.total, quote.currency) : formatMoney(subtotal, currency)}</dd></div>
+            </dl>
+          </aside>
+        ) : null}
       </div>
     </section>
   );
 }
 
-const field: CSSProperties = {
-  height: 48,
-  border: 0,
-  borderRadius: 999,
-  background: "#F7F5F2",
-  padding: "0 16px",
-  font: "inherit",
-  color: "#1C1C1C",
-};
+function Field({
+  label,
+  value,
+  onChange,
+  className,
+  type = "text",
+  autoComplete,
+  inputMode,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+  type?: string;
+  autoComplete?: string;
+  inputMode?: "tel" | "text";
+}) {
+  return (
+    <label className={`checkout-field${className ? ` ${className}` : ""}`}>
+      <span>{label}</span>
+      <input type={type} value={value} autoComplete={autoComplete} inputMode={inputMode} onChange={(event) => onChange(event.target.value)} />
+    </label>
+  );
+}
