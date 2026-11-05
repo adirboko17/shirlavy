@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Heebo } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
+import "./commerce.css";
+import "./home.css";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
 import { RenovationGate } from "@/components/renovation-gate";

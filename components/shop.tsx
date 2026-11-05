@@ -1,97 +1,66 @@
 "use client";
 
-import { useRef, useState } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import { useSite } from "@/lib/site";
-import { SHOP_INTRO } from "@/lib/content";
-import { PageHero, ResponsiveCarousel, SectionLabel, h2Style } from "./ui";
 import { ProductCard } from "./product-card";
+import { CommerceIcon } from "./commerce-icon";
 
 export function ShopPage() {
-  const { products, mobile, shop } = useSite();
-  const cats = [["all", "הכל"], ...shop.collections.map((collection) => [collection.id, collection.title])] as [string, string][];
-  const gridRef = useRef<HTMLElement>(null);
+  const { products, shop } = useSite();
   const [cat, setCat] = useState("all");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState("rec");
   const selected = shop.collections.find((collection) => collection.id === cat);
-  let list = products.filter((p) => (cat === "all" || selected?.productIds.includes(p.id) || p.cat === cat) && (!q.trim() || (p.name + " " + p.catName + " " + p.short).includes(q.trim())));
-  const sorters: Record<string, (a: (typeof products)[0], b: (typeof products)[0]) => number> = {
-    rec: (a, b) => a.rank - b.rank,
-    name: (a, b) => a.name.localeCompare(b.name, "he"),
-    price: (a, b) => a.price - b.price,
-  };
-  list = list.slice().sort(sorters[sort]);
+  const search = q.trim().toLocaleLowerCase("he");
+  const list = products.filter((p) => (cat === "all" || selected?.productIds.includes(p.id) || p.cat === cat) && (!search || `${p.name} ${p.catName} ${p.short}`.toLocaleLowerCase("he").includes(search))).sort((a, b) => {
+    if (sort === "name") return a.name.localeCompare(b.name, "he");
+    if (sort === "price") return a.price - b.price;
+    if (sort === "price-desc") return b.price - a.price;
+    return a.rank - b.rank;
+  });
 
-  return (
-    <div>
-      <PageHero kicker="החנות שלנו" title="טיפוח שממשיך הביתה." text={SHOP_INTRO} />
-      <section ref={gridRef} style={{ padding: "clamp(8px,1.5vw,16px) clamp(16px,4vw,48px) clamp(48px,6vw,80px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <SectionLabel>קטלוג</SectionLabel>
-          <h2 style={{ ...h2Style("clamp(28px,3vw,42px)"), margin: "8px 0 20px" }}>כל המוצרים</h2>
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-              <div role="tablist" aria-label="קטגוריות" style={{ display: "flex", gap: "clamp(14px,2vw,28px)", overflowX: "auto", flex: "1 1 auto", minWidth: 0 }}>
-                {cats.map(([k, label]) => (
-                  <button key={k} type="button" role="tab" aria-selected={cat === k} onClick={() => setCat(k)} style={{ height: 44, padding: 0, border: 0, borderBottom: `1.5px solid ${cat === k ? "#8F6A4B" : "transparent"}`, background: "transparent", fontSize: 14, fontWeight: cat === k ? 500 : 400, cursor: "pointer", whiteSpace: "nowrap", color: cat === k ? "#1C1C1C" : "#6B6B6B", fontFamily: "inherit" }}>{label}</button>
-                ))}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <label style={{ width: 220, maxWidth: "100%", display: "flex", alignItems: "center", gap: 8, height: 44, padding: "0 16px", borderRadius: 999, background: "#F7F5F2" }}>
-                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden><circle cx="7" cy="7" r="5.2" stroke="#5A5A5A" strokeWidth="1.3" /><path d="M11 11l3.5 3.5" stroke="#5A5A5A" strokeWidth="1.3" strokeLinecap="round" /></svg>
-                  <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="חיפוש מוצר" aria-label="חיפוש מוצר" style={{ flex: 1, minWidth: 0, border: 0, background: "transparent", fontSize: 14, color: "#1C1C1C", outline: "none", height: 42, fontFamily: "inherit" }} />
-                </label>
-                <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="מיון" style={{ height: 44, padding: "0 16px", borderRadius: 999, border: 0, background: "#F7F5F2", fontSize: 14, color: "#1C1C1C", fontFamily: "inherit" }}>
-                  <option value="rec">מומלצים</option>
-                  <option value="name">שם (א–ת)</option>
-                  <option value="price">מחיר</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div style={{ fontSize: 13, color: "#8A8A8A", marginBottom: 18 }}>{list.length === 1 ? "מוצר אחד" : `${list.length} מוצרים`}</div>
-          {list.length ? (
-            mobile ? (
-              <ResponsiveCarousel ariaLabel="מוצרים בקטלוג" slideWidth="min(72vw, 280px)">
-                {list.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </ResponsiveCarousel>
-            ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "clamp(32px,4vw,48px) clamp(20px,2.4vw,32px)" }}>
-                {list.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
-            )
-          ) : (
-            <div style={{ borderTop: "1px solid rgba(28,28,28,.1)", borderBottom: "1px solid rgba(28,28,28,.1)", padding: "72px 24px", display: "flex", flexDirection: "column", alignItems: "center", gap: 12, textAlign: "center" }}>
-              <span style={{ fontSize: 24, fontWeight: 200 }}>לא נמצאו מוצרים</span>
-              <span style={{ fontSize: 15, color: "#5A5A5A" }}>נסי חיפוש או קטגוריה אחרת.</span>
-              <button type="button" className="pill gold" onClick={() => { setCat("all"); setQ(""); }}>ניקוי הסינון</button>
-            </div>
-          )}
-          <div style={{ marginTop: 28, fontSize: 12, color: "#8A8A8A" }}>המחיר הסופי, כולל משלוח והנחה, מחושב בקופה.</div>
+  return <div className="commerce shop-page">
+    <section className="shop-intro">
+      <div className="commerce-container shop-intro__inner">
+        <div>
+          <span className="commerce-eyebrow">THE SHIR LAVY EDIT</span>
+          <h1>הבחירות שלנו.<br /><em>הרגע שלך.</em></h1>
+          <p>טיפוח, ביוטי וציוד מקצועי שנבחרו בקפידה.<br />כל מה שאת אוהבת, במקום אחד.</p>
+          <a className="commerce-text-link" href="#catalog">לגלות את הקולקציה <CommerceIcon name="arrow" /></a>
         </div>
-      </section>
-      <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(56px,7vw,96px)" }}>
-        <ResponsiveCarousel
-          ariaLabel="מידע על החנות"
-          slideWidth="min(84vw, 280px)"
-          desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", columnGap: "clamp(24px,4vw,56px)" }}
-        >
-          {[
-            ["משלוח", shop.shipping.length ? shop.shipping.map((method) => method.name).join(" · ") : "אפשרויות המשלוח מופיעות בקופה."],
-            ["מחירים מהחנות", "הסכום לתשלום מחושב בשרת לפי העגלה."],
-            ["ייעוץ אישי", "לא בטוחה מה מתאים לך? כתבי לנו."],
-          ].map(([t, d]) => (
-            <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", padding: "20px 0" }}>
-              <div style={{ fontSize: 17 }}>{t}</div>
-              <div style={{ fontSize: 14, lineHeight: 1.6, color: "#5A5A5A" }}>{d}</div>
-            </div>
-          ))}
-        </ResponsiveCarousel>
-      </section>
-    </div>
-  );
+        <div className="shop-intro__signature" aria-hidden="true">
+          <img src="/assets/monogram-gold.png" alt="" />
+          <span>A LITTLE MOMENT. JUST FOR YOU.</span>
+        </div>
+      </div>
+    </section>
+    <section id="catalog" className="commerce-container shop-catalog">
+      <div className="shop-catalog__heading">
+        <div><span className="commerce-eyebrow">נבחרו בשבילך</span><h2>{selected?.title || "הקולקציה שלנו"}</h2></div>
+        <span className="shop-count" role="status" aria-live="polite">{list.length === 1 ? "מוצר אחד" : `${list.length} מוצרים`}</span>
+      </div>
+      <div className="shop-toolbar">
+        <div className="shop-categories" role="group" aria-label="סינון לפי קטגוריה">
+          <button type="button" aria-pressed={cat === "all"} onClick={() => setCat("all")}>הכל</button>
+          {shop.collections.map((collection) => <button key={collection.id} type="button" aria-pressed={cat === collection.id} onClick={() => setCat(collection.id)}>{collection.title}</button>)}
+        </div>
+        <div className="shop-tools">
+          <label className="shop-search"><CommerceIcon name="search" width="18" height="18" /><input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="מה את מחפשת?" aria-label="חיפוש מוצר" /></label>
+          <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="מיון מוצרים">
+            <option value="rec">המומלצים שלנו</option><option value="name">שם (א–ת)</option><option value="price">מחיר: מהנמוך לגבוה</option><option value="price-desc">מחיר: מהגבוה לנמוך</option>
+          </select>
+        </div>
+      </div>
+      {list.length ? <div className="commerce-grid">{list.map((product) => <ProductCard key={product.id} product={product} />)}</div> : <div className="shop-empty">
+        <CommerceIcon name="search" width="32" height="32" /><h3>לא מצאנו התאמה הפעם</h3><p>נסי מילה אחרת או גלי את כל הקולקציה.</p><button type="button" className="commerce-button" onClick={() => { setCat("all"); setQ(""); }}>לכל המוצרים <CommerceIcon name="arrow" /></button>
+      </div>}
+      <p className="shop-fineprint">המחיר הסופי, כולל משלוח והנחות, מחושב בקופה.</p>
+    </section>
+    <section className="commerce-container shop-service" aria-label="שירות בחנות">
+      <div><CommerceIcon name="spark" /><h3>נבחר בקפידה</h3><p>מוצרים וציוד מתוך העולם המקצועי שלנו.</p></div>
+      <div><CommerceIcon name="delivery" /><h3>בדרך אלייך</h3><p>{shop.shipping.length ? shop.shipping.map((method) => method.name).join(" · ") : "אפשרויות המשלוח והאיסוף מחכות לך בקופה."}</p></div>
+      <div><CommerceIcon name="bag" /><h3>בואי נמצא את שלך</h3><p>מתלבטת מה לבחור? אנחנו כאן בשבילך.</p><Link href="/contact" className="commerce-text-link">לייעוץ אישי <CommerceIcon name="arrow" width="17" /></Link></div>
+    </section>
+  </div>;
 }

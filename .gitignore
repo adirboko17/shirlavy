@@ -8,3 +8,5 @@ out
 _extract.js
 _extract_logo.js
 _extracted_template.html
+
+.next-preview/
