@@ -68,7 +68,6 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
             position: "relative",
             overflow: "hidden",
             background: "#8F6A4B",
-            borderRadius: "0 0 clamp(24px,3vw,40px) clamp(24px,3vw,40px)",
             height: narrow ? "min(72svh,620px)" : "clamp(560px,78svh,760px)",
             color: "#fff",
             isolation: "isolate",

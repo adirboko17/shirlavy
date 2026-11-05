@@ -171,7 +171,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
 
       {showFooter ? (
-        <footer style={{ padding: "0 clamp(12px,2vw,24px) clamp(12px,2vw,24px)" }}>
+        <footer style={{ padding: "clamp(32px,4vw,56px) clamp(12px,2vw,24px) clamp(12px,2vw,24px)" }}>
           <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F7F5F2", borderRadius: 32, padding: "clamp(40px,6vw,72px) clamp(24px,5vw,64px) 28px", display: "flex", flexDirection: "column", gap: "clamp(40px,5vw,64px)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,200px),1fr))", gap: 40 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "flex-start" }}>
