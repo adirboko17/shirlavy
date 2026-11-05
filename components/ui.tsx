@@ -154,7 +154,7 @@ export function PageHero({
           background: "radial-gradient(ellipse 70% 90% at 50% 0%,#F5EEE7 0%,rgba(245,238,231,.55) 45%,#FFFFFF 100%)",
         }}
       >
-        <div style={{ padding: "clamp(132px,15vw,196px) clamp(20px,4.5vw,64px) clamp(64px,8vw,112px)" }}>
+        <div style={{ padding: "clamp(108px,11vw,128px) clamp(20px,4.5vw,64px) clamp(20px,3vw,32px)" }}>
           <div
             style={{
               maxWidth: 860,
@@ -163,7 +163,7 @@ export function PageHero({
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
-              gap: 24,
+              gap: 14,
             }}
           >
             <Eyebrow>{kicker}</Eyebrow>
@@ -172,7 +172,7 @@ export function PageHero({
                 style={{
                   margin: 0,
                   fontWeight: 200,
-                  fontSize: "clamp(44px,6.4vw,96px)",
+                  fontSize: "clamp(36px,4.8vw,64px)",
                   lineHeight: 1.02,
                   letterSpacing: "-.04em",
                   textWrap: "balance",

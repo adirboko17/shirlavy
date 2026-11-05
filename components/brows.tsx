@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
-import { Faq, PageHero, ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot, h2Style } from "./ui";
+import { useSite } from "@/lib/site";
+import { Faq, PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
 
 const TECH = [
   {
@@ -44,11 +45,8 @@ export function BrowsPage() {
   const galRef = useRef<HTMLElement>(null);
   const [tech, setTech] = useState(0);
   const [f, setF] = useState("all");
-  const [lb, setLb] = useState(-1);
   const t = TECH[tech];
   const items = GAL.map((g, i) => ({ cat: g[0], label: g[1], i })).filter((g) => f === "all" || g.cat === f);
-  const cur = items.findIndex((g) => g.i === lb);
-  const lbItem = cur >= 0 ? items[cur] : null;
 
   return (
     <div>
@@ -118,8 +116,8 @@ export function BrowsPage() {
 
       <section ref={galRef} style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 20, marginBottom: "clamp(28px,4vw,48px)" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: 20, marginBottom: "clamp(20px,3vw,32px)" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <SectionLabel>לפני ואחרי</SectionLabel>
               <h2 style={h2Style()}>גלריית עבודות</h2>
             </div>
@@ -129,21 +127,8 @@ export function BrowsPage() {
               ))}
             </div>
           </div>
-          <ResponsiveCarousel
-            ariaLabel="גלריית לפני ואחרי"
-            slideWidth="min(88vw, 340px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 12 }}
-          >
-            {items.map((g) => (
-              <div key={g.i} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <ResultPhotoCard slotId={`brows-g${g.i}`} caption={g.label} ratio="1/1" placeholder={g.label} />
-                <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 6px" }}>
-                  <button type="button" className="chip" style={{ height: 36, background: "#F5EEE7" }} onClick={() => setLb(g.i)}>הגדלה</button>
-                </div>
-              </div>
-            ))}
-          </ResponsiveCarousel>
-          <p style={{ margin: "20px 0 0", fontSize: 13, color: "#8A8A8A" }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן. התוצאות משתנות מאישה לאישה.</p>
+          <BrowGallery key={f} items={items} />
+          <p style={{ margin: "20px 0 0", fontSize: 13, color: "#8A8A8A", textAlign: "center" }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן. התוצאות משתנות מאישה לאישה.</p>
         </div>
       </section>
 
@@ -163,19 +148,48 @@ export function BrowsPage() {
         </div>
       </section>
 
-      {lbItem ? (
-        <div role="dialog" aria-modal="true" aria-label="תמונת תוצאה" style={{ position: "fixed", inset: 0, zIndex: 90, background: "rgba(41,37,34,.55)", backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div style={{ width: "min(100%,560px)", background: "#fff", borderRadius: 28, padding: 14, display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 6px 0" }}>
-              <span style={{ fontSize: 14, color: "#8A8A8A" }}>{cur + 1} / {items.length}</span>
-              <button type="button" aria-label="סגירה" className="round" style={{ width: 40, height: 40, background: "#F7F5F2" }} onClick={() => setLb(-1)}>✕</button>
+    </div>
+  );
+}
+
+function BrowGallery({ items }: { items: { i: number; label: string }[] }) {
+  const { mobile } = useSite();
+  const pageSize = mobile ? 1 : 4;
+  const [start, setStart] = useState(0);
+  if (!items.length) return null;
+
+  const visible = items.slice(start, start + pageSize);
+  const end = start + visible.length;
+  const step = (dir: number) => {
+    setStart((current) => {
+      const next = current + dir * pageSize;
+      if (next >= items.length) return 0;
+      if (next < 0) return Math.max(0, items.length - (items.length % pageSize || pageSize));
+      return next;
+    });
+  };
+
+  return (
+    <div className="brow-gallery">
+      <div className="brow-gallery__grid" role="region" aria-label="גלריית לפני ואחרי">
+        {visible.map((item) => (
+          <figure key={item.i} className="brow-gallery__card">
+            <div className="brow-gallery__photo">
+              <Slot id={`brows-g${item.i}`} placeholder={item.label} />
             </div>
-            <ResultPhotoCard slotId={`brows-g${lbItem.i}`} caption={lbItem.label} note="[פרטי הטיפול]" ratio="1/1" />
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-              <button type="button" className="pill ghost" onClick={() => setLb(items[(cur - 1 + items.length) % items.length].i)}>→ הקודם</button>
-              <button type="button" className="pill ghost" onClick={() => setLb(items[(cur + 1) % items.length].i)}>הבא ←</button>
-            </div>
-          </div>
+            <figcaption>{item.label}</figcaption>
+          </figure>
+        ))}
+      </div>
+      {items.length > pageSize ? (
+        <div className="brow-gallery__bar">
+          <button type="button" className="round ghost" aria-label="הקודם" onClick={() => step(-1)}>
+            <span aria-hidden>→</span>
+          </button>
+          <span className="brow-gallery__count">{start + 1}–{end} / {items.length}</span>
+          <button type="button" className="round ghost" aria-label="הבא" onClick={() => step(1)}>
+            <span aria-hidden>←</span>
+          </button>
         </div>
       ) : null}
     </div>

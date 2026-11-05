@@ -5,13 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { StoreQuiz } from "./store-quiz";
-import { CLIENT_TESTIMONIALS, GRADUATE_TESTIMONIALS } from "@/lib/content";
+import { GRADUATE_TESTIMONIALS } from "@/lib/content";
 import type { InstagramWallData } from "@/lib/instagram";
 import { INSTAGRAM_HANDLE, INSTAGRAM_PROFILE_URL } from "@/lib/data";
 import { InstagramWall } from "./instagram-wall";
 import { ResponsiveCarousel, ResultPhotoCard, SectionLabel, Slot } from "./ui";
-
-const QUOTES = [...CLIENT_TESTIMONIALS, ...GRADUATE_TESTIMONIALS.slice(0, 2)];
 
 const TREATMENTS = [
   ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית — קווים בכיוון צמיחת השערה.", "/brows"],
@@ -37,7 +35,6 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const [playing, setPlaying] = useState(true);
   const [vOk, setVOk] = useState<boolean | null>(null);
   const [t, setT] = useState(0);
-  const [q, setQ] = useState(0);
   const narrow = (width || 1200) < 760;
   const mobile = (width || 1200) < 760;
 
@@ -53,12 +50,9 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   }, []);
 
   const featured = [...products].sort((a, b) => a.rank - b.rank).slice(0, 4);
-  const quote = QUOTES[q];
   const shade = narrow
     ? "linear-gradient(to top,rgba(28,20,14,.88) 0%,rgba(28,20,14,.7) 40%,rgba(28,20,14,.25) 70%,rgba(28,20,14,.4) 100%)"
     : "linear-gradient(to top,rgba(28,20,14,.72) 0%,rgba(28,20,14,.28) 45%,rgba(28,20,14,.18) 70%,rgba(28,20,14,.42) 100%)";
-
-  const setQuote = (i: number) => setQ((i + QUOTES.length) % QUOTES.length);
 
   return (
     <div>
@@ -179,6 +173,26 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
 
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
+          <SectionLabel>לפני ואחרי</SectionLabel>
+          <div>
+            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
+            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
+          </div>
+          <ResponsiveCarousel
+            ariaLabel="תוצאות לפני ואחרי"
+            slideWidth="min(88vw, 360px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
+          >
+            <ResultPhotoCard slotId="home-ba-1" ratio="1/1" caption="מיקרובליידינג" />
+            <ResultPhotoCard slotId="home-ba-2" ratio="1/1" caption="שיטה משולבת" />
+            <ResultPhotoCard slotId="home-ba-3" ratio="1/1" caption="מיקרובליידינג" />
+            <ResultPhotoCard slotId="home-ba-4" ratio="1/1" caption="שיטה משולבת" />
+          </ResponsiveCarousel>
+        </div>
+      </section>
+
+      <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
           <SectionLabel>טיפולים</SectionLabel>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em", textWrap: "balance" }}>טיפולים בהתאמה אישית</h2>
@@ -244,7 +258,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
               גלי את האקדמיה <span aria-hidden>←</span>
             </Link>
           </div>
-          <div style={{ position: "relative", width: "100%", aspectRatio: "4/5", maxHeight: "70vh", borderRadius: 24, overflow: "hidden", background: "#E9DED3", color: "#7A573C" }}>
+          <div style={{ position: "relative", width: "100%", aspectRatio: "3/4", maxHeight: "70vh", borderRadius: 24, overflow: "hidden", background: "#E9DED3", color: "#7A573C" }}>
             <Slot id="home-academy-1" placeholder="תלמידות בהכשרה" />
           </div>
         </div>
@@ -252,56 +266,9 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
 
       <section style={{ padding: "clamp(72px,10vw,140px) clamp(16px,4vw,48px) 0" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
-          <SectionLabel>הבוגרות שלנו ממליצות</SectionLabel>
-          <div>
-            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>
-              מה אומרות <span style={{ fontWeight: 500 }}>הבוגרות</span>
-            </h2>
-          </div>
-          <ResponsiveCarousel
-            ariaLabel="המלצות בוגרות"
-            slideWidth="min(88vw, 340px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,320px),1fr))", gap: "clamp(16px,2vw,24px)" }}
-          >
-            {GRADUATE_TESTIMONIALS.slice(0, 3).map((item) => (
-              <blockquote key={item.name} style={{ margin: 0, padding: "24px 0", borderTop: "1px solid rgba(28,28,28,.14)", display: "flex", flexDirection: "column", gap: 14, height: "100%" }}>
-                <p style={{ margin: 0, fontSize: "clamp(17px,1.5vw,20px)", lineHeight: 1.55, fontWeight: 300 }}>&quot;{item.q}&quot;</p>
-                <footer style={{ fontSize: 14, color: "#5A5A5A" }}>
-                  <strong style={{ fontWeight: 500, color: "#1C1C1C" }}>{item.name}</strong>
-                  <span> · {item.meta}</span>
-                </footer>
-              </blockquote>
-            ))}
-          </ResponsiveCarousel>
-          <Link href="/academy" className="text-link">עוד המלצות מהאקדמיה <span aria-hidden>←</span></Link>
-        </div>
-      </section>
-
-      <section style={{ padding: "clamp(72px,10vw,140px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
-          <SectionLabel>לפני ואחרי</SectionLabel>
-          <div>
-            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
-            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>יוצגו תמונות אמיתיות של לקוחות בלבד, באישורן.</p>
-          </div>
-          <ResponsiveCarousel
-            ariaLabel="תוצאות לפני ואחרי"
-            slideWidth="min(88vw, 360px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
-          >
-            <ResultPhotoCard slotId="home-ba-1" ratio="1/1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
-            <ResultPhotoCard slotId="home-ba-2" ratio="1/1" caption="שיטה משולבת" note="[פרטי טיפול]" />
-            <ResultPhotoCard slotId="home-ba-3" ratio="1/1" caption="מיקרובליידינג" note="[פרטי טיפול]" />
-            <ResultPhotoCard slotId="home-ba-4" ratio="1/1" caption="שיטה משולבת" note="[פרטי טיפול]" />
-          </ResponsiveCarousel>
-        </div>
-      </section>
-
-      <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
           <SectionLabel>החנות</SectionLabel>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
-            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>טיפוח שממשיך בבית</h2>
+            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>חנות המוצרים שלי</h2>
             <Link href="/shop" className="text-link">לכל המוצרים <span aria-hidden>←</span></Link>
           </div>
           {featured.length === 0 ? (
@@ -324,36 +291,46 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
         </div>
       </section>
 
-      <StoreQuiz />
-
-      <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,3.5vw,44px)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 16 }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C" }}>מילים של לקוחות</span>
-            <span style={{ fontSize: 13, color: "#5A5A5A" }} dir="ltr">{q + 1} / {QUOTES.length}</span>
+      <section style={{ padding: "clamp(72px,10vw,140px) clamp(16px,4vw,48px)" }}>
+        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
+          <SectionLabel>הבוגרות שלנו ממליצות</SectionLabel>
+          <div>
+            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>
+              מה אומרות <span style={{ fontWeight: 500 }}>הבוגרות</span>
+            </h2>
           </div>
-          <blockquote style={{ margin: 0, fontWeight: 200, fontSize: "clamp(28px,3.6vw,50px)", lineHeight: 1.3, letterSpacing: "-.03em", textWrap: "pretty", minHeight: "3.9em" }}>{quote.q}</blockquote>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 20 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <span style={{ fontSize: 15, fontWeight: 500 }}>{quote.name}</span>
-              <span style={{ fontSize: 13, color: "#5A5A5A" }}>{quote.meta}</span>
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <button type="button" aria-label="הקודם" className="round ghost" onClick={() => setQuote(q - 1)}>→</button>
-              <button type="button" aria-label="הבא" className="round ghost" onClick={() => setQuote(q + 1)}>←</button>
-            </div>
-          </div>
+          <ResponsiveCarousel
+            ariaLabel="המלצות בוגרות"
+            slideWidth="min(88vw, 340px)"
+            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "clamp(14px,1.6vw,20px)" }}
+          >
+            {GRADUATE_TESTIMONIALS.slice(0, 3).map((item) => (
+              <blockquote key={item.name} style={{ margin: 0, padding: "28px 26px 22px", borderRadius: 24, background: "#F6F2ED", display: "flex", flexDirection: "column", gap: 18, height: "100%" }}>
+                <span aria-hidden style={{ fontSize: 40, lineHeight: 0.8, color: "#C4A484", fontFamily: "Georgia, 'Times New Roman', serif" }}>“</span>
+                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, fontWeight: 400, color: "#1C1C1C" }}>{item.q}</p>
+                <footer style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid rgba(28,28,28,.08)", display: "flex", flexDirection: "column", gap: 2 }}>
+                  <strong style={{ fontWeight: 500, fontSize: 15, color: "#1C1C1C" }}>{item.name}</strong>
+                  <span style={{ fontSize: 13, color: "#8A8A8A" }}>{item.meta}</span>
+                </footer>
+              </blockquote>
+            ))}
+          </ResponsiveCarousel>
+          <Link href="/academy" className="text-link">עוד המלצות מהאקדמיה <span aria-hidden>←</span></Link>
         </div>
       </section>
 
+      <StoreQuiz />
+
       <section style={{ padding: "0 clamp(16px,4vw,48px) clamp(72px,10vw,140px)" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 16 }}>
-            <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C" }}>הקהילה</span>
-            <span dir="ltr" style={{ fontSize: 13, color: "#5A5A5A" }}>{instagram.handle || INSTAGRAM_HANDLE}</span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 16 }}>
-            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>עקבי אחרינו</h2>
+          <SectionLabel>הקהילה</SectionLabel>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: 20 }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
+              <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>עקבי אחרינו</h2>
+              <a href={instagram.profileUrl || INSTAGRAM_PROFILE_URL} target="_blank" rel="noopener noreferrer" dir="ltr" className="ig-handle">
+                {instagram.handle || INSTAGRAM_HANDLE}
+              </a>
+            </div>
             <a href={instagram.profileUrl || INSTAGRAM_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="pill gold">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.5" />

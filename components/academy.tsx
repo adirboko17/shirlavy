@@ -102,37 +102,26 @@ export function AcademyPage() {
             <SectionLabel>הכשרה מעשית</SectionLabel>
             <h2 style={h2Style()}>מה תלמדי</h2>
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: mobile ? "1fr" : "minmax(0,1fr) minmax(280px,420px)",
-              gap: "clamp(24px,4vw,48px)",
-              alignItems: "start",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, order: mobile ? 2 : 1 }}>
-              {[
-                ["מבנה הפנים ותכנון הגבה", "מדידה, סימטריה והתאמת צורה לכל פנים."],
-                ["עור ופיגמנט", "היכרות עם סוגי עור והתאמת גוון."],
-                ["מיקרובליידינג", "בניית קווים בכיוון הצמיחה הטבעי."],
-                ["הצללת פודרה ושיטה משולבת", "יצירת עומק ורכות בהדרגה."],
-                ["היגיינה ובטיחות", "סטנדרטים מחמירים לעבודה נקייה ובטוחה."],
-                ["עבודה על מודלים", "תרגול מעשי בליווי צמוד של שיר."],
-                ["ליווי לקוחה", "ייעוץ, תיאום ציפיות והנחיות אחרי טיפול."],
-              ].map(([t, d], i) => (
-                <div key={t} style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "18px 0", borderTop: "1px solid rgba(28,28,28,.14)" }}>
-                  <span style={{ flex: "none", width: 28, height: 28, borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#5A5A5A" }}>{String(i + 1).padStart(2, "0")}</span>
-                  <div><span style={{ fontSize: 16, fontWeight: 500 }}>{t}</span><div style={{ fontSize: 14, lineHeight: 1.6, color: "#5A5A5A" }}>{d}</div></div>
+          <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", columnGap: "clamp(32px,5vw,80px)" }}>
+            {[
+              ["מבנה הפנים ותכנון הגבה", "מדידה, סימטריה והתאמת צורה לכל פנים."],
+              ["עור ופיגמנט", "היכרות עם סוגי עור והתאמת גוון."],
+              ["מיקרובליידינג", "בניית קווים בכיוון הצמיחה הטבעי."],
+              ["הצללת פודרה ושיטה משולבת", "יצירת עומק ורכות בהדרגה."],
+              ["היגיינה ובטיחות", "סטנדרטים מחמירים לעבודה נקייה ובטוחה."],
+              ["עבודה על מודלים", "תרגול מעשי בליווי צמוד של שיר."],
+              ["ליווי לקוחה", "ייעוץ, תיאום ציפיות והנחיות אחרי טיפול."],
+            ].map(([t, d], i) => (
+              <div key={t} style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 14, alignItems: "start", padding: "22px 0", borderTop: "1px solid rgba(28,28,28,.14)" }}>
+                <span style={{ fontSize: 13, fontWeight: 500, color: "#8F6A4B", paddingTop: 3 }}>{String(i + 1).padStart(2, "0")}</span>
+                <div>
+                  <div style={{ fontSize: 17, lineHeight: 1.4 }}>{t}</div>
+                  <div style={{ marginTop: 4, fontSize: 14, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</div>
                 </div>
-              ))}
-              <span style={{ fontSize: 13, color: "#8A8A8A", padding: "8px 4px" }}>תוכנית הלימודים המפורטת תעודכן כאן.</span>
-            </div>
-            <div style={{ position: "relative", order: mobile ? 1 : 2, width: "100%", maxWidth: mobile ? "100%" : 420, justifySelf: mobile ? "stretch" : "end" }}>
-              <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: "4/3", width: "100%" }}>
-                <Slot id="ac-skills" placeholder="עבודה מעשית בכיתה" />
               </div>
-            </div>
+            ))}
           </div>
+          <span style={{ fontSize: 13, color: "#8A8A8A" }}>תוכנית הלימודים המפורטת תעודכן כאן.</span>
         </div>
       </section>
 
