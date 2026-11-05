@@ -91,12 +91,21 @@ def main() -> None:
     # Brows technique hero images
     micro_dir = CONTENT / "images/microblading-before-after"
     micro_files = sorted(micro_dir.glob("*.jpg"))
+    if micro_files:
+        b, a = ba_from_ig(micro_files[0], 3, 0, 2)
+        slots["brows-tech-0"] = save_webp(b, "brows-tech-micro")
+        slots["home-tr-1"] = slots["brows-tech-0"]
+        slots["home-ba-1"] = save_webp(collage_from_ig(micro_files[0]), "home-ba-1")
 
     combo_dir = CONTENT / "images/combined-method-before-after"
     combo_files = sorted(combo_dir.glob("*.jpg"))
+    if combo_files:
+        b, a = ba_from_ig(combo_files[0], 3, 0, 2)
+        slots["brows-tech-2"] = save_webp(b, "brows-tech-combo")
+        slots["home-tr-2"] = slots["brows-tech-2"]
+        slots["home-ba-2"] = save_webp(collage_from_ig(combo_files[0]), "home-ba-2")
 
     if len(micro_files) > 1:
-        # TODO: replace with a real powder-brows photo (still an old Instagram crop)
         b, a = ba_from_ig(micro_files[1], 3, 0, 1)
         slots["brows-tech-1"] = save_webp(b, "brows-tech-powder")
 
@@ -107,25 +116,16 @@ def main() -> None:
         slots[f"rm-ba-{i + 1}"] = collage
         if i == 0:
             slots["home-tr-3"] = collage
+            slots["home-ba-3"] = collage
 
-    # Brows results (microblading + combined) — campaign photos from Drive folder "קמפיינים".
-    # Source PNGs are not committed; optimized WebPs live in public/slots (see
-    # scripts/build-results.py). Old watermarked Instagram collages are no longer used.
-    results_micro = sorted(OUT.glob("results-micro-*.webp"), key=lambda p: int(p.stem.rsplit("-", 1)[1]))
-    results_combo = sorted(OUT.glob("results-combo-*.webp"), key=lambda p: int(p.stem.rsplit("-", 1)[1]))
-    for i, fp in enumerate(results_micro + results_combo):
-        slots[f"brows-g{i}"] = f"/slots/{fp.name}"
-    if len(results_micro) > 2:
-        slots["home-ba-1"] = f"/slots/{results_micro[0].name}"
-        slots["home-ba-3"] = f"/slots/{results_micro[2].name}"
-        slots["brows-tech-0"] = f"/slots/{results_micro[1].name}"
-    if len(results_combo) > 2:
-        slots["home-ba-2"] = f"/slots/{results_combo[0].name}"
-        slots["home-ba-4"] = f"/slots/{results_combo[2].name}"
-        slots["brows-tech-2"] = f"/slots/{results_combo[1].name}"
-    for slot_id, name in [("home-tr-1", "home-tr-micro-after"), ("home-tr-2", "home-tr-combo-after")]:
-        if (OUT / f"{name}.webp").exists():
-            slots[slot_id] = f"/slots/{name}.webp"
+    # Brows gallery (micro + combo) — full collage per post
+    gal_idx = 0
+    for fp in micro_files:
+        slots[f"brows-g{gal_idx}"] = save_webp(collage_from_ig(fp), f"brows-g{gal_idx}")
+        gal_idx += 1
+    for fp in combo_files:
+        slots[f"brows-g{gal_idx}"] = save_webp(collage_from_ig(fp), f"brows-g{gal_idx}")
+        gal_idx += 1
 
     root = CONTENT / "images/root"
     product_files: dict[str, str] = {
