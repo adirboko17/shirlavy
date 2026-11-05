@@ -27,19 +27,17 @@ const TECH = [
 ];
 
 const GAL = [
-  ["micro", "מיקרובליידינג"],
-  ["micro", "מיקרובליידינג"],
-  ["micro", "מיקרובליידינג"],
-  ["combo", "שיטה משולבת"],
-  ["combo", "שיטה משולבת"],
-  ["combo", "שיטה משולבת"],
-] as const;
-const FILTERS = [
-  ["all", "הכל"],
-  ["micro", "מיקרובליידינג"],
-  ["powder", "פודרה"],
-  ["combo", "משולבת"],
-] as const;
+  ...Array.from({ length: 8 }, () => ["micro", "מיקרובליידינג"] as const),
+  ...Array.from({ length: 8 }, () => ["combo", "שיטה משולבת"] as const),
+];
+const FILTERS = (
+  [
+    ["all", "הכל"],
+    ["micro", "מיקרובליידינג"],
+    ["powder", "פודרה"],
+    ["combo", "משולבת"],
+  ] as const
+).filter(([k]) => k === "all" || GAL.some((g) => g[0] === k));
 const WA = waLink("היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול גבות.");
 
 export function BrowsPage() {
@@ -124,7 +122,6 @@ export function BrowsPage() {
             <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
               <SectionLabel>לפני ואחרי</SectionLabel>
               <h2 style={h2Style()}>גלריית עבודות</h2>
-              <p style={{ margin: 0, fontSize: 12, color: "#8A8A8A" }}>תמונות מסרגלת אינסטגרם — חלקן נחתכו להסרת ממשק וכיתוב; ייתכן שייר של לוגו ישן בחלק מהן.</p>
             </div>
             <div role="tablist" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {FILTERS.map(([k, label]) => (
@@ -139,7 +136,7 @@ export function BrowsPage() {
           >
             {items.map((g) => (
               <div key={g.i} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <ResultPhotoCard slotId={`brows-g${g.i}`} caption={g.label} ratio="5/4" placeholder={g.label} />
+                <ResultPhotoCard slotId={`brows-g${g.i}`} caption={g.label} ratio="1/1" placeholder={g.label} />
                 <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 6px" }}>
                   <button type="button" className="chip" style={{ height: 36, background: "#F5EEE7" }} onClick={() => setLb(g.i)}>הגדלה</button>
                 </div>
@@ -173,7 +170,7 @@ export function BrowsPage() {
               <span style={{ fontSize: 14, color: "#8A8A8A" }}>{cur + 1} / {items.length}</span>
               <button type="button" aria-label="סגירה" className="round" style={{ width: 40, height: 40, background: "#F7F5F2" }} onClick={() => setLb(-1)}>✕</button>
             </div>
-            <ResultPhotoCard slotId={`brows-g${lbItem.i}`} caption={lbItem.label} note="[פרטי הטיפול]" ratio="5/4" />
+            <ResultPhotoCard slotId={`brows-g${lbItem.i}`} caption={lbItem.label} note="[פרטי הטיפול]" ratio="1/1" />
             <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
               <button type="button" className="pill ghost" onClick={() => setLb(items[(cur - 1 + items.length) % items.length].i)}>→ הקודם</button>
               <button type="button" className="pill ghost" onClick={() => setLb(items[(cur + 1) % items.length].i)}>הבא ←</button>
