@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { MENU_ROUTES, NAV, TOP_NAV, waLink } from "@/lib/data";
+import { MENU_ROUTES, NAV, SITE_EMAIL, TOP_NAV, waLink } from "@/lib/data";
 import { useSite } from "@/lib/site";
 import { MenuButton, MobileMenu } from "./mobile-menu";
 import { CartDrawer } from "./cart-drawer";
@@ -28,16 +28,21 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const [drop, setDrop] = useState<string | null>(null);
   const [wide, setWide] = useState(true);
   const hdRef = useRef<HTMLElement>(null);
+  const promoRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 30);
-      if (hdRef.current) hdRef.current.style.top = Math.max(0, 36 - window.scrollY) + "px";
+      const promoH = promoRef.current?.offsetHeight ?? 36;
+      const safe = Math.max(0, promoH - 36);
+      if (hdRef.current) hdRef.current.style.top = Math.max(safe, promoH - window.scrollY) + "px";
     };
     const onResize = () => {
       const next = window.innerWidth >= 1200;
       setWide(next);
       if (next) site.closeMenu();
+      onScroll();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") site.closeMenu();
@@ -67,8 +72,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const showFab = !wide && site.width < 760 && !["/shop", "/checkout"].includes(path) && !path.startsWith("/shop/") && !site.menuOpen;
 
   return (
-    <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C", overflowX: "clip" }}>
-      <div className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ, האתר שומר שבת">
+    <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C" }}>
+      <div ref={promoRef} className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ, האתר שומר שבת">
         {wide ? (
           <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>הזמנות מהחנות באתר · האתר שומר שבת</div>
         ) : (
@@ -83,7 +88,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         )}
       </div>
 
-      <header ref={hdRef} style={{ position: "fixed", top: 36, right: 0, left: 0, zIndex: 50, padding: "12px clamp(12px,2vw,24px)", pointerEvents: "none" }}>
+      <header ref={hdRef} style={{ position: "fixed", top: "calc(36px + env(safe-area-inset-top, 0px))", right: 0, left: 0, zIndex: 50, height: 0, margin: 0, padding: 0, pointerEvents: "none" }}>
+        <div ref={barRef} style={{ position: "absolute", top: 0, right: 0, left: 0, padding: "12px clamp(12px,2vw,24px)", pointerEvents: "none" }}>
         <div
           style={{
             pointerEvents: "auto",
@@ -166,16 +172,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </>
           )}
         </div>
+        </div>
       </header>
 
       <main>{children}</main>
 
       {showFooter ? (
-        <footer style={{ padding: "clamp(32px,4vw,56px) clamp(12px,2vw,24px) clamp(12px,2vw,24px)" }}>
-          <div style={{ maxWidth: 1320, margin: "0 auto", background: "#F7F5F2", borderRadius: 32, padding: "clamp(40px,6vw,72px) clamp(24px,5vw,64px) 28px", display: "flex", flexDirection: "column", gap: "clamp(40px,5vw,64px)" }}>
+        <footer style={{ background: "#F7F5F2" }}>
+          <div style={{ maxWidth: 1320, margin: "0 auto", padding: "clamp(40px,6vw,72px) clamp(24px,5vw,64px) 28px", display: "flex", flexDirection: "column", gap: "clamp(40px,5vw,64px)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,200px),1fr))", gap: 40 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "flex-start" }}>
-                <img src="/assets/logo-gold.png" alt="SHIR LAVY — Aesthetics & Academy" style={{ width: 132, height: "auto" }} />
+                <img src="/assets/logo-gold.png" alt="SHIR LAVY - Aesthetics & Academy" style={{ width: 132, height: "auto" }} />
                 <span style={{ fontSize: 14, lineHeight: 1.7, color: "#5A5A5A", maxWidth: 240 }}>קליניקת בוטיק לאיפור קבוע ואסתטיקה, ואקדמיה מקצועית לנשים.</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -189,8 +196,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14, color: "#5A5A5A", lineHeight: 1.6 }}>
                 <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C", marginBottom: 4 }}>הקליניקה</span>
                 <span>לנשים בלבד</span>
-                <span>[שעות פעילות]</span>
-                <span>[כתובת אימייל]</span>
+                <a href={`mailto:${SITE_EMAIL}`} dir="ltr" style={{ alignSelf: "flex-start", color: "inherit" }}>{SITE_EMAIL}</a>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 14 }}>
                 <span style={{ fontSize: 13, fontWeight: 500, color: "#7A573C", marginBottom: 4 }}>עקבי אחרינו</span>
@@ -234,7 +240,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <MobileMenu
           open={site.menuOpen}
           onClose={site.closeMenu}
-          anchorRef={hdRef}
+          anchorRef={barRef}
           ctaHref={CONSULT}
           activeKey={activeMenuKey(path)}
           onNavigate={(key) => router.push(MENU_ROUTES[key] ?? "/")}
@@ -247,13 +253,13 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
 function CartButton({ ink, bg, count, onClick }: { ink: string; bg: string; count: number; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} aria-label={count ? `עגלה, ${count} פריטים` : "עגלה"} style={{ width: 44, height: 44, border: 0, borderRadius: 999, background: bg, color: ink, cursor: "pointer", position: "relative", fontFamily: "inherit" }}>
+    <button type="button" onClick={onClick} aria-label={count ? `עגלה, ${count} פריטים` : "עגלה"} style={{ width: 44, height: 44, padding: 0, border: 0, borderRadius: 999, background: bg, color: ink, cursor: "pointer", position: "relative", display: "grid", placeItems: "center", fontFamily: "inherit", lineHeight: 0 }}>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
         <path d="M6 7h15l-1.5 9h-12L5 4H3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx="9" cy="20" r="1.2" fill="currentColor" />
         <circle cx="18" cy="20" r="1.2" fill="currentColor" />
       </svg>
-      {count > 0 ? <span style={{ position: "absolute", top: 4, left: 4, minWidth: 16, height: 16, borderRadius: 999, background: "#8F6A4B", color: "#fff", fontSize: 10, display: "grid", placeItems: "center" }}>{count}</span> : null}
+      {count > 0 ? <span style={{ position: "absolute", top: 1, left: 1, minWidth: 16, height: 16, padding: "0 4px", borderRadius: 999, background: "#8F6A4B", color: "#fff", fontSize: 10, lineHeight: 1, display: "grid", placeItems: "center", boxShadow: `0 0 0 2px ${bg}` }}>{count}</span> : null}
     </button>
   );
 }
@@ -262,7 +268,7 @@ function Logo({ onDark, small }: { onDark: boolean; small?: boolean }) {
   const m = small ? 28 : 30;
   const h = small ? 13 : 14;
   return (
-    <Link href="/" aria-label="SHIR LAVY — דף הבית" dir="ltr" style={{ background: "none", border: 0, padding: small ? 0 : "0 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: small ? 9 : 10, flex: "none" }}>
+    <Link href="/" aria-label="SHIR LAVY - דף הבית" dir="ltr" style={{ background: "none", border: 0, padding: small ? 0 : "0 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: small ? 9 : 10, flex: "none" }}>
       <img src={onDark ? "/assets/monogram-ivory.png" : "/assets/monogram-gold.png"} alt="" style={{ width: m, height: m }} />
       <img src={onDark ? "/assets/name-ivory.png" : "/assets/name-gold.png"} alt="SHIR LAVY" style={{ height: h, width: "auto" }} />
     </Link>

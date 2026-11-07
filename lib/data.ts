@@ -1,4 +1,5 @@
 export const PHONE = "972502444994";
+export const SITE_EMAIL = "office@shirlavy.co.il";
 
 export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/shir_aesthetics/";
 export const INSTAGRAM_HANDLE = "@shir_aesthetics";
@@ -258,7 +259,7 @@ export type MobileNavItem =
   | { key: string; label: string }
   | { key: string; label: string; kids: { key: string; label: string }[] };
 
-/** Mobile drawer nav — derived from `TOP_NAV` so treatment labels stay in sync. */
+/** Mobile drawer nav - derived from `TOP_NAV` so treatment labels stay in sync. */
 export const MOBILE_NAV: MobileNavItem[] = TOP_NAV.map((item) => {
   if (item.kids) {
     return {

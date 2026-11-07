@@ -1,208 +1,139 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { waLink } from "@/lib/data";
 import { GRADUATE_TESTIMONIALS } from "@/lib/content";
-import { useSite } from "@/lib/site";
-import { PageHero, ResponsiveCarousel, SectionLabel, Slot, h2Style } from "./ui";
+import slotMap from "@/lib/slot-map.json";
+import { ResponsiveCarousel } from "./ui";
 
-const GAL: [string, string, number][] = [
-  ["training", "תלמידות בהכשרה", 2], ["work", "תקריב עבודה", 1], ["space", "סביבת הלמידה", 1], ["work", "תקריב עבודה", 2],
-  ["achieve", "הישגי תלמידות", 1], ["training", "תרגול על מודל", 1], ["graduation", "רגע סיום ההכשרה", 2], ["space", "עמדת עבודה", 1], ["achieve", "עבודת בוגרת", 1],
+const CONSULT = waLink("היי שיר, אשמח לשמוע על הלימודים באקדמיה ולבדוק איזה מסלול מתאים לי.");
+const TRACKS = [
+  { title: "מסלול אישי", label: "אחת על אחת", description: "למידה פרטנית מול שיר, בקצב שלך ובהתאמה מלאה לנקודת הפתיחה שלך.", detail: "מועדי הלימוד בתיאום אישי.", message: "היי שיר, אשמח לשמוע פרטים על המסלול האישי באקדמיה." },
+  { title: "מסלול קבוצתי", label: "ללמוד יחד, בקבוצה קטנה", description: "קבוצה קטנה ואינטימית, עם תרגול משותף, למידה הדדית וליווי צמוד.", detail: "לפרטי המחזור הקרוב, דברי עם שיר.", message: "היי שיר, אשמח לשמוע פרטים על המסלול הקבוצתי באקדמיה." },
 ];
-const FILTERS = [["all", "הכל"], ["training", "בהכשרה"], ["work", "עבודות"], ["space", "הסטודיו"], ["achieve", "הישגים"], ["graduation", "סיום"]] as const;
+const SUBJECTS = [
+  ["מבנה הפנים ותכנון הגבה", "מדידה, סימטריה והתאמת צורה לכל פנים."],
+  ["עור ופיגמנט", "היכרות עם סוגי עור והתאמת גוון."],
+  ["מיקרובליידינג", "בניית קווים בכיוון הצמיחה הטבעי."],
+  ["הצללת פודרה ושיטה משולבת", "יצירת עומק ורכות בהדרגה."],
+  ["היגיינה ובטיחות", "סטנדרטים מחמירים לעבודה נקייה ובטוחה."],
+  ["עבודה על מודלים", "תרגול מעשי בליווי צמוד של שיר."],
+  ["ליווי לקוחה", "ייעוץ, תיאום ציפיות והנחיות אחרי טיפול."],
+] as const;
+const GALLERY = [
+  { slot: "ac-gal-0", category: "class", caption: "לומדות את הטכניקה" },
+  { slot: "ac-gal-1", category: "practice", caption: "הדגמה מקרוב" },
+  { slot: "ac-gal-2", category: "class", caption: "מהתיאוריה לקליניקה" },
+  { slot: "ac-gal-3", category: "class", caption: "שואלות, מתבוננות, לומדות" },
+  { slot: "ac-gal-4", category: "practice", caption: "תכנון הגבה, שלב אחר שלב" },
+  { slot: "ac-gal-5", category: "practice", caption: "תרגול בליווי אישי" },
+];
+const FILTERS = [["all", "כל הרגעים"], ["class", "בשיעור"], ["practice", "בתרגול"]] as const;
+
+function AcademyLabel({ children }: { children: ReactNode }) {
+  return <span className="academy-label">{children}</span>;
+}
+
+function AcademyPhoto({ slot, caption, className = "", priority = false }: { slot: keyof typeof slotMap; caption: string; className?: string; priority?: boolean }) {
+  return <figure className={`academy-photo ${className}`}>
+    <div><img src={slotMap[slot]} alt={caption} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} /></div>
+    <figcaption>{caption}</figcaption>
+  </figure>;
+}
+
+function AcademyLink({ href, children, light = false }: { href: string; children: ReactNode; light?: boolean }) {
+  const external = href.startsWith("https://");
+  return <a className={`academy-button${light ? " academy-button--light" : ""}`} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>{children}<span aria-hidden="true">{external ? "←" : "↓"}</span></a>;
+}
 
 export function AcademyPage() {
-  const tracksRef = useRef<HTMLElement>(null);
-  const { mobile } = useSite();
-  const [gf, setGf] = useState("all");
-  const gallery = GAL.map((g, i) => ({ cat: g[0], cap: g[1], rows: g[2], i })).filter((g) => gf === "all" || g.cat === gf);
+  const [filter, setFilter] = useState("all");
+  const [subject, setSubject] = useState<number | null>(0);
+  const [quote, setQuote] = useState(0);
+  const id = useId();
+  const gallery = GALLERY.filter(item => filter === "all" || item.category === filter);
+  const testimonial = GRADUATE_TESTIMONIALS[quote];
 
-  return (
-    <div>
-      <PageHero kicker="האקדמיה של שיר לביא" title={<>המקצוע שלך.<br />העתיד שלך.</>} text="גם אם את מתחילה מאפס, כאן מתחיל המסע שלך לעולם האיפור הקבוע.">
-        <button type="button" className="pill gold" style={{ marginTop: 6 }} onClick={() => tracksRef.current && window.scrollTo({ top: tracksRef.current.getBoundingClientRect().top + window.scrollY - 60, behavior: "smooth" })}>
-          לפרטים על מסלולי הלימוד <span aria-hidden>↓</span>
-        </button>
-      </PageHero>
-
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 920, margin: "0 auto", display: "flex", flexDirection: "column", gap: 22, alignItems: "center", textAlign: "center" }}>
-          <SectionLabel>על האקדמיה</SectionLabel>
-          <p style={{ margin: 0, fontSize: "clamp(24px,2.8vw,38px)", lineHeight: 1.4, letterSpacing: "-.02em", fontWeight: 300, textWrap: "balance" }}>האקדמיה נולדה מתוך הקליניקה. מה שנלמד כאן נבחן קודם על לקוחות אמיתיות, ומועבר הלאה בסבלנות ובדיוק.</p>
-          <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 640 }}>כבר יותר משבע שנים שיר מכשירה נשים לאיפור קבוע, בקבוצות קטנות או באופן פרטני, עם דגש על עבודה מעשית.</p>
+  return <div className="academy-page">
+    <section className="academy-hero">
+      <div className="academy-container">
+        <div className="academy-hero__intro">
+          <div><AcademyLabel>האקדמיה של שיר לביא</AcademyLabel><h1>המקצוע שלך.<br /><span>העתיד שלך.</span></h1></div>
+          <div className="academy-hero__aside"><p>גם אם את מתחילה מאפס, כאן מתחיל המסע שלך לעולם האיפור הקבוע. לימודים מקרוב, עם שיר, מהבסיס ועד לעבודה בידיים.</p><AcademyLink href="#tracks">בואי להכיר את המסלולים</AcademyLink></div>
         </div>
-      </section>
+        <AcademyPhoto slot="ac-gal-0" caption="רגע מתוך שיעור באקדמיה" className="academy-hero__photo" priority />
+      </div>
+    </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: "clamp(28px,4vw,48px)" }}>
-            <SectionLabel>למי זה מתאים</SectionLabel>
-            <h2 style={h2Style()}>לכל אישה שרוצה מקצוע בידיים</h2>
-          </div>
-          <ResponsiveCarousel
-            ariaLabel="למי האקדמיה מתאימה"
-            slideWidth="min(84vw, 300px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,280px),1fr))", gap: 12 }}
-          >
-            {[
-              ["מתחילות מאפס", "נשים שחולמות על מקצוע חדש ורוצות ללמוד אותו נכון, מהבסיס."],
-              ["הסבה מקצועית", "נשים שמחפשות עצמאות, גמישות ומקצוע יצירתי עם ביקוש."],
-              ["נשות מקצוע", "מאפרות וקוסמטיקאיות שרוצות להעמיק טכניקה ולדייק את העבודה."],
-            ].map(([t, d]) => (
-              <div key={t} style={{ borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 22 }}>
-                <h3 style={{ margin: "14px 0 10px", fontWeight: 300, fontSize: "clamp(21px,1.9vw,26px)" }}>{t}</h3>
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</p>
-              </div>
-            ))}
-          </ResponsiveCarousel>
-          <div style={{ marginTop: 12, borderRadius: 24, background: "#EFEBE5", padding: "clamp(24px,3.4vw,44px)", display: "flex", flexWrap: "wrap", gap: "16px 40px", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: "clamp(22px,2.4vw,32px)", fontWeight: 300, letterSpacing: "-.02em" }}>מתחילה מאפס? זו בדיוק נקודת ההתחלה.</span>
-            <span style={{ fontSize: 15, lineHeight: 1.7, color: "#3A3A3A", maxWidth: 420 }}>אין צורך בניסיון קודם. ההכשרה בנויה שלב אחר שלב, עם ליווי אישי של שיר.</span>
-          </div>
+    <section className="academy-section academy-story">
+      <div className="academy-container academy-split">
+        <div><AcademyLabel>ללמוד מתוך הניסיון</AcademyLabel><h2>האקדמיה נולדה<br />מתוך הקליניקה.</h2><p>מה שנלמד כאן נבחן קודם על לקוחות אמיתיות, ומועבר הלאה בסבלנות ובדיוק.</p><p>כבר יותר משבע שנים שיר מכשירה נשים לאיפור קבוע, בקבוצות קטנות או באופן פרטני, עם דגש על עבודה מעשית.</p></div>
+        <div className="academy-audience">
+          {[
+            ["מתחילה מאפס", "אין צורך בניסיון קודם. ההכשרה בנויה שלב אחר שלב, עם ליווי אישי של שיר."],
+            ["משנה כיוון מקצועי", "לנשים שמחפשות עצמאות, גמישות ומקצוע יצירתי."],
+            ["כבר עוסקת בתחום", "למאפרות וקוסמטיקאיות שרוצות להעמיק טכניקה ולדייק את העבודה."],
+          ].map(([title, text]) => <div key={title}><h3>{title}</h3><p>{text}</p></div>)}
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="tracks" ref={tracksRef} style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: "clamp(28px,4vw,48px)" }}>
-            <SectionLabel>מסלולי לימוד</SectionLabel>
-            <h2 style={h2Style()}>שתי דרכים ללמוד</h2>
-            <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 380 }}>פרטי המסלולים, משכם ומועדי הפתיחה יעודכנו כאן.</p>
-          </div>
-          <ResponsiveCarousel
-            ariaLabel="מסלולי לימוד"
-            slideWidth="min(88vw, 400px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,400px),1fr))", gap: 12 }}
-          >
-            {[
-              ["מסלול אישי", "למידה פרטנית מול שיר, בקצב שלך ובהתאמה מלאה לנקודת הפתיחה שלך.", [["מבנה", "אחת על אחת"], ["משך", "[יעודכן]"], ["מועדים", "בתיאום אישי"]], "היי שיר, אשמח לשמוע פרטים על המסלול האישי באקדמיה."],
-              ["מסלול קבוצתי", "קבוצה קטנה ואינטימית, עם תרגול משותף, למידה הדדית וליווי צמוד.", [["מבנה", "קבוצה קטנה"], ["משך", "[יעודכן]"], ["מחזור קרוב", "[יעודכן]"]], "היי שיר, אשמח לשמוע פרטים על המסלול הקבוצתי באקדמיה."],
-            ].map(([title, desc, rows, msg]) => (
-              <article key={title as string} style={{ borderRadius: 28, background: "#fff", border: "1px solid rgba(41,37,34,.08)", padding: "clamp(24px,3vw,40px)", display: "flex", flexDirection: "column", gap: 20, height: "100%" }}>
-                <h3 style={{ ...h2Style("clamp(28px,3vw,40px)") }}>{title as string}</h3>
-                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, color: "#5A5A5A" }}>{desc as string}</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {(rows as string[][]).map(([k, v]) => (
-                    <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "12px 16px", borderRadius: 14, background: "#fff", fontSize: 14 }}>
-                      <span style={{ color: "#5A5A5A" }}>{k}</span><span>{v}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href={waLink(msg as string)} target="_blank" rel="noopener noreferrer" className="pill gold" style={{ marginTop: "auto", alignSelf: "flex-start" }}>לפרטים בוואטסאפ <span aria-hidden>←</span></a>
-              </article>
-            ))}
-          </ResponsiveCarousel>
+    <section className="academy-section academy-tracks" id="tracks">
+      <div className="academy-container">
+        <div className="academy-section-heading"><div><AcademyLabel>מסלולי הלימוד</AcademyLabel><h2>איך נוח לך ללמוד?</h2></div><p>שתי מסגרות, אותה תשומת לב.<br />לפרטים על משך ההכשרה ומועדי הפתיחה, דברי עם שיר.</p></div>
+        <div className="academy-tracks__grid">
+          {TRACKS.map(track => <article key={track.title}>
+            <span className="academy-track-label">{track.label}</span><h3>{track.title}</h3><p>{track.description}</p><p className="academy-track-detail">{track.detail}</p><AcademyLink href={waLink(track.message)}>לפרטים על {track.title === "מסלול אישי" ? "המסלול האישי" : "המסלול הקבוצתי"}</AcademyLink>
+          </article>)}
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section style={{ background: "#F5EEE7", padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(24px,4vw,40px)" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <SectionLabel>הכשרה מעשית</SectionLabel>
-            <h2 style={h2Style()}>מה תלמדי</h2>
+    <section className="academy-section academy-syllabus">
+      <div className="academy-container academy-syllabus__grid">
+        <div>
+          <AcademyLabel>מה תלמדי כאן</AcademyLabel><h2>מהעין לפרטים,<br />אל הביטחון בידיים.</h2>
+          <div className="academy-subjects">
+            {SUBJECTS.map(([title, text], index) => {
+              const open = subject === index;
+              return <div key={title} className="academy-subject" data-open={open}>
+                <h3><button type="button" id={`${id}-subject-${index}`} aria-expanded={open} aria-controls={`${id}-content-${index}`} onClick={() => setSubject(open ? null : index)}><span>{title}</span><span className="academy-plus" aria-hidden="true" /></button></h3>
+                <div className="academy-subject__answer" id={`${id}-content-${index}`} role="region" aria-labelledby={`${id}-subject-${index}`} aria-hidden={!open} inert={!open}><div><p>{text}</p></div></div>
+              </div>;
+            })}
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: mobile ? "1fr" : "1fr 1fr", columnGap: "clamp(32px,5vw,80px)" }}>
-            {[
-              ["מבנה הפנים ותכנון הגבה", "מדידה, סימטריה והתאמת צורה לכל פנים."],
-              ["עור ופיגמנט", "היכרות עם סוגי עור והתאמת גוון."],
-              ["מיקרובליידינג", "בניית קווים בכיוון הצמיחה הטבעי."],
-              ["הצללת פודרה ושיטה משולבת", "יצירת עומק ורכות בהדרגה."],
-              ["היגיינה ובטיחות", "סטנדרטים מחמירים לעבודה נקייה ובטוחה."],
-              ["עבודה על מודלים", "תרגול מעשי בליווי צמוד של שיר."],
-              ["ליווי לקוחה", "ייעוץ, תיאום ציפיות והנחיות אחרי טיפול."],
-            ].map(([t, d], i) => (
-              <div key={t} style={{ display: "grid", gridTemplateColumns: "36px 1fr", gap: 14, alignItems: "start", padding: "22px 0", borderTop: "1px solid rgba(28,28,28,.14)" }}>
-                <span style={{ fontSize: 13, fontWeight: 500, color: "#8F6A4B", paddingTop: 3 }}>{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <div style={{ fontSize: 17, lineHeight: 1.4 }}>{t}</div>
-                  <div style={{ marginTop: 4, fontSize: 14, lineHeight: 1.65, color: "#5A5A5A" }}>{d}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <span style={{ fontSize: 13, color: "#8A8A8A" }}>תוכנית הלימודים המפורטת תעודכן כאן.</span>
+          <p className="academy-small">את תוכנית הלימודים המפורטת אפשר לקבל בשיחה עם שיר.</p>
         </div>
-      </section>
+        <AcademyPhoto slot="ac-gal-4" caption="ליווי אישי, גם בפרטים הקטנים" className="academy-syllabus__photo" />
+      </div>
+    </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))", gap: "clamp(24px,4vw,56px)", alignItems: "center" }}>
-          <div style={{ position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: "1/1" }}>
-            <Slot id="ac-shir" placeholder="שיר מלמדת" />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <SectionLabel>ללמוד משיר</SectionLabel>
-            <blockquote style={{ margin: 0, fontSize: "clamp(24px,2.8vw,38px)", lineHeight: 1.35, letterSpacing: "-.02em", fontWeight: 300 }}>&quot;אני מלמדת כל תלמידה כמו שהייתי רוצה שילמדו אותי: מקרוב, בסבלנות, ובלי קיצורי דרך.&quot;</blockquote>
-            <span style={{ fontSize: 14, color: "#5A5A5A" }}>שיר לביא, מייסדת האקדמיה</span>
-          </div>
-        </div>
-      </section>
+    <section className="academy-section academy-mentor">
+      <div className="academy-container academy-mentor__grid">
+        <AcademyPhoto slot="ac-shir" caption="שיר לביא · מייסדת האקדמיה" />
+        <div><AcademyLabel>ללמוד משיר</AcademyLabel><blockquote>״אני מלמדת כל תלמידה כמו שהייתי רוצה שילמדו אותי: מקרוב, בסבלנות, ובלי קיצורי דרך.״</blockquote><a href="/about" className="academy-text-link">עוד על שיר <span aria-hidden="true">←</span></a></div>
+      </div>
+    </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center", display: "flex", flexDirection: "column", gap: 16 }}>
-          <SectionLabel>הבוגרות שלנו</SectionLabel>
-          <h2 style={h2Style()}>מצפון ועד דרום</h2>
-          <p style={{ margin: 0, fontSize: "clamp(16px,1.3vw,18px)", lineHeight: 1.75, color: "#5A5A5A" }}>מאות תלמידות שהוכשרו מכל רחבי הארץ — מהצפון ועד הדרום, בדרך אחת שנבנתה מתוך ניסיון אמיתי.</p>
-        </div>
-      </section>
+    <section className="academy-section academy-gallery">
+      <div className="academy-container">
+        <div className="academy-section-heading"><div><AcademyLabel>מהאקדמיה</AcademyLabel><h2>ככה זה נראה, מבפנים.</h2></div><div className="academy-filters" role="group" aria-label="סינון תמונות האקדמיה">{FILTERS.map(([key, label]) => <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}</div></div>
+        <ResponsiveCarousel key={filter} ariaLabel="גלריית האקדמיה" slideWidth="min(80vw, 340px)" desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "32px 22px" }}>
+          {gallery.map(item => <AcademyPhoto key={item.slot} slot={item.slot as keyof typeof slotMap} caption={item.caption} />)}
+        </ResponsiveCarousel>
+      </div>
+    </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "flex-end", gap: 20, marginBottom: "clamp(28px,4vw,48px)" }}>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
-              <SectionLabel>מהאקדמיה</SectionLabel>
-              <h2 style={h2Style()}>גלריה</h2>
-            </div>
-            <div role="tablist" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {FILTERS.map(([k, label]) => (
-                <button key={k} type="button" role="tab" aria-selected={gf === k} className="chip" onClick={() => setGf(k)} style={{ background: gf === k ? "#1C1C1C" : "#F7F5F2", color: gf === k ? "#fff" : "#1C1C1C" }}>{label}</button>
-              ))}
-            </div>
-          </div>
-          {mobile ? (
-            <ResponsiveCarousel ariaLabel="גלריית האקדמיה" slideWidth="min(72vw, 280px)">
-              {gallery.map((g) => (
-                <figure key={g.i} style={{ margin: 0, position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", aspectRatio: g.rows === 2 ? "3/4" : "4/5" }}>
-                  <Slot id={`ac-gal-${g.i}`} placeholder={g.cap} />
-                </figure>
-              ))}
-            </ResponsiveCarousel>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,260px),1fr))", gridAutoFlow: "dense", gap: 12 }}>
-              {gallery.map((g) => (
-                <figure key={g.i} style={{ margin: 0, gridRow: `span ${g.rows}`, position: "relative", borderRadius: 24, overflow: "hidden", background: "#F2EBE4", color: "#999", minHeight: g.rows === 2 ? 480 : 234 }}>
-                  <Slot id={`ac-gal-${g.i}`} placeholder={g.cap} />
-                </figure>
-              ))}
-            </div>
-          )}
+    <section className="academy-section academy-testimonials">
+      <div className="academy-container academy-split">
+        <div><AcademyLabel>במילים שלהן</AcademyLabel><h2>מהאקדמיה,<br />לדרך שלהן.</h2><p>מאות תלמידות שהוכשרו מכל רחבי הארץ, מהצפון ועד הדרום. אלה כמה מהמילים שהן שלחו לשיר.</p></div>
+        <div className="academy-testimonials__content">
+          <div className="academy-testimonials__quote" aria-live="polite" aria-atomic="true"><figure key={quote}><blockquote>״{testimonial.q}״</blockquote><figcaption><strong>{testimonial.name}</strong><span>{testimonial.meta}</span></figcaption></figure></div>
+          <div className="academy-testimonials__controls"><button type="button" aria-label="ההמלצה הקודמת" onClick={() => setQuote(current => (current - 1 + GRADUATE_TESTIMONIALS.length) % GRADUATE_TESTIMONIALS.length)}>→</button><span>{quote + 1} / {GRADUATE_TESTIMONIALS.length}</span><button type="button" aria-label="ההמלצה הבאה" onClick={() => setQuote(current => (current + 1) % GRADUATE_TESTIMONIALS.length)}>←</button></div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section style={{ padding: "clamp(56px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <div style={{ marginBottom: "clamp(28px,4vw,48px)", display: "flex", flexDirection: "column", gap: 16 }}>
-            <SectionLabel>הבוגרות שלנו ממליצות</SectionLabel>
-            <h2 style={h2Style()}>מה אומרות הבוגרות</h2>
-          </div>
-          <ResponsiveCarousel
-            ariaLabel="המלצות בוגרות"
-            slideWidth="min(88vw, 340px)"
-            desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,380px),1fr))", gap: 12 }}
-          >
-            {GRADUATE_TESTIMONIALS.map((item) => (
-              <figure key={item.name + item.q.slice(0, 12)} style={{ margin: 0, borderTop: "1px solid rgba(28,28,28,.14)", paddingTop: 24, display: "flex", flexDirection: "column", gap: 16, height: "100%" }}>
-                <blockquote style={{ margin: 0, fontSize: "clamp(19px,1.8vw,24px)", lineHeight: 1.5, fontWeight: 300 }}>&quot;{item.q}&quot;</blockquote>
-                <figcaption>
-                  <span style={{ fontSize: 15, fontWeight: 500 }}>{item.name}</span>
-                  <br />
-                  <span style={{ fontSize: 13, color: "#8A8A8A" }}>{item.meta}</span>
-                </figcaption>
-              </figure>
-            ))}
-          </ResponsiveCarousel>
-        </div>
-      </section>
-    </div>
-  );
+    <section className="academy-section academy-closing"><div className="academy-container"><AcademyLabel>הצעד הראשון שלך</AcademyLabel><h2>בואי נדבר על הלימודים.</h2><p>נכיר, נשמע איפה את היום ונבדוק יחד איזה מסלול מתאים לך.</p><AcademyLink href={CONSULT}>לשיחה עם שיר</AcademyLink></div></section>
+  </div>;
 }

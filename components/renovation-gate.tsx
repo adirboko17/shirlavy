@@ -39,7 +39,7 @@ function Renovation({ onUnlock }: { onUnlock: () => void }) {
       <img className="reno-mark" src="/assets/monogram-tone.png" alt="" aria-hidden />
       <span />
       <div className="reno-content">
-        <img className="reno-logo" src="/assets/logo-foil.png" alt="SHIR LAVY — Aesthetics & Academy" />
+        <img className="reno-logo" src="/assets/logo-foil.png" alt="SHIR LAVY - Aesthetics & Academy" />
         <div className="reno-rule" />
         <div className="reno-copy">
           <h1>האתר בשיפוצים</h1>

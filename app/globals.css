@@ -77,7 +77,9 @@ img { max-width: 100%; }
 .promo {
   position: relative;
   z-index: 51;
-  height: 36px;
+  box-sizing: border-box;
+  height: calc(36px + env(safe-area-inset-top, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
   background: #8f6a4b;
   color: #fff;
   font-size: 13px;
@@ -121,6 +123,7 @@ img { max-width: 100%; }
 }
 .marquee-row {
   display: flex;
+  flex: none;
   align-items: center;
   gap: clamp(28px, 3.2vw, 52px);
   padding-inline-end: clamp(28px, 3.2vw, 52px);

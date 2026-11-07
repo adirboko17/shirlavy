@@ -90,7 +90,7 @@ export function ResponsiveCarousel({
           </div>
         ))}
       </div>
-      <div className="resp-carousel__dots" role="tablist" aria-label={ariaLabel ? `${ariaLabel} — ניווט` : "ניווט שקפים"}>
+      <div className="resp-carousel__dots" role="tablist" aria-label={ariaLabel ? `${ariaLabel} - ניווט` : "ניווט שקפים"}>
         {items.map((_, i) => (
           <button
             key={i}

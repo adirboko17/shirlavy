@@ -265,7 +265,7 @@ export function Faq({ items }: { items: { q: string; a: string }[] }) {
   );
 }
 
-/** Single clinic result card — full before/after collage image (no interactive slider). */
+/** Single clinic result card - full before/after collage image (no interactive slider). */
 export function ResultPhotoCard({
   slotId,
   caption,

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { StoreQuiz } from "./store-quiz";
@@ -12,15 +12,15 @@ import { InstagramWall } from "./instagram-wall";
 import { ResponsiveCarousel, ResultPhotoCard, Slot } from "./ui";
 
 const TREATMENTS = [
-  ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית — קווים בכיוון צמיחת השערה.", "/brows"],
+  ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית - קווים בכיוון צמיחת השערה.", "/brows"],
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
   ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להבהרת איפור קבוע ישן או לא רצוי.", "/removal"],
-  // TODO: replace home-tr-4 with high-res clinic photo when available (currently low-res WhatsApp crop)
   ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק ומתיחת העור בטכנולוגיות מתקדמות.", "/aesthetics"],
   ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/medical-aesthetics"],
 ] as const;
 
 const VALUES = ["דיוק", "טבעיות", "יחס אישי", "מקצועיות", "ביטחון", "אסתטיקה", "למידה", "יופי"];
+const MARQUEE_COPIES = 8;
 
 const ACADEMY = [
   ["שנות הוראה", "ניסיון מצטבר בהכשרת נשים למקצוע האיפור הקבוע."],
@@ -129,11 +129,11 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
       </section>
 
       <section aria-label="דיוק, טבעיות, יחס אישי, מקצועיות, ביטחון, אסתטיקה, למידה, יופי" className="marquee-wrap">
-        <div className="marquee-track" aria-hidden>
-          {[0, 1].map((copy) => (
+        <div className="marquee-track" aria-hidden style={{ "--marquee-count": MARQUEE_COPIES } as CSSProperties}>
+          {Array.from({ length: MARQUEE_COPIES }, (_, copy) => (
             <div key={copy} className="marquee-row">
               {VALUES.map((v) => (
-                <span key={copy + v} style={{ display: "contents" }}>
+                <span key={`${copy}-${v}`} style={{ display: "contents" }}>
                   <span>{v}</span>
                   <i />
                 </span>
@@ -148,7 +148,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           <HomeSectionLabel>לפני ואחרי</HomeSectionLabel>
           <div>
             <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
-            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>מיקרובליידינג ושיטה משולבת — מבט מקרוב על העבודה בקליניקה.</p>
+            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>מיקרובליידינג ושיטה משולבת - מבט מקרוב על העבודה בקליניקה.</p>
           </div>
           <ResponsiveCarousel
             ariaLabel="תוצאות לפני ואחרי"
@@ -183,7 +183,13 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
             <figure className="home-treatment-photo">
               <div className="home-treatment-photo__frame">
                 {TREATMENTS.map((item, i) => <div key={item[0]} className="home-treatment-photo__slide" data-active={t === i} aria-hidden={t !== i}>
-                  <Slot id={i === 4 ? "aes-clinic" : "home-tr-" + (i + 1)} placeholder={item[1]} />
+                  {i >= 3 ? (
+                    <div className="home-treatment-logo">
+                      <img src="/assets/logo-gold.png" alt="" />
+                    </div>
+                  ) : (
+                    <Slot id={"home-tr-" + (i + 1)} placeholder={item[1]} />
+                  )}
                 </div>)}
               </div>
               <figcaption>{TREATMENTS[t][1]}</figcaption>
@@ -193,22 +199,25 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
       </section>
 
       <section className="home-academy" id="home-academy">
-        <div className="home-container">
+        <figure className="home-academy__photo">
+          <div><Slot id="home-academy-1" placeholder="תלמידות בהכשרה" /></div>
+        </figure>
+        <div className="home-academy__copy">
           <HomeSectionLabel>האקדמיה של שיר לביא</HomeSectionLabel>
-          <div className="home-academy__layout">
-            <div className="home-academy__copy">
-              <h2>המקצוע שלך.<br /><span>העתיד שלך.</span></h2>
-              <p className="home-academy__intro">אקדמיה לאיפור קבוע שבה כל תלמידה לומדת ישירות משיר, עם יחס אישי ותרגול מעשי.</p>
+          <h2>המקצוע שלך.<br /><span>העתיד שלך.</span></h2>
+          <p className="home-academy__intro">אקדמיה לאיפור קבוע שבה כל תלמידה לומדת ישירות משיר, עם יחס אישי ותרגול מעשי.</p>
               <div className="home-academy__values">
-                {ACADEMY.map(([title, text]) => <div key={title}><h3>{title}</h3><p>{text}</p></div>)}
+                {ACADEMY.map(([title, text]) => <div className="home-academy__value" key={title}>
+                  <span className="home-academy__check" aria-hidden>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <circle cx="9" cy="9" r="7.25" stroke="currentColor" strokeWidth="1.2" />
+                      <path d="M5.2 9.15 7.7 11.6 12.8 6.55" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <div><h3>{title}</h3><p>{text}</p></div>
+                </div>)}
               </div>
-              <Link href="/academy" className="home-button home-button--ivory">בואי להכיר את האקדמיה <span aria-hidden>←</span></Link>
-            </div>
-            <figure className="home-academy__photo">
-              <div><Slot id="home-academy-1" placeholder="תלמידות בהכשרה" /></div>
-              <figcaption>לומדות. מתרגלות. מתפתחות.</figcaption>
-            </figure>
-          </div>
+          <Link href="/academy" className="home-button home-button--ivory">בואי להכיר את האקדמיה <span aria-hidden>←</span></Link>
         </div>
       </section>
 

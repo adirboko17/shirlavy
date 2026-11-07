@@ -224,7 +224,7 @@ export function CheckoutPage() {
             <dl className="summary-totals">
               <div><dt>סכום ביניים</dt><dd>{formatMoney(subtotal, currency)}</dd></div>
               {quote && quote.discount > 0 ? <div><dt>הנחה</dt><dd>−{formatMoney(quote.discount, quote.currency)}</dd></div> : null}
-              <div><dt>משלוח</dt><dd>{quote ? (quote.shipping == null ? "—" : formatShippingPrice(quote.shipping, quote.currency)) : "בחרי משלוח"}</dd></div>
+              <div><dt>משלוח</dt><dd>{quote ? (quote.shipping == null ? "-" : formatShippingPrice(quote.shipping, quote.currency)) : "בחרי משלוח"}</dd></div>
               <div className="is-total"><dt>לתשלום</dt><dd>{quote ? formatMoney(quote.total, quote.currency) : formatMoney(subtotal, currency)}</dd></div>
             </dl>
           </aside>

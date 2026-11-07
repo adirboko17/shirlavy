@@ -4,6 +4,10 @@ import { headers } from "next/headers";
 import "./globals.css";
 import "./commerce.css";
 import "./home.css";
+import "./about.css";
+import "./treatments.css";
+import "./academy.css";
+import "./contact.css";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
 import { RenovationGate } from "@/components/renovation-gate";
@@ -19,8 +23,8 @@ const heebo = Heebo({
 
 export const metadata: Metadata = {
   title: {
-    default: "SHIR LAVY — Aesthetics & Academy",
-    template: "%s — SHIR LAVY",
+    default: "SHIR LAVY - Aesthetics & Academy",
+    template: "%s - SHIR LAVY",
   },
   description: "קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, ואקדמיה מקצועית לנשים.",
 };
