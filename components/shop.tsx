@@ -25,8 +25,8 @@ export function ShopPage() {
     <section className="shop-intro">
       <div className="commerce-container shop-intro__inner">
         <div>
-          <span className="commerce-eyebrow">החנות שלנו</span>
-          <h1>החנות שלנו</h1>
+          <span className="commerce-eyebrow">THE SHIR LAVY EDIT</span>
+          <h1>החנות<br /><em>שלנו</em></h1>
           <p>{SHOP_INTRO}<br />{SHOP_INTRO_SECOND}</p>
           <a className="commerce-text-link" href="#catalog">לכל המוצרים שלנו <CommerceIcon name="arrow" /></a>
         </div>
