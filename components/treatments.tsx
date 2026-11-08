@@ -2,22 +2,28 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { waLink } from "@/lib/data";
-import { TREATMENT_DISCLAIMER } from "@/lib/content";
+import { TREATMENT_DISCLAIMER, LASER_HAIR_COPY, SKIN_FIRMING_COPY, PMU_REMOVAL_COPY } from "@/lib/content";
 import { ResultPhotoCard } from "./ui";
+import { MedicalAestheticsPage } from "./medical-aesthetics";
 import { TreatmentHero, TreatmentLabel, TreatmentCta, TreatmentProcess, TreatmentFaq, TreatmentClosing } from "./treatment-ui";
 const WA = waLink("היי שיר, אשמח לבדיקת התאמה להסרת איפור קבוע בלייזר.");
 
 export function RemovalPage() {
   return <div className="treatment-page treatment-removal">
-    <TreatmentHero tone="clay" label="הסרת איפור קבוע בלייזר" title={<>כשהאיפור הקבוע{" "}<em>כבר לא מתאים לך.</em></>} text="איפור קבוע שלא צלח, גוון שהשתנה או רצון במראה אחר. בטכנולוגיית לייזר ניתן לפרק פיגמנטים במטרה להבהיר או להסיר איפור ישן, בהתאם לבדיקת התאמה." image="home-tr-3" caption="מבט מקרוב · מהקליניקה">
+    <TreatmentHero tone="clay" label="הסרת איפור קבוע בלייזר" title={<>כשהאיפור הקבוע{" "}<em>כבר לא מתאים לך.</em></>} text={PMU_REMOVAL_COPY[0]} image="home-tr-3" caption="מבט מקרוב · מהקליניקה">
       <TreatmentCta href={WA}>לבדיקת התאמה ללא עלות</TreatmentCta>
       <a className="treatment-link" href="#removal-results">לתמונות הטיפול <span aria-hidden="true">↓</span></a>
     </TreatmentHero>
     <section className="treatment-section"><div className="treatment-container treatment-split">
       <div className="treatment-section-intro"><TreatmentLabel>לפני שמתחילים מחדש</TreatmentLabel><h2>קודם מבינות<br />מה נכון לעור שלך.</h2></div>
-      <div className="treatment-prose"><p className="treatment-lead">הטיפול מתבצע באמצעות מכשור מתקדם, תוך הקפדה על פרוטוקולי עבודה, אמצעי מיגון ובטיחות.</p>
-        <p>משך הטיפול קצר ולעיתים ניתן להבחין בשינוי כבר לאחר המפגש הראשון. מספר הטיפולים הנדרש משתנה בהתאם לסוג הפיגמנט, צבעו, עומק החדרתו, סוג העור ותגובתו לטיפול. {TREATMENT_DISCLAIMER}</p>
-        <p>מדובר במכשור עוצמתי המחייב ידע מקצועי, הכשרה מתאימה וניסיון מעשי.</p>
+      <div className="treatment-prose"><p className="treatment-lead">{PMU_REMOVAL_COPY[1]}</p>
+        <p>{PMU_REMOVAL_COPY[2]}</p>
+        <aside className="treatment-safety" aria-labelledby="removal-safety-title">
+          <h3 id="removal-safety-title">חשוב לדעת</h3>
+          <p>{PMU_REMOVAL_COPY[3]}</p>
+          <p>{PMU_REMOVAL_COPY[4]}</p>
+        </aside>
+        <p className="treatment-eligibility">{TREATMENT_DISCLAIMER}</p>
         <div className="treatment-reasons">{[
           ["גוון שהשתנה", "פיגמנט שהפך עם השנים לאפרפר, אדמדם או כחלחל."],
           ["צורה שלא מתאימה", "גבה שעוצבה בעבר בקו שאינו תואם את מבנה הפנים."],
@@ -48,22 +54,46 @@ export function RemovalPage() {
 }
 
 const TREATMENTS = [
-  { id: "laser", title: "הסרת שיער בלייזר", ph: "הסרת שיער בלייזר", short: "טיפולי הסרת השיער מתבצעים באמצעות מכשור לייזר מתקדם, עם התאמת פרמטרים לגוון העור, סוג השיער ומאפיינים אישיים.", blocks: [["מה זה", "מכשור לייזר הפועל באמצעות אנרגיית אור המכוונת לפיגמנט שבשערה ופוגעת בזקיק השיער במטרה להפחית את צמיחתו לאורך זמן."], ["למי זה מתאים", "הטיפול מתאים גם למטופלים צעירים, לאחר אבחון מקצועי, בחינת ההתאמה האישית והתייחסות לגיל ולשלב ההתפתחות."], ["מה לצפות", "כבר במהלך סדרת הטיפולים ניתן להבחין בהפחתה בצמיחת השיער. קצב התגובה ומספר המפגשים משתנים מאדם לאדם."]], faq: [{ q: "כמה מפגשים נדרשים?", a: "אין מספר קבוע. ההערכה נעשית בייעוץ ומתעדכנת לפי התגובה לטיפול." }, { q: "האם יש הכנה מיוחדת?", a: "כן, תקבלי הנחיות הכנה מפורטות לפני המפגש הראשון." }, { q: "אפשר לטפל בכל עונה?", a: "ניתן לטפל לאורך השנה, תוך הקפדה על הנחיות חשיפה לשמש." }] },
-  { id: "firming", title: "מיצוק והידוק העור", ph: "טיפול מיצוק", short: "טיפולי מיצוק והידוק העור לשיפור מראה העור, מרקמו ותחושת המוצקות - בטכנולוגיה מתקדמת המותאמת לאזור המטופל.", blocks: [["מה זה", "אנרגיה מבוקרת מועברת לרקמות העור במטרה לעודד תהליכים טבעיים של התחדשות וייצור קולגן."], ["למי זה מתאים", "למי שניכר בה ירידה בגמישות העור - לאחר הריונות, ירידה במשקל או שינויים הורמונליים - באזורים כמו הבטן, הזרועות והירכיים."], ["מה לצפות", "תוכנית הטיפול נבנית בהתאמה אישית. השיפור מתפתח בהדרגה ותלוי במצב העור, במידת הרפיון ובתגובה האישית."]], faq: [{ q: "מתי רואים שינוי?", a: "השינוי הדרגתי ותלוי בעור ובתגובה לטיפול. שיר תתאם איתך ציפיות מראש." }, { q: "האם יש זמן החלמה?", a: "ברוב המקרים ניתן לחזור לשגרה מיד. פרטים מדויקים יינתנו בייעוץ." }] },
-  { id: "tightening", title: "מתיחת העור וטכנולוגיות מתקדמות", ph: "טכנולוגיות אסתטיות", short: "טכנולוגיות אסתטיות לשיפור מראה המרקם והקווים, בגישה זהירה ומותאמת אישית.", blocks: [["מה זה", "מגוון טכנולוגיות לשיפור מראה העור. הבחירה בטכנולוגיה נעשית לפי מטרת הטיפול ומאפייני העור."], ["למי זה מתאים", "לנשים המחפשות שיפור במראה המרקם או הקווים, בלי הליך פולשני. ההתאמה נבדקת באופן אישי."], ["מה לצפות", "תוכנית אישית עם תיאום ציפיות כן. התוצאות משתנות ואינן מובטחות מראש."]], faq: [{ q: "איך בוחרים את הטיפול הנכון?", a: "בשיחת הייעוץ בוחנים את העור והמטרות, ושיר ממליצה על הכיוון המתאים." }, { q: "אפשר לשלב עם טיפולים אחרים?", a: "לעיתים כן. ההמלצה ניתנת באופן אישי." }] },
+  {
+    id: "laser", title: "הסרת שיער בלייזר",
+    short: "הפחתת צמיחת השיער לאורך זמן, באמצעות מכשור לייזר מתקדם ובהתאמה אישית לגוון העור ולסוג השיער.",
+    blocks: [
+      ["איך הטיפול עובד?", LASER_HAIR_COPY[0]],
+      ["התאמה אישית לכל מטופלת", LASER_HAIR_COPY[1]],
+      ["מה אפשר לצפות לאורך הדרך?", LASER_HAIR_COPY[2]],
+      ["התאמה גם למטופלות צעירות", LASER_HAIR_COPY[3]],
+    ], faq: [{ q: "כמה מפגשים נדרשים?", a: "אין מספר קבוע. ההערכה נעשית בייעוץ ומתעדכנת לפי התגובה לטיפול." }, { q: "האם יש הכנה מיוחדת?", a: "כן, תקבלי הנחיות הכנה מפורטות לפני המפגש הראשון." }, { q: "אפשר לטפל בכל עונה?", a: "ניתן לטפל לאורך השנה, תוך הקפדה על הנחיות חשיפה לשמש." }, { q: "האם זה כואב?", a: "לא. באמצעות ידית קרח וטכנולוגיה מתקדמת הטיפול אינו כואב." }] },
+  {
+    id: "firming", title: "מיצוק והידוק העור",
+    short: SKIN_FIRMING_COPY[1],
+    blocks: [
+      ["כשהעור משתנה", SKIN_FIRMING_COPY[0]],
+      ["איך הטיפול עובד?", SKIN_FIRMING_COPY[2]],
+      ["באילו אזורים מטפלים?", SKIN_FIRMING_COPY[3]],
+      ["צלוליטיס", SKIN_FIRMING_COPY[6]],
+      ["שיפור מראה סימני מתיחה וקמטוטים", SKIN_FIRMING_COPY[7]],
+      ["למי הטיפול עשוי להתאים?", SKIN_FIRMING_COPY[4]],
+      ["תהליך הדרגתי, תוכנית אישית", SKIN_FIRMING_COPY[5]],
+    ], faq: [{ q: "מתי רואים שינוי?", a: "השינוי הדרגתי ותלוי בעור ובתגובה לטיפול. שיר תתאם איתך ציפיות מראש." }, { q: "האם יש זמן החלמה?", a: "ברוב המקרים ניתן לחזור לשגרה מיד. פרטים מדויקים יינתנו בייעוץ." }, { q: "איך בוחרים את הטיפול הנכון?", a: "בשיחת הייעוץ בוחנים את העור והמטרות, ושיר ממליצה על הכיוון המתאים." }, { q: "אפשר לשלב עם טיפולים אחרים?", a: "לעיתים כן. ההמלצה ניתנת באופן אישי." }] },
+  {
+    id: "medical", title: "אסתטיקה רפואית",
+    short: "הזרקות וטיפולים אסתטיים־רפואיים, המבוצעים על ידי רופא מוסמך ובעל ניסיון. כל טיפול מתחיל בייעוץ רפואי, אבחון והתאמה אישית.",
+    blocks: [], faq: [],
+  },
 ];
 
 export function AestheticsPage() {
   const params = useParams();
   const id = typeof params?.id === "string" ? params.id : null;
   const current = TREATMENTS.find((treatment) => treatment.id === id);
+  if (current?.id === "medical") return <MedicalAestheticsPage />;
   if (!current) return <div className="treatment-page treatment-aesthetics">
-    <TreatmentHero label="טיפולי אסתטיקה" title={<>טכנולוגיה מתקדמת.{" "}<em>תשומת לב אישית.</em></>} text="טיפולים לעור ולגוף, עם אותה הקפדה ואותו יחס אישי. את הדרך מתחילות באבחון ובבחירת הטיפול המתאים לך." image="aes-clinic" caption="הקליניקה של שיר לביא">
+    <TreatmentHero label="טיפולי אסתטיקה" titleAbove title={<>טכנולוגיה מתקדמת<em>לצד שמירה על מראה טבעי.</em></>} text="טיפולים לעור ולגוף, עם אותה הקפדה ואותו יחס אישי. את הדרך מתחילות באבחון ובבחירת הטיפול המתאים לך." image="aes-clinic" caption="הקליניקה של שיר לביא">
       <a href="#aesthetic-treatments" className="treatment-cta">לכל הטיפולים <span aria-hidden="true">↓</span></a>
     </TreatmentHero>
     <section className="treatment-section treatment-gallery" id="aesthetic-treatments"><div className="treatment-container treatment-catalog">
       {TREATMENTS.map(treatment => <article key={treatment.id}>
-        <h2>{treatment.title}</h2><div><p>{treatment.short}</p><div className="treatment-actions"><Link href={`/aesthetics/${treatment.id}`} className="treatment-link">להכיר את הטיפול <span aria-hidden="true">←</span></Link><a href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${treatment.title}.`)} className="treatment-link" target="_blank" rel="noopener noreferrer">ייעוץ ללא עלות</a></div></div>
+        <h2>{treatment.title}</h2><div><p>{treatment.short}</p><p className="treatment-eligibility">{TREATMENT_DISCLAIMER}</p><div className="treatment-actions"><Link href={`/aesthetics/${treatment.id}`} className="treatment-link">להכיר את הטיפול <span aria-hidden="true">←</span></Link><a href={waLink(treatment.id === "medical" ? "היי, אשמח לפרטים על טיפולי אסתטיקה רפואית ותיאום תור." : `היי שיר, אשמח לייעוץ ללא עלות לגבי ${treatment.title}.`)} className="treatment-link" target="_blank" rel="noopener noreferrer">{treatment.id === "medical" ? "ייעוץ ותיאום תור" : "ייעוץ ללא עלות"}</a></div></div>
       </article>)}
     </div></section>
     <TreatmentClosing href={waLink("היי שיר, אשמח לייעוץ ללא עלות לגבי טיפולי אסתטיקה.")} />
@@ -74,8 +104,8 @@ export function AestheticsPage() {
       <TreatmentCta href={consultation} />
     </TreatmentHero>
     <section className="treatment-section"><div className="treatment-container treatment-split">
-      <div className="treatment-section-intro"><TreatmentLabel>להכיר את הטיפול</TreatmentLabel><h2>מה חשוב לדעת<br />לפני שמתחילות.</h2><p className="treatment-note">{TREATMENT_DISCLAIMER}</p></div>
-      <div className="treatment-detail-blocks">{current.blocks.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}</div>
+      <div className="treatment-section-intro"><TreatmentLabel>להכיר את הטיפול</TreatmentLabel><h2>מה חשוב לדעת<br />לפני שמתחילות.</h2></div>
+      <div className="treatment-detail-blocks">{current.blocks.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}<p className="treatment-eligibility">{TREATMENT_DISCLAIMER}</p><div className="treatment-actions"><TreatmentCta href={consultation}>לייעוץ והתאמה אישית</TreatmentCta></div></div>
     </div></section>
     <TreatmentFaq key={current.id} items={current.faq} />
     <section className="treatment-section"><div className="treatment-container"><TreatmentLabel>עוד בקליניקה</TreatmentLabel><div className="treatment-related">{TREATMENTS.filter(treatment => treatment.id !== current.id).map(treatment => <Link key={treatment.id} href={`/aesthetics/${treatment.id}`} className="treatment-link">{treatment.title}<span aria-hidden="true">←</span></Link>)}</div></div></section>

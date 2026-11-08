@@ -15,8 +15,8 @@ const TREATMENTS = [
   ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית, בכיוון צמיחת השערה.", "/brows"],
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
   ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להסרת איפור קבוע ישן, כושל או לא רצוי.", "/removal"],
-  ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק ומתיחת העור בטכנולוגיות מתקדמות.", "/aesthetics"],
-  ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/medical-aesthetics"],
+  ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק והידוק העור בטכנולוגיות מתקדמות.", "/aesthetics"],
+  ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/aesthetics/medical"],
 ] as const;
 
 const MARQUEE_BANNER = [
@@ -99,10 +99,6 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
               <p style={{ margin: 0, fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#fff", textWrap: "pretty" }}>
                 קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.
               </p>
-              <p style={{ margin: 0, fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#fff", textWrap: "pretty" }}>
-                כבר למעלה מעשור שאני חיה ונושמת את עולם האיפור הקבוע והאסתטיקה — ומתאימה כל טיפול אישית למבנה הפנים, לסוג העור ולמראה שאת אוהבת.{" "}
-                <Link href="/about" className="text-link light">מי אני ←</Link>
-              </p>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 22 }}>
                 <Link href="/brows" className="pill white-pill">
                   גלי את הטיפולים <span aria-hidden>←</span>
@@ -153,13 +149,12 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
 
       <section className="home-results">
         <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexDirection: "column", gap: "clamp(28px,4vw,48px)" }}>
-          <HomeSectionLabel>לפני ואחרי</HomeSectionLabel>
           <div>
-            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>תוצאות מהקליניקה</h2>
-            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 340 }}>מיקרובליידינג ושיטה משולבת - מבט מקרוב על העבודה בקליניקה.</p>
+            <h2 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(36px,4.6vw,68px)", lineHeight: 1.02, letterSpacing: "-.035em" }}>לפני ואחרי</h2>
+            <p style={{ margin: "16px 0 0", fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#5A5A5A", maxWidth: 480 }}>מגוון טיפולי הדמיית שיער בגבות בהתאמה אישית לכל לקוחה ובהתאם לתוצאה שרוצה להשיג.</p>
           </div>
           <ResponsiveCarousel
-            ariaLabel="תוצאות לפני ואחרי"
+            ariaLabel="לפני ואחרי"
             slideWidth="min(88vw, 360px)"
             desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: "clamp(12px,1.6vw,20px)" }}
           >

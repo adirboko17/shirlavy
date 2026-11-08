@@ -8,18 +8,23 @@ export function TreatmentLabel({ children }: { children: ReactNode }) {
   return <span className="treatment-label">{children}</span>;
 }
 
-export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream" }: {
+export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream", titleAbove = false }: {
   label: string; title: ReactNode; text: string; image: string; caption: string;
-  children?: ReactNode; back?: boolean; tone?: "cream" | "clay";
+  children?: ReactNode; back?: boolean; tone?: "cream" | "clay"; titleAbove?: boolean;
 }) {
+  const heading = (
+    <>
+      <TreatmentLabel>{label}</TreatmentLabel>
+      <h1>{title}</h1>
+    </>
+  );
   return (
-    <section className={`treatment-hero treatment-hero--${tone}`}>
+    <section className={`treatment-hero treatment-hero--${tone}${titleAbove ? " treatment-hero--title-above" : ""}`}>
       <div className="treatment-container">
         {back ? <Link className="treatment-back" href="/aesthetics">→ כל טיפולי האסתטיקה</Link> : null}
         <div className="treatment-hero__grid">
           <div className="treatment-hero__copy">
-            <TreatmentLabel>{label}</TreatmentLabel>
-            <h1>{title}</h1>
+            {heading}
             <p>{text}</p>
             <div className="treatment-actions">{children}</div>
           </div>

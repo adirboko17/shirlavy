@@ -9,21 +9,24 @@ import { TreatmentHero, TreatmentLabel, TreatmentCta, TreatmentProcess, Treatmen
 const TECH = [
   {
     title: BROW_TECHNIQUES.microblading.title,
+    subtitle: BROW_TECHNIQUES.microblading.subtitle,
     look: BROW_TECHNIQUES.microblading.look,
     fit: BROW_TECHNIQUES.microblading.fit,
-    text: BROW_TECHNIQUES.microblading.paragraphs.slice(1).join(" "),
+    paragraphs: BROW_TECHNIQUES.microblading.paragraphs.slice(1),
   },
   {
     title: BROW_TECHNIQUES.powder.title,
+    subtitle: BROW_TECHNIQUES.powder.subtitle,
     look: BROW_TECHNIQUES.powder.look,
     fit: BROW_TECHNIQUES.powder.fit,
-    text: BROW_TECHNIQUES.powder.paragraphs.join(" "),
+    paragraphs: BROW_TECHNIQUES.powder.paragraphs,
   },
   {
     title: BROW_TECHNIQUES.combined.title,
+    subtitle: BROW_TECHNIQUES.combined.subtitle,
     look: BROW_TECHNIQUES.combined.look,
     fit: BROW_TECHNIQUES.combined.fit,
-    text: BROW_TECHNIQUES.combined.paragraphs.join(" "),
+    paragraphs: BROW_TECHNIQUES.combined.paragraphs,
   },
 ];
 
@@ -59,9 +62,12 @@ export function BrowsPage() {
         <div className="treatment-technique" id="brow-technique">
           <div className="treatment-technique__photo"><Slot id={`brows-tech-${tech}`} /></div>
           <div className="treatment-technique__copy" key={tech}>
-            <h3>{selected.title}</h3><p>{selected.text}</p>
+            <h3>{selected.title}</h3>
+            <p className="treatment-technique__subtitle">{selected.subtitle}</p>
+            <div className="treatment-copy">{selected.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
             <dl><div><dt>המראה</dt><dd>{selected.look}</dd></div><div><dt>לרוב מתאים ל</dt><dd>{selected.fit}</dd></div></dl>
-            <p className="treatment-note">ההתאמה הסופית נקבעת בייעוץ אישי.</p>
+            <p className="treatment-eligibility">{TREATMENT_DISCLAIMER}</p>
+            <div className="treatment-actions"><TreatmentCta href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${selected.title}.`)}>לייעוץ והתאמה אישית</TreatmentCta></div>
           </div>
         </div>
       </div>

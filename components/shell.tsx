@@ -13,7 +13,6 @@ import { Socials } from "./ui";
 const CONSULT = waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.");
 
 function activeMenuKey(path: string) {
-  if (path.startsWith("/medical-aesthetics")) return "medical-aesthetics";
   if (path.startsWith("/aesthetics")) return "aesthetics";
   if (path.startsWith("/shop")) return "shop";
   if (path === "/") return "home";

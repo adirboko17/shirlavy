@@ -1,5 +1,5 @@
-import { MedicalAestheticsPage } from "@/components/medical-aesthetics";
+import { permanentRedirect } from "next/navigation";
 
 export default function Page() {
-  return <MedicalAestheticsPage />;
+  permanentRedirect("/aesthetics/medical");
 }
