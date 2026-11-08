@@ -1,6 +1,11 @@
+import {
+  ABOUT_HEADING,
+  ABOUT_PARAGRAPHS,
+  ABOUT_SECTION_SLICES,
+} from "@/lib/about-narrative";
 import { Slot } from "./ui";
 
-const CHAPTERS = [
+const CHAPTER_META = [
   {
     big: "+10",
     bigLabel: "שנות ניסיון באיפור קבוע ואסתטיקה",
@@ -9,7 +14,7 @@ const CHAPTERS = [
     ph: "שיר בעבודה",
     photo: "about-photo--portrait",
     flip: false,
-    text: "כבר למעלה מעשור שאני חיה ונושמת את עולם האיפור הקבוע והאסתטיקה, ומה שהתחיל מאהבה גדולה לתחום הפך עם השנים למקצוע, לאקדמיה ולמקום שהוא לגמרי שלי. בקליניקה שלי אני מתמחה באיפור קבוע לגבות בכל השיטות והטכניקות, ומתאימה כל טיפול באופן אישי למבנה הפנים, לגבה הטבעית, לסוג העור ובעיקר למה שאת אוהבת.",
+    paragraphs: ABOUT_SECTION_SLICES.chapters[0],
   },
   {
     big: "+7",
@@ -19,7 +24,7 @@ const CHAPTERS = [
     ph: "שיר מלמדת",
     photo: "about-photo--teach",
     flip: true,
-    text: "כבר למעלה משבע שנים שאני גם מלמדת ומכשירה נשים בתחום האיפור הקבוע. הקמתי את האקדמיה שלי כדי לתת מקום גם למי שמתחילה ממש מאפס — בלי ניסיון קודם ובלי רקע. אפשר ללמוד אצלי באופן פרטני או בקבוצות, כשהלימודים מותאמים לקצב ולרמה של כל תלמידה.",
+    paragraphs: ABOUT_SECTION_SLICES.chapters[1],
   },
   {
     big: "1:1",
@@ -29,9 +34,9 @@ const CHAPTERS = [
     ph: "הקליניקה",
     photo: "about-photo--clinic",
     flip: false,
-    text: "יצרתי קליניקת בוטיק אינטימית לנשים בלבד, שבה אני יכולה להעניק לכל אחת יחס אישי, פרטיות ותשומת לב מלאה. לצד האיפור הקבוע, תוכלי למצוא אצלי גם טיפולי הסרת שיער בלייזר, הסרת איפור קבוע מהגבות וטיפולים למיצוק והידוק מראה העור. כל מי שמגיעה אליי פוגשת אותי — מבדיקת ההתאמה ועד סיום הטיפול.",
+    paragraphs: ABOUT_SECTION_SLICES.chapters[2],
   },
-];
+] as const;
 
 const VALUES = [
   ["דיוק ויופי טבעי", "תוצאה שמתאימה לפנים שלך, ולא לטרנד של העונה."],
@@ -41,29 +46,29 @@ const VALUES = [
   ["העצמה דרך לימוד", "לתת לנשים מקצוע, ביטחון ועתיד עצמאי."],
 ];
 
+function AboutNarrativeParagraphs({ indices }: { indices: readonly number[] }) {
+  return (
+    <>
+      {indices.map((index) =>
+        ABOUT_PARAGRAPHS[index].split("\n").map((line) => (
+          <p key={`${index}-${line.slice(0, 24)}`}>{line}</p>
+        )),
+      )}
+    </>
+  );
+}
+
 export function AboutPage() {
   return (
     <div className="about-page">
       <section className="about-intro">
         <p className="about-kicker">נעים להכיר</p>
-        <h1>
-          נעים להכיר,
-          <br />
-          אני שיר לביא
-        </h1>
-        <p>
-          כבר למעלה מעשור שאני חיה ונושמת את עולם האיפור הקבוע והאסתטיקה, ומה שהתחיל מאהבה גדולה לתחום הפך עם השנים למקצוע, לאקדמיה ולמקום שהוא לגמרי שלי.
-        </p>
-        <p>
-          אבל מבחינתי, הטכניקה היא רק חלק מהעניין. אין גבה אחת שמתאימה לכולן, ולכן אני מתאימה כל טיפול באופן אישי למבנה הפנים שלך, לגבה הטבעית, לסוג העור ובעיקר למה שאת אוהבת ולתוצאה שאת רוצה לראות במראה.
-        </p>
-        <p>
-          חשוב לי שהתוצאה תהיה מדויקת, מחמיאה וטבעית — כזאת שמשתלבת בפנים שלך ולא משתלטת עליהן.
-        </p>
+        <h1>{ABOUT_HEADING}</h1>
+        <AboutNarrativeParagraphs indices={ABOUT_SECTION_SLICES.intro} />
       </section>
 
       <div className="about-story">
-        {CHAPTERS.map((chapter) => (
+        {CHAPTER_META.map((chapter) => (
           <section key={chapter.title} className={chapter.flip ? "about-chapter about-chapter--blush" : "about-chapter"}>
             <div className={chapter.flip ? "about-split about-split--flip" : "about-split"}>
               <figure className={`about-photo ${chapter.photo}`}>
@@ -75,7 +80,7 @@ export function AboutPage() {
                   <span>{chapter.bigLabel}</span>
                 </p>
                 <h2>{chapter.title}</h2>
-                <p>{chapter.text}</p>
+                <AboutNarrativeParagraphs indices={chapter.paragraphs} />
               </div>
             </div>
           </section>
@@ -85,8 +90,10 @@ export function AboutPage() {
       <section className="about-quote">
         <img src="/assets/monogram-gold.png" alt="" />
         <blockquote>
-          <p>אסתטיקה טובה היא לא לשנות אותך. היא לדעת לדייק את מה שכבר יפה בך.</p>
-          <footer>שיר לביא</footer>
+          <AboutNarrativeParagraphs indices={ABOUT_SECTION_SLICES.quote} />
+          <footer>
+            <AboutNarrativeParagraphs indices={ABOUT_SECTION_SLICES.closing} />
+          </footer>
         </blockquote>
       </section>
 
