@@ -12,7 +12,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   const single = product.variants.length === 1 && product.bundles.length === 0;
   const soldOut = !product.variants.length || product.variants.every((variant) => variant.stock === 0);
   const href = `/shop/${product.id}`;
-  const tag = soldOut ? "אזל מהמלאי" : product.tag || (product.isNew ? "חדש בקולקציה" : product.best ? "מהאהובים שלנו" : "");
+  const tag = soldOut ? "אזל מהמלאי" : product.tag || (product.isNew ? "חדש בחנות" : product.best ? "מהאהובים שלנו" : "");
 
   return <article className="boutique-card">
     <Link href={href} className="boutique-card__link">

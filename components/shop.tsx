@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { SHOP_INTRO, SHOP_INTRO_SECOND } from "@/lib/content";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CommerceIcon } from "./commerce-icon";
@@ -25,9 +26,9 @@ export function ShopPage() {
       <div className="commerce-container shop-intro__inner">
         <div>
           <span className="commerce-eyebrow">THE SHIR LAVY EDIT</span>
-          <h1>הבחירות שלנו.<br /><em>הרגע שלך.</em></h1>
-          <p>טיפוח, ביוטי וציוד מקצועי שנבחרו בקפידה.<br />כל מה שאת אוהבת, במקום אחד.</p>
-          <a className="commerce-text-link" href="#catalog">לגלות את הקולקציה <CommerceIcon name="arrow" /></a>
+          <h1>החנות<br /><em>שלנו</em></h1>
+          <p>{SHOP_INTRO}<br />{SHOP_INTRO_SECOND}</p>
+          <a className="commerce-text-link" href="#catalog">לכל המוצרים שלנו <CommerceIcon name="arrow" /></a>
         </div>
         <div className="shop-intro__signature" aria-hidden="true">
           <img src="/assets/monogram-gold.png" alt="" />
@@ -37,7 +38,7 @@ export function ShopPage() {
     </section>
     <section id="catalog" className="commerce-container shop-catalog">
       <div className="shop-catalog__heading">
-        <div><span className="commerce-eyebrow">נבחרו בשבילך</span><h2>{selected?.title || "הקולקציה שלנו"}</h2></div>
+        <div><span className="commerce-eyebrow">נבחרו בשבילך</span><h2>{selected?.title || "המוצרים שלנו"}</h2></div>
         <span className="shop-count" role="status" aria-live="polite">{list.length === 1 ? "מוצר אחד" : `${list.length} מוצרים`}</span>
       </div>
       <div className="shop-toolbar">
@@ -53,7 +54,7 @@ export function ShopPage() {
         </div>
       </div>
       {list.length ? <div className="commerce-grid">{list.map((product) => <ProductCard key={product.id} product={product} />)}</div> : <div className="shop-empty">
-        <CommerceIcon name="search" width="32" height="32" /><h3>לא מצאנו התאמה הפעם</h3><p>נסי מילה אחרת או גלי את כל הקולקציה.</p><button type="button" className="commerce-button" onClick={() => { setCat("all"); setQ(""); }}>לכל המוצרים <CommerceIcon name="arrow" /></button>
+        <CommerceIcon name="search" width="32" height="32" /><h3>לא מצאנו התאמה הפעם</h3><p>נסי מילה אחרת או גלי את כל המוצרים שלנו.</p><button type="button" className="commerce-button" onClick={() => { setCat("all"); setQ(""); }}>לכל המוצרים <CommerceIcon name="arrow" /></button>
       </div>}
       <p className="shop-fineprint">המחיר הסופי, כולל משלוח והנחות, מחושב בקופה.</p>
     </section>

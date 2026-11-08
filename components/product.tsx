@@ -69,6 +69,6 @@ function ProductDetails({ id }: { id: string }) {
         </div>
       </div>
     </section>
-    {related.length ? <section className="commerce-container product-related"><div className="shop-catalog__heading"><div><span className="commerce-eyebrow">עוד קצת השראה</span><h2>אולי תאהבי גם</h2></div><Link href="/shop" className="commerce-text-link">לכל הקולקציה <CommerceIcon name="arrow" /></Link></div><div className="commerce-grid">{related.map((item) => <ProductCard key={item.id} product={item} />)}</div></section> : null}
+    {related.length ? <section className="commerce-container product-related"><div className="shop-catalog__heading"><div><span className="commerce-eyebrow">עוד קצת השראה</span><h2>אולי תאהבי גם</h2></div><Link href="/shop" className="commerce-text-link">לכל המוצרים <CommerceIcon name="arrow" /></Link></div><div className="commerce-grid">{related.map((item) => <ProductCard key={item.id} product={item} />)}</div></section> : null}
   </div>;
 }

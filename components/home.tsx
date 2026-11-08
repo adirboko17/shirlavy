@@ -12,21 +12,25 @@ import { InstagramWall } from "./instagram-wall";
 import { ResponsiveCarousel, ResultPhotoCard, Slot } from "./ui";
 
 const TREATMENTS = [
-  ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית - קווים בכיוון צמיחת השערה.", "/brows"],
+  ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית, בכיוון צמיחת השערה.", "/brows"],
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
-  ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להבהרת איפור קבוע ישן או לא רצוי.", "/removal"],
+  ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להסרת איפור קבוע ישן, כושל או לא רצוי.", "/removal"],
   ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק ומתיחת העור בטכנולוגיות מתקדמות.", "/aesthetics"],
   ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/medical-aesthetics"],
 ] as const;
 
-const VALUES = ["דיוק", "טבעיות", "יחס אישי", "מקצועיות", "ביטחון", "אסתטיקה", "למידה", "יופי"];
+const MARQUEE_BANNER = [
+  "אלפי לקוחות מרוצות מכל רחבי הארץ",
+  "מאות תלמידות מצליחות",
+  "חנות מוצרים מקצועית",
+] as const;
 const MARQUEE_COPIES = 8;
 
 const ACADEMY = [
-  ["שנות הוראה", "ניסיון מצטבר בהכשרת נשים למקצוע האיפור הקבוע."],
+  ["מעל שבע שנות הוראה", "מעל שבע שנים של הכשרה והוראה לנשים בתחום האיפור הקבוע."],
   ["יחס אישי", "ליווי צמוד, קבוצות קטנות ואפשרות ללמידה פרטנית."],
   ["הכשרה מעשית", "עבודה בידיים כבר מהשלבים הראשונים, לצד שיר."],
-  ["מכל הארץ", "תלמידות שמגיעות מצפון הארץ ועד הדרום."],
+  ["מאות תלמידות", "הכשרה לנשים מהצפון ועד הדרום."],
 ];
 
 export function HomePage({ instagram }: { instagram: InstagramWallData }) {
@@ -95,6 +99,10 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
               <p style={{ margin: 0, fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#fff", textWrap: "pretty" }}>
                 קליניקת בוטיק לאיפור קבוע ואסתטיקה מתקדמת, לצד אקדמיה מקצועית להכשרת הדור הבא של נשות המקצוע.
               </p>
+              <p style={{ margin: 0, fontSize: "clamp(15px,1.2vw,17px)", lineHeight: 1.75, color: "#fff", textWrap: "pretty" }}>
+                כבר למעלה מעשור שאני חיה ונושמת את עולם האיפור הקבוע והאסתטיקה — ומתאימה כל טיפול אישית למבנה הפנים, לסוג העור ולמראה שאת אוהבת.{" "}
+                <Link href="/about" className="text-link light">מי אני ←</Link>
+              </p>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 22 }}>
                 <Link href="/brows" className="pill white-pill">
                   גלי את הטיפולים <span aria-hidden>←</span>
@@ -128,11 +136,11 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
         </div>
       </section>
 
-      <section aria-label="דיוק, טבעיות, יחס אישי, מקצועיות, ביטחון, אסתטיקה, למידה, יופי" className="marquee-wrap">
+      <section aria-label="אלפי לקוחות מרוצות מכל רחבי הארץ, מאות תלמידות מצליחות, חנות מוצרים מקצועית" className="marquee-wrap">
         <div className="marquee-track" aria-hidden style={{ "--marquee-count": MARQUEE_COPIES } as CSSProperties}>
           {Array.from({ length: MARQUEE_COPIES }, (_, copy) => (
             <div key={copy} className="marquee-row">
-              {VALUES.map((v) => (
+              {MARQUEE_BANNER.map((v) => (
                 <span key={`${copy}-${v}`} style={{ display: "contents" }}>
                   <span>{v}</span>
                   <i />
