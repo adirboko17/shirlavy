@@ -55,7 +55,7 @@ export function CartDrawer() {
             <div className="cart-drawer__empty">
               <div className="cart-drawer__empty-icon"><CommerceIcon name="bag" width="42" height="42" /></div>
               <h3>מקום לדברים שאת אוהבת</h3>
-              <p>הסל שלך עדיין ריק.<br />הבחירה הבאה שלך מחכה בקולקציה.</p>
+              <p>הסל שלך עדיין ריק.<br />הבחירה הבאה שלך מחכה בחנות.</p>
               <Link href="/shop" onClick={site.closeCart} className="commerce-button">בואי לגלות <CommerceIcon name="arrow" /></Link>
             </div>
           ) : site.cart.map((line) => (
