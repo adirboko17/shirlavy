@@ -34,7 +34,7 @@ export function CartDrawer() {
         dialog.close();
         unlockRef.current?.();
         unlockRef.current = null;
-      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420);
+      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : window.matchMedia("(max-width: 759px)").matches ? 180 : 420);
     }
     return () => { cancelAnimationFrame(frame); cancelAnimationFrame(nextFrame); window.clearTimeout(timer); };
   }, [site.cartOpen]);
