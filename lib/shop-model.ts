@@ -3,6 +3,7 @@ export type Currency = "ILS" | "USD" | "EUR";
 export type ShopOption = {
   name: string;
   values: string[];
+  colors?: Record<string, string>;
 };
 
 export type ShopVariant = {

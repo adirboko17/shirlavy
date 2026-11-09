@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { formatMoney, type ShopProduct, type ShopVariant } from "@/lib/shop-model";
+import { useId, useState } from "react";
+import { formatMoney, type Currency, type ShopBundle, type ShopProduct, type ShopVariant } from "@/lib/shop-model";
 import { productLine, useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CommerceIcon } from "./commerce-icon";
@@ -33,7 +33,9 @@ const SWATCHES: Record<string, string> = {
   "כתום": "#d9782d",
 };
 
-function swatchColor(value: string) {
+function swatchColor(value: string, colors?: Record<string, string>) {
+  const chosen = colors?.[value]?.trim() ?? "";
+  if (/^#[0-9a-f]{6}$/i.test(chosen)) return chosen;
   const named = value.trim();
   if (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(named)) return named;
   return SWATCHES[named] ?? "#e6ddd3";
@@ -70,6 +72,37 @@ export function ProductPage() {
   const id = typeof params?.id === "string" ? params.id : "";
   // Reset gallery and selection state when navigating between products.
   return <ProductDetails key={id} id={id} />;
+}
+
+function BundlePicker({ bundles, unitPrice, currency, selected, onSelect }: {
+  bundles: ShopBundle[];
+  unitPrice: number;
+  currency: Currency;
+  selected: number;
+  onSelect: (quantity: number) => void;
+}) {
+  const groupId = useId();
+  const choices = [{ qty: 0, label: "יחידה אחת", price: unitPrice, tag: undefined as string | undefined }, ...bundles];
+  return <fieldset className="product-bundles">
+    <legend>בחרי את המארז שלך</legend>
+    <div className="product-bundles__list">
+      {choices.map((item) => {
+        const quantity = item.qty || 1;
+        const regularTotal = unitPrice * quantity;
+        const saving = Math.round((regularTotal - item.price) * 100) / 100;
+        return <label key={item.qty} className="product-bundle" data-selected={selected === item.qty} data-tagged={Boolean(item.tag)}>
+          {item.tag ? <span className="product-bundle__tag">{item.tag}</span> : null}
+          <span className="product-bundle__copy">
+            <span className="product-bundle__title">{item.label}</span>
+            <span className="product-bundle__detail">{quantity > 1 ? <>{quantity} יחידות · {formatMoney(item.price / quantity, currency)} ליחידה</> : "הבחירה הקלאסית"}</span>
+            {saving > 0 ? <span className="product-bundle__saving">חיסכון של {formatMoney(saving, currency)}</span> : null}
+          </span>
+          <span className="product-bundle__price"><strong>{formatMoney(item.price, currency)}</strong>{saving > 0 ? <s aria-label={`ברכישת יחידות בנפרד: ${formatMoney(regularTotal, currency)}`}>{formatMoney(regularTotal, currency)}</s> : null}</span>
+          <input type="radio" name={groupId} value={item.qty} checked={selected === item.qty} onChange={() => onSelect(item.qty)} aria-label={item.label} />
+        </label>;
+      })}
+    </div>
+  </fieldset>;
 }
 
 function ProductDetails({ id }: { id: string }) {
@@ -114,9 +147,9 @@ function ProductDetails({ id }: { id: string }) {
           <div className="product-purchase">
             {grouped ? product.options.map((option) => <fieldset key={option.name} className="product-options"><legend>{option.name}{variant.selected[option.name] ? <>: <b>{variant.selected[option.name]}</b></> : null}</legend><div>{option.values.map((value) => {
               const sold = valueSoldOut(product, variant, option.name, value);
-              return <button key={value} type="button" aria-pressed={variant.selected[option.name] === value} data-sold={sold ? "true" : undefined} onClick={() => setVariantId(chooseOption(product, variant, option.name, value).id)}>{isColorOption(option.name) ? <span className="product-swatch" style={{ background: swatchColor(value) }} /> : null}{value}</button>;
+              return <button key={value} type="button" aria-pressed={variant.selected[option.name] === value} data-sold={sold ? "true" : undefined} onClick={() => setVariantId(chooseOption(product, variant, option.name, value).id)}>{isColorOption(option.name) ? <span className="product-swatch" style={{ background: swatchColor(value, option.colors) }} /> : null}{value}</button>;
             })}</div></fieldset>) : product.variants.length > 1 ? <fieldset className="product-options"><legend>בחרי את האפשרות שלך</legend><div>{product.variants.map((item) => <button key={item.id} type="button" aria-pressed={variant.id === item.id} data-sold={item.stock === 0 ? "true" : undefined} onClick={() => setVariantId(item.id)}>{item.title || "רגיל"}</button>)}</div></fieldset> : null}
-            {product.bundles.length ? <fieldset className="product-options"><legend>יחידה או מארז?</legend><div><button type="button" aria-pressed={bundleQty === 0} onClick={() => setBundleQty(0)}>יחידה</button>{product.bundles.map((item) => <button key={item.qty} type="button" aria-pressed={bundleQty === item.qty} onClick={() => setBundleQty(item.qty)}>{item.label} · {formatMoney(item.price, shop.currency)}</button>)}</div></fieldset> : null}
+            {product.bundles.length ? <BundlePicker bundles={product.bundles} unitPrice={variant.price} currency={shop.currency} selected={bundleQty} onSelect={setBundleQty} /> : null}
             <div className="product-purchase__status"><span className={soldOut ? "stock-status stock-status--out" : "stock-status"}>{soldOut ? "כרגע לא במלאי" : variant.stock != null ? "זמין במלאי" : "ניתן להזמנה"}</span><span>{bundle ? "כמות מארזים" : "כמות יחידות"}</span></div>
             <div className="product-purchase__actions">
               <button type="button" className="commerce-button" disabled={soldOut} onClick={() => { const line = productLine(product, variant.id, count, bundle?.qty); if (line) addLine(line); }}><span>{soldOut ? "אזל מהמלאי" : "הוספה לסל"}</span><CommerceIcon name="bag" /></button>

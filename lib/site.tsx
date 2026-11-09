@@ -42,11 +42,14 @@ const SiteContext = createContext<SiteValue | null>(null);
 const CART_KEY = "shirlavy-cart";
 const POLICY_KEY = "shirlavy-policies";
 
-function readCart(): CartLine[] {
+function readCart(products: ShopProduct[]): CartLine[] {
   try {
     const parsed = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((item) => item && typeof item.variantId === "string" && typeof item.key === "string");
+    return parsed.filter((item) => item && typeof item.variantId === "string" && typeof item.key === "string").map((line: CartLine) => {
+      const bundle = line.bundle && !line.gift ? products.find(product => product.id === line.productId)?.bundles.find(item => item.qty === line.bundleQty) : undefined;
+      return bundle ? { ...line, unitPrice: bundle.price / bundle.qty } : line;
+    });
   } catch {
     return [];
   }
@@ -61,7 +64,7 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setCart(readCart());
+    setCart(readCart(shop.products));
     try {
       const stored = JSON.parse(sessionStorage.getItem(POLICY_KEY) || "[]");
       if (Array.isArray(stored)) setAcceptedPolicies(stored.filter((item) => typeof item === "string"));
@@ -116,7 +119,7 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
     setCart((current) => {
       const existing = current.find((item) => item.key === line.key);
       if (!existing) return [...current, line];
-      return current.map((item) => (item.key === line.key ? { ...item, quantity: Math.min(99, item.quantity + line.quantity) } : item));
+      return current.map((item) => (item.key === line.key ? { ...line, quantity: Math.min(99, item.quantity + line.quantity) } : item));
     });
     if (open) setCartOpen(true);
     if (!track) return;
@@ -189,7 +192,8 @@ export function productLine(product: ShopProduct, variantId: string, packs = 1, 
     name: product.name,
     detail: bundle ? bundle.label : variant.title,
     image: bundle?.image || product.images[0] || "",
-    unitPrice: bundle ? bundle.price : variant.price,
+    // Cart quantities count individual units; bundle.price is the whole pack.
+    unitPrice: bundle ? bundle.price / bundle.qty : variant.price,
     quantity,
     bundle: Boolean(bundle),
     ...(bundle ? { bundleQty: bundle.qty } : {}),

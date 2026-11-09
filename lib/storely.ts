@@ -172,7 +172,13 @@ function optionsOf(value: unknown): ShopOption[] {
     }
     if (!values.length) continue;
     seen.add(name);
-    options.push({ name, values });
+    const colors: Record<string, string> = {};
+    const rawColors = recordOf(row?.colors);
+    for (const label of values) {
+      const hex = text(rawColors?.[label], 7).toLowerCase();
+      if (/^#[0-9a-f]{6}$/.test(hex)) colors[label] = hex;
+    }
+    options.push({ name, values, ...(Object.keys(colors).length ? { colors } : {}) });
     if (options.length === 3) break;
   }
   return options;
