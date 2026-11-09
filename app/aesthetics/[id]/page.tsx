@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
-import { AestheticsPage } from "@/components/treatments";
+import { notFound, permanentRedirect } from "next/navigation";
 
 export const metadata: Metadata = { title: "טיפולי אסתטיקה" };
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  if (id === "tightening") permanentRedirect("/aesthetics/firming");
-
-  return <AestheticsPage />;
+  const section = id === "tightening" ? "firming" : id;
+  if (!["laser", "firming", "medical"].includes(section)) notFound();
+  permanentRedirect(`/aesthetics#${section}`);
 }

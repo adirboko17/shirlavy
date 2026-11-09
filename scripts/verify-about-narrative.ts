@@ -8,7 +8,7 @@ import {
 } from "../lib/about-narrative";
 
 function parseCanonicalFile(raw: string): { heading: string; paragraphs: string[] } {
-  const lines = raw.trim().split("\n");
+  const lines = raw.trim().split(/\r?\n/);
   const heading = lines[0];
   const paragraphs: string[] = [];
   let cur: string[] = [];

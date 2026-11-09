@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { StoreQuiz } from "./store-quiz";
@@ -16,15 +16,8 @@ const TREATMENTS = [
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
   ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להסרת איפור קבוע ישן, כושל או לא רצוי.", "/removal"],
   ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק והידוק העור בטכנולוגיות מתקדמות.", "/aesthetics"],
-  ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/aesthetics/medical"],
+  ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/aesthetics#medical"],
 ] as const;
-
-const MARQUEE_BANNER = [
-  "אלפי לקוחות מרוצות מכל רחבי הארץ",
-  "מאות תלמידות מצליחות",
-  "חנות מוצרים מקצועית",
-] as const;
-const MARQUEE_COPIES = 8;
 
 const ACADEMY = [
   ["מעל שבע שנות הוראה", "מעל שבע שנים של הכשרה והוראה לנשים בתחום האיפור הקבוע."],
@@ -129,21 +122,6 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
               {playing ? "❚❚" : "▶"}
             </button>
           ) : null}
-        </div>
-      </section>
-
-      <section aria-label="אלפי לקוחות מרוצות מכל רחבי הארץ, מאות תלמידות מצליחות, חנות מוצרים מקצועית" className="marquee-wrap">
-        <div className="marquee-track" aria-hidden style={{ "--marquee-count": MARQUEE_COPIES } as CSSProperties}>
-          {Array.from({ length: MARQUEE_COPIES }, (_, copy) => (
-            <div key={copy} className="marquee-row">
-              {MARQUEE_BANNER.map((v) => (
-                <span key={`${copy}-${v}`} style={{ display: "contents" }}>
-                  <span>{v}</span>
-                  <i />
-                </span>
-              ))}
-            </div>
-          ))}
         </div>
       </section>
 

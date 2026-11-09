@@ -24,7 +24,7 @@ const CHAPTER_META = [
     ph: "שיר מלמדת",
     photo: "about-photo--teach",
     flip: true,
-    text: "למעלה משבע שנים שאני גם מלמדת ומכשירה נשים בתחום האיפור הקבוע. הקמתי את האקדמיה שלי כדי לתת מקום גם למי שמתחילה ממש מאפס — בלי ניסיון קודם ובלי רקע. אפשר ללמוד אצלי באופן פרטני או בקבוצות, כשהלימודים מותאמים לקצב ולרמה של כל תלמידה.",
+    paragraphs: ABOUT_SECTION_SLICES.chapters[1],
   },
   {
     big: "1:1",
@@ -70,17 +70,19 @@ export function AboutPage() {
       <div className="about-story">
         {CHAPTER_META.map((chapter) => (
           <section key={chapter.title} className={chapter.flip ? "about-chapter about-chapter--blush" : "about-chapter"}>
-            <div className={chapter.flip ? "about-split about-split--flip" : "about-split"}>
+            <div className="about-split">
               <figure className={`about-photo ${chapter.photo}`}>
                 <Slot id={chapter.slot} placeholder={chapter.ph} />
-              </figure>
-              <div className="about-copy">
-                <p className="about-stat">
+                <figcaption className="about-stat">
                   <strong>{chapter.big}</strong>
                   <span>{chapter.bigLabel}</span>
-                </p>
-                <h2>{chapter.title}</h2>
-                <AboutNarrativeParagraphs indices={chapter.paragraphs} />
+                </figcaption>
+              </figure>
+              <div className="about-copy">
+                <div className="about-chapter-heading">
+                  <h2>{chapter.title}</h2>
+                </div>
+                <div className="about-narrative"><AboutNarrativeParagraphs indices={chapter.paragraphs} /></div>
               </div>
             </div>
           </section>

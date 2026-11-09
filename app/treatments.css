@@ -1,30 +1,76 @@
 /* Scoped to treatment routes; the shop and other pages keep their own layouts. */
-.treatment-page { --t-clay: #85583f; --t-ink: #50392c; --t-muted: #77614e; --t-line: #dac9b9; color: var(--t-ink); background: #fffaf3; }
+.treatment-page { --t-clay: #85644e; --t-ink: #493d35; --t-muted: #73675d; --t-line: #e2d9ce; color: var(--t-ink); background: #fcfaf7; }
 .treatment-page :is(a, button):focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
 .treatment-page :is(h1, h2, h3, p, figure) { margin: 0; }
-.treatment-page h2 { font-size: clamp(32px, 3.8vw, 50px); font-weight: 300; line-height: 1.2; letter-spacing: -.035em; text-wrap: balance; }
+.treatment-page h2 { font-size: clamp(30px, 3.4vw, 44px); font-weight: 300; line-height: 1.3; letter-spacing: -.025em; text-wrap: balance; }
 .treatment-page p { font-size: 16px; line-height: 1.85; color: var(--t-muted); }
-.treatment-container { width: 100%; max-width: 1184px; margin-inline: auto; }
-.treatment-section { padding: clamp(60px, 7vw, 96px) clamp(20px, 4.5vw, 64px); }
+.treatment-container { width: 100%; max-width: 1080px; margin-inline: auto; }
+.treatment-page :is(.brow-methods__detail, .removal-overview__detail, .treatment-detail-blocks, .aesthetic-overview__services > a, .aesthetic-service__body) { border-radius: 18px; }
+.treatment-page .brow-methods__choices button { border-radius: 12px; }
+.treatment-section { padding: clamp(52px, 6vw, 80px) clamp(22px, 5vw, 64px); }
+.treatment-page [id] { scroll-margin-top: 112px; }
 .treatment-label { display: inline-flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 500; color: var(--t-clay); }
 .treatment-label::before { content: ""; width: 26px; height: 1px; background: currentColor; opacity: .6; }
-.treatment-hero { padding: 146px clamp(20px, 4.5vw, 64px) 52px; background: #efe3d6; }
-.treatment-hero__grid { display: grid; grid-template-columns: 1.08fr 1fr; align-items: center; gap: clamp(40px, 6vw, 88px); }
-.treatment-hero__copy { padding-block: 30px; }
-.treatment-hero h1 { font-size: clamp(42px, 5.3vw, 72px); font-weight: 300; line-height: 1.12; letter-spacing: -.045em; margin: 26px 0; text-wrap: balance; }
+.treatment-hero { background: #f3efe9; }
+.treatment-hero__grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); min-height: 620px; }
+.treatment-hero__copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 0; padding: 140px clamp(32px, 5.5vw, 96px) 64px; }
+.treatment-hero h1 { font-size: clamp(44px, 4.6vw, 66px); font-weight: 300; line-height: 1.18; letter-spacing: -.035em; margin: 24px 0; text-wrap: balance; }
 .treatment-hero h1 em { display: block; color: var(--t-clay); font-style: normal; }
-.treatment-hero--title-above .treatment-hero__grid { align-items: center; }
-.treatment-hero--title-above h1 { max-width: none; margin-bottom: 18px; font-size: clamp(28px, 3.15vw, 46px); text-wrap: wrap; }
-.treatment-hero--title-above h1 em { display: block; }
 .treatment-hero__copy > p { max-width: 470px; }
-.treatment-hero__photo { position: relative; aspect-ratio: 1 / 1.08; border-radius: 100px 24px 24px 24px; overflow: hidden; background: #d5bfa8; }
-.treatment-hero__photo img { animation: treatment-photo-in .7s ease both; }
-.treatment-hero__figure figcaption { padding: 12px 8px 0; font-size: 12px; color: var(--t-muted); }
-.treatment-hero--clay { background: var(--t-clay); color: #fff6e9; }
-.treatment-hero--clay :is(.treatment-label, p, figcaption) { color: #f6e4d2; }
-.treatment-hero--clay h1 em { color: #eac8aa; }
-.treatment-hero--clay .treatment-cta { background: #fff5e7; color: #68412e; }
-.treatment-hero--clay .treatment-cta:hover { background: #ecd3b9; }
+.treatment-hero__figure { position: relative; min-width: 0; background: #e8dfd3; }
+.treatment-hero__photo { position: absolute; inset: 0; overflow: hidden; }
+.treatment-hero__photo img { width: 100%; height: 100%; object-fit: cover; animation: treatment-photo-in .7s ease both; }
+.treatment-removal .treatment-hero__figure { background: #eae3d9; }
+.treatment-removal .treatment-hero__photo { inset: 100px 30px 0; }
+.treatment-removal .treatment-hero__photo img { object-fit: contain; object-position: center bottom; }
+.treatment-brows .treatment-hero__figure { background: #eae3d9; }
+.treatment-brows .treatment-hero__photo { inset: 100px 30px 0; }
+.treatment-brows .treatment-hero__photo img { object-fit: contain; object-position: center bottom; }
+.brow-methods { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: start; gap: clamp(36px, 6vw, 80px); }
+.brow-methods__intro h2 { margin: 20px 0; }
+.brow-methods__intro > p { max-width: 330px; font-size: 15px; }
+.brow-methods__choices { display: grid; gap: 8px; margin-top: 32px; }
+.brow-methods__choices button { display: flex; align-items: center; gap: 16px; width: 100%; padding: 20px 16px; border: 0; background: transparent; color: var(--t-muted); text-align: start; font: inherit; cursor: pointer; transition: background .2s, color .2s; }
+.brow-methods__choices button:hover { background: #f6f2ec; }
+.brow-methods__choices button[aria-pressed="true"] { background: #eee6dc; color: var(--t-ink); }
+.brow-methods__number { font-size: 12px; align-self: flex-start; padding-top: 7px; color: var(--t-clay); }
+.brow-methods__choices strong { display: block; font-size: 22px; font-weight: 400; }
+.brow-methods__choices small { display: block; margin-top: 5px; font-size: 13px; line-height: 1.6; }
+.brow-methods__arrow { margin-inline-start: auto; opacity: 0; }
+.brow-methods__choices button[aria-pressed="true"] .brow-methods__arrow { opacity: 1; }
+.brow-methods__detail { padding: clamp(24px, 3vw, 40px); background: #f5f1eb; }
+.brow-methods__detail h3 { font-size: clamp(28px, 3vw, 38px); font-weight: 300; line-height: 1.3; }
+.treatment-page .brow-methods__subtitle { margin: 14px 0 26px; font-size: 18px; line-height: 1.65; color: var(--t-clay); }
+.brow-methods__detail .treatment-copy { gap: 14px; }
+.brow-methods__detail .treatment-copy p { font-size: 15px; }
+.brow-methods__detail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 28px 0 0; padding-top: 24px; border-top: 1px solid var(--t-line); }
+.brow-methods__detail dt { font-size: 12px; color: var(--t-clay); margin-bottom: 6px; }
+.brow-methods__detail dd { margin: 0; font-size: 15px; line-height: 1.65; }
+.treatment-page .brow-methods__note { margin-top: 22px; font-size: 12px; }
+.treatment-aesthetics .treatment-hero__figure { background: #eae3d9; }
+.treatment-aesthetics .treatment-hero__photo { inset: 100px 30px 0; }
+.treatment-aesthetics .treatment-hero__photo img { object-fit: contain; object-position: center bottom; }
+.treatment-hero__figure figcaption { position: absolute; bottom: 24px; inset-inline: 24px; width: fit-content; max-width: calc(100% - 48px); padding: 12px 18px; border-radius: 12px; font-size: 12px; color: var(--t-ink); background: rgba(255, 250, 243, .82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.treatment-page .treatment-hero__figure--brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; padding: 140px 32px 64px; background: transparent; }
+.treatment-hero__figure--brand::before { content: ""; position: absolute; inset-inline-start: 0; top: 140px; bottom: 64px; width: 1px; background: #d9cdbf; pointer-events: none; }
+.treatment-page .treatment-hero__figure--brand .treatment-hero__photo { position: static; width: clamp(170px, 15vw, 210px); height: 220px; overflow: visible; }
+.treatment-page .treatment-hero__figure--brand img { object-fit: contain; object-position: center; opacity: .65; }
+.treatment-page .treatment-hero__figure--brand figcaption { position: static; max-width: 100%; padding: 0; border-radius: 0; text-align: center; font-size: 12px; line-height: 1.7; color: #8c7762; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.treatment-hero--cutout .treatment-hero__grid { max-width: 1440px; margin-inline: auto; }
+.treatment-page .treatment-hero__figure--cutout { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; margin: 0; padding: 136px 40px 64px; background: transparent; }
+.treatment-hero__figure--cutout::before { content: ""; position: absolute; inset-inline-start: 0; top: 144px; bottom: 72px; width: 1px; background: linear-gradient(to bottom, transparent, #d6c8b8 12%, #d6c8b8 88%, transparent); pointer-events: none; }
+.treatment-page .treatment-hero__figure--cutout .treatment-hero__photo { position: relative; inset: auto; width: min(100%, 400px); aspect-ratio: 1; overflow: visible; }
+.treatment-page .treatment-hero__figure--cutout img { display: block; object-fit: contain; object-position: center; filter: drop-shadow(8px 14px 12px rgba(76, 53, 40, .1)); }
+.treatment-page .treatment-hero__figure--cutout figcaption { position: static; max-width: 32ch; padding: 0; text-align: center; text-wrap: balance; color: #8c7762; font-size: 12px; line-height: 1.8; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+@media (min-width: 801px) {
+  .treatment-hero--cutout .treatment-hero__grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); min-height: 640px; }
+  .treatment-hero--cutout .treatment-hero__copy { padding: 144px clamp(32px, 4.5vw, 72px) 72px; }
+}
+.treatment-hero__copy > .treatment-actions { gap: 16px 24px; }
+.treatment-aesthetics .treatment-hero__copy .treatment-cta + .treatment-cta { background: none; padding-inline: 0; color: var(--t-clay); }
+.treatment-page-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px 32px; padding: 18px 24px; border-bottom: 1px solid var(--t-line); background: #fcfaf7; }
+.treatment-page-nav a { padding: 8px 0; font-size: 14px; color: var(--t-muted); }
+.treatment-page-nav a:hover { color: var(--t-ink); text-decoration: underline; text-underline-offset: 6px; }
 .treatment-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-top: 30px; }
 .treatment-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 52px; padding: 14px 24px; border-radius: 999px; background: var(--t-clay); color: #fff9ef; font-size: 14px; transition: background .25s; }
 .treatment-cta span { transition: transform .25s; }
@@ -35,14 +81,14 @@
 .treatment-split { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(40px, 8vw, 120px); align-items: flex-start; }
 .treatment-section-intro h2 { margin-top: 22px; }
 .treatment-section-intro > p { margin-top: 20px; max-width: 390px; }
-.treatment-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; margin-bottom: 36px; }
+.treatment-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 32px; }
 .treatment-heading h2 { margin-top: 18px; }
-.treatment-heading > p { max-width: 310px; font-size: 13px; }
+.treatment-heading > p { max-width: 620px; font-size: 13px; }
 .treatment-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 28px; }
 .treatment-selector button { font: inherit; font-size: 14px; padding: 11px 20px; border: 1px solid var(--t-line); border-radius: 999px; background: transparent; color: var(--t-muted); cursor: pointer; transition: background .25s, color .25s; }
 .treatment-selector button[aria-pressed="true"] { color: #fff8ed; background: var(--t-clay); border-color: var(--t-clay); }
-.treatment-technique { display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: clamp(32px, 6vw, 80px); }
-.treatment-technique__photo { position: relative; aspect-ratio: 5/4; border-radius: 24px; overflow: hidden; background: #ecdfd0; }
+.treatment-technique { display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: clamp(32px, 6vw, 80px); }
+.treatment-technique__photo { position: relative; aspect-ratio: 5/4; width: 100%; max-width: 380px; border-radius: 12px; overflow: hidden; background: #f3eee7; }
 .treatment-technique__photo img { object-fit: contain !important; }
 .treatment-technique__copy { animation: treatment-photo-in .4s ease both; }
 .treatment-copy { display: grid; gap: 16px; }
@@ -56,18 +102,18 @@
 .treatment-technique dt { color: var(--t-muted); font-size: 12px; margin-bottom: 6px; }
 .treatment-technique dd { margin: 0; font-size: 15px; line-height: 1.65; }
 .treatment-page .treatment-note { font-size: 12px; line-height: 1.7; color: var(--t-muted); }
-.treatment-process { background: #eee0d1; }
+.treatment-process { --t-ink: #fff9f1; --t-muted: #f3e9de; --t-clay: #f0ddc5; --t-line: rgba(255, 249, 241, .24); background: #85644e; color: var(--t-ink); }
 .treatment-process__list { list-style: none; padding: 0; margin: 0; }
 .treatment-process__list li { display: flex; gap: 24px; padding-block: 22px; }
 .treatment-process__list li:first-child { padding-top: 0; }
-.treatment-process__list li + li { border-top: 1px solid #d4bda7; }
+.treatment-process__list li + li { border-top: 1px solid var(--t-line); }
 .treatment-process__number { font-size: 14px; color: var(--t-clay); padding-top: 7px; flex: 0 0 20px; }
 .treatment-process__list h3 { font-size: 24px; font-weight: 400; margin-bottom: 8px; }
 .treatment-page .brow-gallery__photo { border-radius: 22px; }
 .treatment-page .brow-gallery__card figcaption { color: var(--t-muted); }
 .treatment-gallery { scroll-margin-top: 120px; }
 .treatment-gallery .treatment-note { margin-top: 24px; }
-.treatment-questions { background: #f4ece2; }
+.treatment-questions { background: #f5f1eb; }
 .treatment-faq__item { border-bottom: 1px solid var(--t-line); }
 .treatment-faq__item:first-child { border-top: 1px solid var(--t-line); }
 .treatment-faq h3 { font: inherit; }
@@ -80,17 +126,18 @@
 .treatment-faq__answer > div { min-height: 0; overflow: hidden; }
 .treatment-faq__answer p { padding: 0 0 24px 34px; font-size: 15px; }
 .treatment-faq__item[data-open="true"] .treatment-faq__answer { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
-.treatment-closing { padding: 56px clamp(20px, 4.5vw, 64px); background: var(--t-clay); color: #fff6ea; }
+.treatment-closing { padding: 56px clamp(20px, 4.5vw, 64px); background: #eee7de; color: var(--t-ink); }
 .treatment-closing .treatment-container { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
-.treatment-closing .treatment-label { color: #efd9c5; }
+.treatment-closing .treatment-label { color: var(--t-clay); }
 .treatment-closing h2 { margin-top: 16px; }
-.treatment-closing .treatment-cta { background: #fff5e7; color: #68412e; flex-shrink: 0; }
+.treatment-closing .treatment-cta { flex-shrink: 0; }
 .treatment-prose p + p { margin-top: 20px; }
 .treatment-prose .treatment-lead { font-size: clamp(23px, 2.6vw, 33px); line-height: 1.5; font-weight: 300; color: var(--t-ink); }
-.treatment-reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 38px; margin-top: 36px; }
+.treatment-reasons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 32px; margin-top: 48px; }
+.treatment-reason-number { display: block; margin-bottom: 16px; font-size: 12px; color: var(--t-clay); }
 .treatment-reasons h3 { font-size: 21px; font-weight: 400; margin-bottom: 8px; }
 .treatment-reasons p { font-size: 14px; }
-.treatment-results { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px; }
+.treatment-results { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 880px; margin: 32px auto 0; }
 .treatment-results figure > div { background: #ecdfd0 !important; }
 .treatment-results figcaption span { color: var(--t-ink) !important; font-weight: 400 !important; font-size: 14px !important; }
 .treatment-catalog { display: flex; flex-direction: column; gap: 56px; }
@@ -102,16 +149,97 @@
 .treatment-detail-blocks { display: flex; flex-direction: column; gap: 28px; }
 .treatment-detail-blocks article + article { border-top: 1px solid var(--t-line); padding-top: 28px; }
 .treatment-detail-blocks h3 { font-size: 23px; font-weight: 400; margin-bottom: 12px; }
+.treatment-detail-blocks p + p { margin-top: 16px; }
+.treatment-safety-section { background: #f5f1eb; }
+.removal-overview { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(36px, 6vw, 80px); align-items: start; }
+.removal-overview .treatment-section-intro > p { font-size: 15px; }
+.removal-overview__link { margin-top: 24px; }
+.removal-overview__detail { padding: clamp(24px, 3vw, 40px); background: #f5f1eb; }
+.removal-overview__detail > h3 { font-size: clamp(24px, 2.4vw, 30px); line-height: 1.4; font-weight: 300; }
+.removal-overview .treatment-reasons { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 30px; gap: 30px; }
+.removal-overview .treatment-reason-number { margin-bottom: 10px; }
+.removal-overview .treatment-reasons h3 { font-size: 20px; }
+.treatment-page .removal-overview__note { margin-top: 28px; font-size: 12px; }
+.treatment-removal .treatment-process .treatment-split { display: block; }
+.treatment-removal .treatment-process .treatment-section-intro { max-width: 640px; }
+.treatment-removal .treatment-process .treatment-section-intro > p { max-width: 600px; }
+.treatment-removal .treatment-process__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; margin-top: 40px; }
+.treatment-removal .treatment-process__list li { position: relative; display: block; padding: 0; border: 0; }
+.treatment-removal .treatment-process__list li + li::before { content: ""; position: absolute; inset-inline-start: -16px; top: 8px; bottom: 8px; width: 1px; background: var(--t-line); pointer-events: none; }
+.treatment-removal .treatment-process__number { display: block; font-size: 28px; font-weight: 300; margin-bottom: 18px; padding: 0; }
+.treatment-removal .treatment-process__list h3 { font-size: 21px; }
+.treatment-removal .treatment-process__list p { font-size: 14px; }
+.treatment-removal .treatment-safety-section { background: #fcfaf7; }
+.treatment-removal .treatment-safety-section .treatment-split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(36px, 6vw, 80px); }
+.treatment-removal .treatment-detail-blocks { background: #f5f1eb; padding: clamp(24px, 3vw, 40px); gap: 28px; }
+.treatment-removal .treatment-detail-blocks article + article { border: 0; padding: 0; }
+.treatment-removal .treatment-detail-blocks h3 { font-size: 21px; }
+.treatment-removal .treatment-detail-blocks p { font-size: 15px; }
+.treatment-removal .treatment-gallery { padding-top: 24px; }
+.treatment-removal .treatment-gallery .treatment-heading { align-items: center; text-align: center; }
+.treatment-removal .treatment-results { max-width: 760px; gap: 28px; }
+.treatment-removal .treatment-results figure > div { border-radius: 10px !important; background: #f2eee8 !important; }
+.aesthetic-overview .treatment-heading { align-items: center; text-align: center; }
+.aesthetic-overview__services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+.aesthetic-overview__services > a { display: flex; flex-direction: column; align-items: flex-start; padding: 28px; background: #f5f1eb; color: var(--t-ink); transition: background .2s; }
+.aesthetic-overview__services > a:hover { background: #eee6dc; }
+.aesthetic-overview__number { font-size: 13px; color: var(--t-clay); margin-bottom: 24px; }
+.aesthetic-overview__services h3 { font-size: clamp(23px, 2.3vw, 29px); font-weight: 300; line-height: 1.35; }
+.aesthetic-overview__services p { font-size: 14px; margin: 14px 0 24px; }
+.aesthetic-overview__link { display: flex; align-items: center; gap: 20px; margin-top: auto; font-size: 13px; color: var(--t-clay); }
+.aesthetic-service:nth-child(odd) { background: #f3efe9; }
+.aesthetic-service__layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(36px, 6vw, 80px); align-items: start; }
+.aesthetic-service__intro { position: sticky; top: 124px; }
+.aesthetic-service__intro h2 { margin: 20px 0; }
+.aesthetic-service__intro > p { font-size: 15px; }
+.aesthetic-service__intro > .treatment-cta { margin-top: 28px; }
+.aesthetic-service__body { padding: clamp(24px, 3vw, 40px); background: #f5f1eb; }
+.aesthetic-service:nth-child(odd) .aesthetic-service__body { background: #fcfaf7; }
+.aesthetic-service__lead h3 { font-size: 25px; font-weight: 300; line-height: 1.4; margin-bottom: 16px; }
+.aesthetic-service__lead p { font-size: 15px; }
+.aesthetic-service__topics { margin-top: 20px; }
+.treatment-page .aesthetic-service__note { font-size: 12px; margin-top: 28px; }
+.treatment-page .aesthetic-service__eyebrow { font-size: 13px; font-weight: 500; color: var(--t-clay); margin-bottom: 14px; }
+.aesthetic-service__faq { margin-top: 36px; }
+.treatment-disclosure { border-bottom: 1px solid var(--t-line); }
+.treatment-disclosure summary { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 0; cursor: pointer; font-size: 17px; line-height: 1.5; list-style: none; }
+.treatment-disclosure summary::-webkit-details-marker { display: none; }
+.treatment-disclosure summary:focus-visible { outline: 2px solid var(--t-clay); outline-offset: 4px; }
+.treatment-disclosure[open] .treatment-faq__icon::after { transform: rotate(0); }
+.treatment-disclosure > p { padding-bottom: 24px; font-size: 15px; }
 .treatment-related { display: flex; flex-wrap: wrap; gap: 14px 40px; margin-top: 28px; }
 .treatment-medical .treatment-hero h1 { font-size: clamp(44px, 6vw, 78px); }
 @keyframes treatment-photo-in { from { opacity: .4; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 800px) {
-  .treatment-hero { padding-top: 126px; }
-  .treatment-hero__grid { gap: 28px; grid-template-columns: 1fr; }
-  .treatment-hero__copy { padding-block: 0; }
+  .treatment-page .treatment-hero__figure--cutout { height: auto; padding: 28px 24px 36px; gap: 16px; }
+  .treatment-hero__figure--cutout::before { inset-inline: 32px; top: 0; bottom: auto; width: auto; height: 1px; background: linear-gradient(to right, transparent, #d6c8b8 12%, #d6c8b8 88%, transparent); }
+  .treatment-page .treatment-hero__figure--cutout .treatment-hero__photo { width: min(76vw, 300px); }
+  .treatment-page .treatment-hero__figure--brand { height: auto; padding: 32px 24px 40px; gap: 20px; }
+  .treatment-hero__figure--brand::before { inset-inline: 24px; top: 0; bottom: auto; width: auto; height: 1px; }
+  .treatment-page .treatment-hero__figure--brand .treatment-hero__photo { width: 120px; height: 130px; }
+  .treatment-removal .treatment-hero__photo { inset: 20px 20px 0; }
+  .treatment-removal .treatment-hero__figure { height: clamp(300px, 75vw, 420px); }
+  .removal-overview, .treatment-removal .treatment-safety-section .treatment-split { grid-template-columns: 1fr; gap: 28px; }
+  .treatment-removal .treatment-process__list { grid-template-columns: 1fr 1fr; gap: 30px; }
+  .treatment-removal .treatment-process__list li + li::before { inset-inline-start: -15px; }
+  .treatment-removal .treatment-process__list li:nth-child(3)::before { display: none; }
+  .treatment-brows .treatment-hero__photo { inset: 20px 20px 0; }
+  .treatment-brows .treatment-hero__figure { height: clamp(300px, 75vw, 420px); }
+  .brow-methods { grid-template-columns: 1fr; gap: 28px; }
+  .brow-methods__intro > p { max-width: 540px; }
+  .brow-methods__choices { margin-top: 24px; gap: 4px; }
+  .brow-methods__choices button { padding: 14px 16px; }
+  .brow-methods__choices strong { font-size: 20px; }
+  .treatment-hero__grid { grid-template-columns: 1fr; min-height: 0; }
+  .treatment-hero__copy { padding: 120px 24px 40px; }
   .treatment-hero h1 { max-width: 620px; margin-block: 20px; }
-  .treatment-hero__photo { aspect-ratio: 5/4; border-radius: 64px 22px 22px 22px; }
-  .treatment-hero__figure { max-width: 560px; width: 100%; }
+  .treatment-hero__figure { height: clamp(260px, 65vw, 400px); width: 100%; }
+  .treatment-hero__figure figcaption { bottom: 16px; inset-inline-start: 16px; }
+  .treatment-aesthetics .treatment-hero__photo { inset: 20px 20px 0; }
+  .treatment-aesthetics .treatment-hero__figure { height: clamp(300px, 75vw, 420px); }
+  .aesthetic-overview__services { grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+  .aesthetic-overview__services > a { padding: 24px; }
+  .aesthetic-overview__number { margin-bottom: 12px; }
   .treatment-split { grid-template-columns: 1fr; gap: 36px; }
   .treatment-section-intro > p { max-width: 540px; }
   .treatment-technique { grid-template-columns: 1fr; gap: 28px; }
@@ -119,12 +247,20 @@
   .treatment-heading > p { max-width: 100%; }
   .treatment-closing .treatment-container { align-items: flex-start; flex-direction: column; }
   .treatment-catalog article { grid-template-columns: 1fr; gap: 18px; }
+  .treatment-reasons { grid-template-columns: 1fr 1fr; }
+  .aesthetic-service__layout { grid-template-columns: 1fr; gap: 32px; }
+  .aesthetic-service__intro { position: static; }
 }
 @media (max-width: 480px) {
-  .treatment-hero { padding-top: 116px; padding-bottom: 32px; }
+  .removal-overview .treatment-reasons { grid-template-columns: 1fr; gap: 24px; }
+  .treatment-removal .treatment-process__list { grid-template-columns: 1fr; }
+  .treatment-removal .treatment-process__list li { display: flex; gap: 20px; }
+  .treatment-removal .treatment-process__list li + li::before { display: block; inset-inline: 0; top: -15px; bottom: auto; width: auto; height: 1px; }
+  .treatment-removal .treatment-process__list li:nth-child(3)::before { display: block; }
+  .treatment-removal .treatment-process__number { flex: 0 0 22px; font-size: 24px; }
+  .treatment-hero__copy { padding-top: 112px; }
   .treatment-hero h1 { font-size: 44px; }
   .treatment-hero__copy > p { font-size: 15px; }
-  .treatment-hero__photo { aspect-ratio: 1.15; }
   .treatment-actions { gap: 16px; }
   .treatment-selector { gap: 6px; }
   .treatment-selector button { padding: 10px 13px; font-size: 13px; }

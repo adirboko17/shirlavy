@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { waLink } from "@/lib/data";
 import { GRADUATE_TESTIMONIALS } from "@/lib/content";
 import slotMap from "@/lib/slot-map.json";
@@ -61,6 +61,59 @@ function AcademyLink({ href, children, light = false }: { href: string; children
   return <a className={`academy-button${light ? " academy-button--light" : ""}`} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>{children}<span aria-hidden="true">{external ? "←" : "↓"}</span></a>;
 }
 
+function AcademyHeroVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const pauseForReducedMotion = () => {
+      if (reducedMotion.matches) video.pause();
+    };
+    if (!reducedMotion.matches) void video.play().catch(() => setPlaying(false));
+    reducedMotion.addEventListener("change", pauseForReducedMotion);
+    return () => reducedMotion.removeEventListener("change", pauseForReducedMotion);
+  }, []);
+
+  return <div className="academy-hero__photo">
+    {failed ? (
+      <img src={slotMap["ac-gal-0"]} alt="שיר מלמדת בשיעור באקדמיה לאיפור קבוע" />
+    ) : (
+      <>
+        <video
+          ref={videoRef}
+          src="/assets/academy-hero.mp4"
+          poster={slotMap["ac-gal-0"]}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="סרטון מהאקדמיה של שיר לביא"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onError={() => setFailed(true)}
+        />
+        <button
+          type="button"
+          className="academy-hero__video-toggle"
+          aria-label={playing ? "עצירת הסרטון" : "הפעלת הסרטון"}
+          onClick={() => {
+            const video = videoRef.current;
+            if (!video) return;
+            if (video.paused) void video.play().catch(() => setPlaying(false));
+            else video.pause();
+          }}
+        >
+          <span aria-hidden="true">{playing ? "❚❚" : "▶"}</span>
+        </button>
+      </>
+    )}
+  </div>;
+}
+
 export function AcademyPage() {
   const [filter, setFilter] = useState("all");
   const [subject, setSubject] = useState<number | null>(0);
@@ -71,12 +124,15 @@ export function AcademyPage() {
 
   return <div className="academy-page">
     <section className="academy-hero">
-      <div className="academy-container">
+      <div className="academy-hero__layout">
         <div className="academy-hero__intro">
-          <div><AcademyLabel>האקדמיה של שיר לביא</AcademyLabel><h1>המקצוע שלך.<br /><span>העתיד שלך.</span></h1></div>
-          <div className="academy-hero__aside"><p>גם אם את מתחילה מאפס, כאן מתחיל המסע שלך לעולם האיפור הקבוע. לימודים מקרוב עם שיר - לפי הקצב והרמה שלך, מהבסיס ועד לעבודה בידיים.</p><AcademyLink href="#tracks">בואי להכיר את המסלולים</AcademyLink></div>
+          <AcademyLabel>האקדמיה של שיר לביא · איפור קבוע</AcademyLabel>
+          <h1>המקצוע שלך.<br /><span>העתיד שלך.</span></h1>
+          <p className="academy-hero__description">גם אם את מתחילה מאפס, כאן מתחילה הדרך שלך לעולם האיפור הקבוע. ללמוד מקרוב עם שיר, בקצב שלך — מהבסיס ועד לביטחון בידיים.</p>
+          <div className="academy-hero__actions"><AcademyLink href="#tracks">בואי להכיר את המסלולים</AcademyLink><a className="academy-text-link" href={CONSULT} target="_blank" rel="noopener noreferrer">לשיחה עם שיר <span aria-hidden="true">←</span></a></div>
+          <ul className="academy-hero__details" aria-label="הלימודים באקדמיה"><li>קבוצות קטנות או אחת על אחת</li><li>ליווי גם אחרי הלימודים</li></ul>
         </div>
-        <AcademyPhoto slot="ac-gal-0" caption="רגע מתוך שיעור באקדמיה" className="academy-hero__photo" priority />
+        <AcademyHeroVideo />
       </div>
     </section>
 
@@ -147,7 +203,7 @@ export function AcademyPage() {
     <section className="academy-section academy-gallery">
       <div className="academy-container">
         <div className="academy-section-heading"><div><AcademyLabel>מהאקדמיה</AcademyLabel><h2>טעימה מהקורסים.</h2></div><div className="academy-filters" role="group" aria-label="סינון תמונות האקדמיה">{FILTERS.map(([key, label]) => <button key={key} type="button" aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}</div></div>
-        <ResponsiveCarousel key={filter} ariaLabel="גלריית האקדמיה" slideWidth="min(80vw, 340px)" desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "32px 22px" }}>
+        <ResponsiveCarousel key={filter} ariaLabel="גלריית האקדמיה" slideWidth="min(72vw, 280px)" desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "28px 22px" }}>
           {gallery.map(item => <AcademyPhoto key={item.slot} slot={item.slot as keyof typeof slotMap} caption={item.caption} />)}
         </ResponsiveCarousel>
       </div>

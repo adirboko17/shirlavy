@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useId, useState, type ReactNode } from "react";
-import { Slot } from "./ui";
+import slotMap from "@/lib/slot-map.json";
 
 export function TreatmentLabel({ children }: { children: ReactNode }) {
   return <span className="treatment-label">{children}</span>;
 }
 
-export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream", titleAbove = false }: {
-  label: string; title: ReactNode; text: string; image: string; caption: string;
-  children?: ReactNode; back?: boolean; tone?: "cream" | "clay"; titleAbove?: boolean;
+export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream", titleAbove = false, cutout = false }: {
+  label: string; title: ReactNode; text: string; image: keyof typeof slotMap | "brand"; caption: string;
+  children?: ReactNode; back?: boolean; tone?: "cream" | "clay"; titleAbove?: boolean; cutout?: boolean;
 }) {
   const heading = (
     <>
@@ -19,21 +19,19 @@ export function TreatmentHero({ label, title, text, image, caption, children, ba
     </>
   );
   return (
-    <section className={`treatment-hero treatment-hero--${tone}${titleAbove ? " treatment-hero--title-above" : ""}`}>
-      <div className="treatment-container">
-        {back ? <Link className="treatment-back" href="/aesthetics">→ כל טיפולי האסתטיקה</Link> : null}
+    <section className={`treatment-hero treatment-hero--${tone}${titleAbove ? " treatment-hero--title-above" : ""}${cutout ? " treatment-hero--cutout" : ""}`}>
         <div className="treatment-hero__grid">
           <div className="treatment-hero__copy">
+            {back ? <Link className="treatment-back" href="/aesthetics">→ כל טיפולי האסתטיקה</Link> : null}
             {heading}
             <p>{text}</p>
             <div className="treatment-actions">{children}</div>
           </div>
-          <figure className="treatment-hero__figure">
-            <div className="treatment-hero__photo"><Slot id={image} /></div>
+          <figure className={`treatment-hero__figure${image === "brand" ? " treatment-hero__figure--brand" : ""}${cutout ? " treatment-hero__figure--cutout" : ""}`}>
+            <div className="treatment-hero__photo"><img src={image === "brand" ? "/assets/monogram-gold.png" : slotMap[image]} alt="" loading="eager" fetchPriority="high" /></div>
             <figcaption>{caption}</figcaption>
           </figure>
         </div>
-      </div>
     </section>
   );
 }
@@ -69,7 +67,7 @@ export function TreatmentFaq({ items }: { items: readonly { q: string; a: string
           {items.map((item, index) => {
             const expanded = open === index;
             return <div className="treatment-faq__item" key={item.q} data-open={expanded}>
-              <h3><button id={`${id}-q-${index}`} aria-expanded={expanded} aria-controls={`${id}-a-${index}`} onClick={() => setOpen(expanded ? null : index)}><span>{item.q}</span><span className="treatment-faq__icon" aria-hidden="true" /></button></h3>
+              <h3><button type="button" id={`${id}-q-${index}`} aria-expanded={expanded} aria-controls={`${id}-a-${index}`} onClick={() => setOpen(expanded ? null : index)}><span>{item.q}</span><span className="treatment-faq__icon" aria-hidden="true" /></button></h3>
               <div id={`${id}-a-${index}`} role="region" aria-labelledby={`${id}-q-${index}`} className="treatment-faq__answer" inert={!expanded} aria-hidden={!expanded}><div><p>{item.a}</p></div></div>
             </div>;
           })}

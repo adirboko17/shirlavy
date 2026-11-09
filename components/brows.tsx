@@ -50,26 +50,30 @@ export function BrowsPage() {
   const selected = TECH[tech];
   const items = GAL.map((g, i) => ({ cat: g[0], label: g[1], i })).filter((g) => filter === "all" || g.cat === filter);
   return <div className="treatment-page treatment-brows">
-    <TreatmentHero label="איפור קבוע לגבות" title={<>גבות שמרגישות{" "}<em>כמו שלך.</em></>} text="איפור קבוע לגבות והדמיית שיער, בהתאמה אישית למבנה הפנים, לגבה הטבעית, לסוג העור ולהעדפות שלך." image="home-tr-1" caption="מיקרובליידינג · עבודה מהקליניקה">
+    <TreatmentHero label="איפור קבוע לגבות" title={<>גבות שמרגישות{" "}<em>כמו שלך.</em></>} text="איפור קבוע לגבות והדמיית שיער, בהתאמה אישית למבנה הפנים, לגבה הטבעית, לסוג העור ולהעדפות שלך." image="brows-hero-tool" cutout caption="שיר לביא · איפור קבוע בהתאמה אישית">
       <TreatmentCta href={WA} /><a className="treatment-link" href="#brow-results">לעבודות מהקליניקה <span aria-hidden="true">↓</span></a>
     </TreatmentHero>
-    <section className="treatment-section">
-      <div className="treatment-container">
-        <div className="treatment-heading"><div><TreatmentLabel>הטכניקה המתאימה לך</TreatmentLabel><h2>שלוש דרכים.<br />המראה שאת אוהבת.</h2></div><p>{TREATMENT_DISCLAIMER}</p></div>
-        <div className="treatment-selector" role="group" aria-label="בחירת טכניקת גבות">
-          {TECH.map((item, index) => <button key={item.title} type="button" aria-pressed={tech === index} aria-controls="brow-technique" onClick={() => setTech(index)}>{item.title}</button>)}
-        </div>
-        <div className="treatment-technique" id="brow-technique">
-          <div className="treatment-technique__photo"><Slot id={`brows-tech-${tech}`} /></div>
-          <div className="treatment-technique__copy" key={tech}>
-            <h3>{selected.title}</h3>
-            <p className="treatment-technique__subtitle">{selected.subtitle}</p>
-            <div className="treatment-copy">{selected.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
-            <dl><div><dt>המראה</dt><dd>{selected.look}</dd></div><div><dt>לרוב מתאים ל</dt><dd>{selected.fit}</dd></div></dl>
-            <p className="treatment-eligibility">{TREATMENT_DISCLAIMER}</p>
-            <div className="treatment-actions"><TreatmentCta href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${selected.title}.`)}>לייעוץ והתאמה אישית</TreatmentCta></div>
+    <nav className="treatment-page-nav" aria-label="בעמוד טיפולי גבות"><a href="#brow-techniques">שיטות הטיפול</a><a href="#brow-results">עבודות מהקליניקה</a></nav>
+    <section className="treatment-section" id="brow-techniques">
+      <div className="treatment-container brow-methods">
+        <div className="brow-methods__intro">
+          <TreatmentLabel>הטכניקה המתאימה לך</TreatmentLabel>
+          <h2>שלוש דרכים.<br />המראה שלך.</h2>
+          <p>לכל גבה אופי משלה. הכירי את השיטות, ובייעוץ נבחר יחד את המתאימה לך.</p>
+          <div className="brow-methods__choices" role="group" aria-label="בחירת טכניקת גבות">
+            {TECH.map((item, index) => <button key={item.title} type="button" aria-pressed={tech === index} aria-controls="brow-technique" onClick={() => setTech(index)}><span className="brow-methods__number" aria-hidden="true">0{index + 1}</span><span><strong>{item.title}</strong><small>{item.look}</small></span><span className="brow-methods__arrow" aria-hidden="true">←</span></button>)}
           </div>
         </div>
+        <section className="brow-methods__detail" id="brow-technique" aria-labelledby="brow-method-title">
+          <div key={tech}>
+            <h3 id="brow-method-title">{selected.title}</h3>
+            <p className="brow-methods__subtitle">{selected.subtitle}</p>
+            <div className="treatment-copy">{selected.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
+            <dl><div><dt>המראה</dt><dd>{selected.look}</dd></div><div><dt>לרוב מתאים ל</dt><dd>{selected.fit}</dd></div></dl>
+            <div className="treatment-actions"><TreatmentCta href={waLink(`היי שיר, אשמח לייעוץ ללא עלות לגבי ${selected.title}.`)}>לייעוץ והתאמה אישית</TreatmentCta><a className="treatment-link" href="#brow-results">לתוצאות מהקליניקה <span aria-hidden="true">↓</span></a></div>
+            <p className="brow-methods__note">{TREATMENT_DISCLAIMER}</p>
+          </div>
+        </section>
       </div>
     </section>
     <TreatmentProcess title="מתכננות יחד, עד לפרט הקטן." intro="שיר מתאימה כל טיפול למבנה הפנים, לגבה הטבעית, לסוג העור ולהעדפות שלך." items={[
