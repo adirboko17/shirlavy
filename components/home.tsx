@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { StoreQuiz } from "./store-quiz";
@@ -31,6 +31,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const [playing, setPlaying] = useState(true);
   const [vOk, setVOk] = useState<boolean | null>(null);
   const [t, setT] = useState(0);
+  const [mobileTreatment, setMobileTreatment] = useState<number | null>(0);
   const narrow = (width || 1200) < 760;
   const mobile = (width || 1200) < 760;
 
@@ -54,6 +55,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
     <div className="home-page">
       <section style={{ padding: 0 }}>
         <div
+          className="home-hero"
           style={{
             position: "relative",
             overflow: "hidden",
@@ -81,7 +83,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           </video>
           <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 1, background: shade }} />
           {vOk === false ? <div className="home-hero-fallback"><Slot id="home-hero-main" /></div> : null}
-          <div style={{ position: "absolute", inset: "auto 0 0 0", zIndex: 2, padding: "0 clamp(20px,4.5vw,64px) clamp(32px,6vh,64px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 24 }}>
+          <div className="home-hero__copy" style={{ position: "absolute", inset: "auto 0 0 0", zIndex: 2, padding: "0 clamp(20px,4.5vw,64px) clamp(32px,6vh,64px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 24 }}>
             <h1 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(42px,6.4vw,100px)", lineHeight: 0.94, letterSpacing: "-.045em", textWrap: "balance", color: "#fff" }}>
               היופי שלך.
               <br />
@@ -152,7 +154,22 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           </div>
           <div className="home-treatments__layout">
             <div className="home-treatments__list">
-              {TREATMENTS.map((item, i) => <Link
+              {TREATMENTS.map((item, i) => mobile ? <Fragment key={item[0]}>
+                <button type="button" className="home-treatment home-treatment--selector" data-active={mobileTreatment === i}
+                  aria-expanded={mobileTreatment === i} aria-controls={`home-treatment-preview-${i}`} onClick={() => setMobileTreatment(current => current === i ? null : i)}>
+                  <span className="home-treatment__copy"><span className="home-treatment__title">{item[1]}</span><span className="home-treatment__description">{item[3]}</span></span>
+                  <span className="home-treatment__arrow" aria-hidden>{mobileTreatment === i ? "−" : "+"}</span>
+                </button>
+                <div id={`home-treatment-preview-${i}`} hidden={mobileTreatment !== i}>
+                  {mobileTreatment === i ? <figure className="home-treatment-photo home-treatment-photo--mobile">
+                    <div className="home-treatment-photo__frame">
+                      {i >= 3 ? <div className="home-treatment-logo"><img src="/assets/logo-gold.png" alt="" /><span className="home-treatment-logo__soon">בקרוב</span></div>
+                        : <Slot id={"home-tr-" + (i + 1)} placeholder={item[1]} fit="cover" />}
+                    </div>
+                    <figcaption><Link href={item[4]} className="home-text-link" aria-label={`למידע על ${item[1]}`}>למידע על הטיפול <span aria-hidden>←</span></Link></figcaption>
+                  </figure> : null}
+                </div>
+              </Fragment> : <Link
                 key={item[0]} href={item[4]} className="home-treatment" data-active={t === i}
                 onMouseEnter={() => setT(i)} onFocus={() => setT(i)}
               >
@@ -160,7 +177,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
                 <span className="home-treatment__arrow" aria-hidden>←</span>
               </Link>)}
             </div>
-            <figure className="home-treatment-photo">
+            {!mobile ? <figure className="home-treatment-photo">
               <div className="home-treatment-photo__frame">
                 {TREATMENTS.map((item, i) => <div key={item[0]} className="home-treatment-photo__slide" data-active={t === i} aria-hidden={t !== i}>
                   {i >= 3 ? (
@@ -174,7 +191,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
                 </div>)}
               </div>
               <figcaption>{TREATMENTS[t][1]}</figcaption>
-            </figure>
+            </figure> : null}
           </div>
         </div>
       </section>

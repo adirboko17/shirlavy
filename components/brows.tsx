@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { waLink } from "@/lib/data";
 import { BROW_TECHNIQUES, TREATMENT_DISCLAIMER } from "@/lib/content";
 import { useSite } from "@/lib/site";
@@ -112,7 +112,50 @@ export function BrowsPage() {
 
 function BrowGallery({ items }: { items: { i: number; label: string }[] }) {
   const { mobile } = useSite();
-  const pageSize = mobile ? 1 : 4;
+  return mobile ? <MobileBrowGallery items={items} /> : <DesktopBrowGallery items={items} />;
+}
+
+function MobileBrowGallery({ items }: { items: { i: number; label: string }[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const goTo = (index: number) => {
+    const track = trackRef.current;
+    const slide = track?.children[(index + items.length) % items.length];
+    if (!track || !(slide instanceof HTMLElement)) return;
+    // Scroll the track only, without moving the page vertically.
+    track.scrollTo({ left: track.scrollLeft + slide.getBoundingClientRect().right - track.getBoundingClientRect().right,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  };
+  if (!items.length) return null;
+  return <div className="brow-gallery">
+    <div ref={trackRef} className="brow-gallery__mobile-track" role="region" aria-label="גלריית לפני ואחרי"
+      onScroll={() => {
+        const track = trackRef.current;
+        if (!track) return;
+        const edge = track.getBoundingClientRect().right;
+        let closest = 0;
+        let distance = Infinity;
+        Array.from(track.children).forEach((slide, index) => {
+          const nextDistance = Math.abs(slide.getBoundingClientRect().right - edge);
+          if (nextDistance < distance) { closest = index; distance = nextDistance; }
+        });
+        setActive(closest);
+      }}>
+      {items.map((item) => <figure key={item.i} className="brow-gallery__card">
+        <div className="brow-gallery__photo"><Slot id={`brows-g${item.i}`} placeholder={item.label} /></div>
+        <figcaption>{item.label}</figcaption>
+      </figure>)}
+    </div>
+    {items.length > 1 ? <div className="brow-gallery__bar">
+      <button type="button" className="round ghost" aria-label="הקודם" onClick={() => goTo(active - 1)}><span aria-hidden>→</span></button>
+      <span className="brow-gallery__count" aria-live="polite">{active + 1} / {items.length}</span>
+      <button type="button" className="round ghost" aria-label="הבא" onClick={() => goTo(active + 1)}><span aria-hidden>←</span></button>
+    </div> : null}
+  </div>;
+}
+
+function DesktopBrowGallery({ items }: { items: { i: number; label: string }[] }) {
+  const pageSize = 4;
   const [start, setStart] = useState(0);
   if (!items.length) return null;
 

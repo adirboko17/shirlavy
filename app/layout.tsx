@@ -3,6 +3,7 @@ import { Heebo } from "next/font/google";
 import { headers } from "next/headers";
 import "./globals.css";
 import "./commerce.css";
+import "./checkout.css";
 import "./home.css";
 import "./about.css";
 import "./treatments.css";

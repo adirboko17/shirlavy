@@ -1,11 +1,17 @@
 export type Currency = "ILS" | "USD" | "EUR";
 
+export type ShopOption = {
+  name: string;
+  values: string[];
+};
+
 export type ShopVariant = {
   id: string;
   title: string;
   sku: string;
   price: number;
   stock: number | null;
+  selected: Record<string, string>;
 };
 
 export type ShopBundle = {
@@ -31,6 +37,7 @@ export type ShopProduct = {
   price: number;
   compareAt: number | null;
   images: string[];
+  options: ShopOption[];
   variants: ShopVariant[];
   bundles: ShopBundle[];
 };

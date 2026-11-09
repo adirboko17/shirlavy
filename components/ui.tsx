@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { INSTAGRAM_PROFILE_URL } from "@/lib/data";
+import { FACEBOOK_PROFILE_URL, INSTAGRAM_PROFILE_URL, TIKTOK_PROFILE_URL } from "@/lib/data";
 import slotMap from "@/lib/slot-map.json";
 
 const slots = slotMap as Record<string, string>;
@@ -333,8 +333,8 @@ export function TtIcon() {
 export function Socials() {
   const items = [
     { label: "Instagram", href: INSTAGRAM_PROFILE_URL, icon: <IgIcon /> },
-    { label: "Facebook", href: "#", icon: <FbIcon /> },
-    { label: "TikTok", href: "#", icon: <TtIcon /> },
+    { label: "Facebook", href: FACEBOOK_PROFILE_URL, icon: <FbIcon /> },
+    { label: "TikTok", href: TIKTOK_PROFILE_URL, icon: <TtIcon /> },
   ];
   return (
     <div style={{ display: "flex", gap: 10 }}>

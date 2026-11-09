@@ -9,6 +9,7 @@ import {
   type ShopBundle,
   type ShopCollection,
   type ShippingMethod,
+  type ShopOption,
   type ShopProduct,
   type ShopSnapshot,
   type ShopVariant,
@@ -152,7 +153,48 @@ function bundlesOf(value: unknown): ShopBundle[] {
   return bundles.sort((a, b) => a.qty - b.qty);
 }
 
-function variantsOf(value: unknown, fallbackPrice: number): ShopVariant[] {
+function optionsOf(value: unknown): ShopOption[] {
+  if (!Array.isArray(value)) return [];
+  const options: ShopOption[] = [];
+  const seen = new Set<string>();
+  for (const item of value) {
+    const row = recordOf(item);
+    const name = text(row?.name, 40);
+    if (!name || seen.has(name) || !Array.isArray(row?.values)) continue;
+    const values: string[] = [];
+    const used = new Set<string>();
+    for (const entry of row.values) {
+      const label = text(entry, 40);
+      if (!label || label.includes("/") || used.has(label)) continue;
+      used.add(label);
+      values.push(label);
+      if (values.length === 30) break;
+    }
+    if (!values.length) continue;
+    seen.add(name);
+    options.push({ name, values });
+    if (options.length === 3) break;
+  }
+  return options;
+}
+
+function selectedOf(row: Record<string, unknown> | null, title: string, options: ShopOption[]) {
+  const selected: Record<string, string> = {};
+  const picked = recordOf(row?.selected);
+  for (const option of options) {
+    const choice = text(picked?.[option.name], 40);
+    if (choice) selected[option.name] = choice;
+  }
+  if (Object.keys(selected).length || !options.length || !title) return selected;
+  const parts = title.split(" / ");
+  options.forEach((option, index) => {
+    const choice = text(parts[index], 40);
+    if (choice) selected[option.name] = choice;
+  });
+  return selected;
+}
+
+function variantsOf(value: unknown, fallbackPrice: number, options: ShopOption[]): ShopVariant[] {
   if (!Array.isArray(value)) return [];
   const variants: ShopVariant[] = [];
   for (const item of value) {
@@ -162,12 +204,15 @@ function variantsOf(value: unknown, fallbackPrice: number): ShopVariant[] {
     if (!id || price < 0) continue;
     const stockValue = row?.stock ?? row?.available;
     const stockNumber = typeof stockValue === "number" ? stockValue : typeof stockValue === "string" ? Number(stockValue) : NaN;
+    const tracked = row?.tracked !== false;
+    const title = text(row?.title, 120);
     variants.push({
       id,
-      title: text(row?.title, 120),
+      title,
       sku: text(row?.sku, 80),
       price,
-      stock: Number.isFinite(stockNumber) ? stockNumber : null,
+      stock: tracked ? (Number.isFinite(stockNumber) ? stockNumber : 0) : null,
+      selected: selectedOf(row, title, options),
     });
   }
   return variants;
@@ -183,8 +228,9 @@ function productsOf(value: unknown, collections: ShopCollection[]): ShopProduct[
     if (!id || !name) return;
     const price = amount(row?.price) ?? 0;
     const compare = amount(row?.compareAt);
-    const variants = variantsOf(row?.variants, price);
     const merch = recordOf(row?.merch);
+    const options = optionsOf(row?.options ?? merch?.options);
+    const variants = variantsOf(row?.variants, price, options);
     const badge = recordOf(merch?.badge);
     const badgeLabel = badge?.hidden === true ? "" : text(badge?.label, 24);
     const tags = Array.isArray(row?.tags) ? row.tags.filter((tag): tag is string => typeof tag === "string") : [];
@@ -209,10 +255,11 @@ function productsOf(value: unknown, collections: ShopCollection[]): ShopProduct[
       isNew: /חדש|\bnew\b/i.test(haystack),
       best: /נמכר|מומלץ|\bbest\b/i.test(haystack),
       rank: index,
-      price: variants[0]?.price ?? price,
-      compareAt: compare != null && compare > (variants[0]?.price ?? price) ? compare : null,
+      price: variants.length ? Math.min(...variants.map((variant) => variant.price)) : price,
+      compareAt: compare != null && compare > (variants.length ? Math.min(...variants.map((variant) => variant.price)) : price) ? compare : null,
       images,
-      variants: variants.length ? variants : [{ id, title: "", sku: "", price, stock: null }],
+      options,
+      variants: variants.length ? variants : [{ id, title: "", sku: "", price, stock: null, selected: {} }],
       bundles: bundlesOf(merch?.bundles),
     });
   });

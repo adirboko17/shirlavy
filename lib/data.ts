@@ -2,6 +2,8 @@ export const PHONE = "972502444994";
 export const SITE_EMAIL = "office@shirlavy.co.il";
 
 export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/shir_aesthetics/";
+export const FACEBOOK_PROFILE_URL = "https://www.facebook.com/lavyshir";
+export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@shir_lavy";
 export const INSTAGRAM_HANDLE = "@shir_aesthetics";
 
 export const CATS = {

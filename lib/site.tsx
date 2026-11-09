@@ -105,7 +105,7 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
         body: JSON.stringify({
           lines: cart.map(storefrontLine),
           shippingName: draft.shippingName,
-          customer: draft,
+          customer: { ...draft, street: [draft.street, draft.addressExtra].filter(Boolean).join(", ") },
         }),
       });
     }, 900);
@@ -206,12 +206,13 @@ export function readCustomerDraft() {
       email: text("email"),
       phone: text("phone"),
       street: text("street"),
+      addressExtra: text("addressExtra"),
       city: text("city"),
       zip: text("zip"),
       shippingName: text("shippingName"),
     };
   } catch {
-    return { name: "", email: "", phone: "", street: "", city: "", zip: "", shippingName: "" };
+    return { name: "", email: "", phone: "", street: "", addressExtra: "", city: "", zip: "", shippingName: "" };
   }
 }
 

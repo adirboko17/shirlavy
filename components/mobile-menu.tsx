@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
-import { INSTAGRAM_PROFILE_URL, MOBILE_NAV } from "@/lib/data";
+import { FACEBOOK_PROFILE_URL, INSTAGRAM_PROFILE_URL, MOBILE_NAV, TIKTOK_PROFILE_URL } from "@/lib/data";
 
 const EASE = "cubic-bezier(.16,.8,.2,1)";
 const reduceMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -20,7 +20,7 @@ const SOCIALS = [
   },
   {
     label: "Facebook",
-    href: "#",
+    href: FACEBOOK_PROFILE_URL,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
         <path d="M13.4 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.7v3h2.6V21h3.1z" />
@@ -29,7 +29,7 @@ const SOCIALS = [
   },
   {
     label: "TikTok",
-    href: "#",
+    href: TIKTOK_PROFILE_URL,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
         <path d="M16.6 3h-3.1v12.2a2.7 2.7 0 11-2.7-2.7c.3 0 .6 0 .8.1V9.4a5.8 5.8 0 105 5.8V9.1a7.3 7.3 0 004.3 1.4V7.4A4.3 4.3 0 0116.6 3z" />

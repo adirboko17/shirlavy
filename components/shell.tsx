@@ -70,6 +70,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const showFooter = path !== "/checkout";
   const showFab = !wide && site.width < 760 && !["/shop", "/checkout"].includes(path) && !path.startsWith("/shop/") && !site.menuOpen;
 
+  if (path === "/checkout") {
+    return <div className="checkout-shell" dir="rtl" lang="he">
+      <header className="checkout-header"><div><Logo onDark={false} small /><Link href="/shop">חזרה לחנות <span aria-hidden="true">←</span></Link></div></header>
+      <main>{children}</main>
+      <CartDrawer />
+    </div>;
+  }
+
   return (
     <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C" }}>
       <div ref={promoRef} className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ, האתר שומר שבת">

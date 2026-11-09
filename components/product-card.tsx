@@ -25,7 +25,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       <div className="boutique-card__meta">
         <span className="boutique-card__category">{product.catName || "SHIR LAVY COLLECTION"}</span>
         <h3>{product.name}</h3>
-        <div className="boutique-card__price"><span>{formatMoney(product.price, site.shop.currency)}</span>{product.compareAt && product.compareAt > product.price ? <s>{formatMoney(product.compareAt, site.shop.currency)}</s> : null}</div>
+        <div className="boutique-card__price"><span>{product.variants.length > 1 && product.variants.some((variant) => variant.price !== product.price) ? `החל מ־${formatMoney(product.price, site.shop.currency)}` : formatMoney(product.price, site.shop.currency)}</span>{product.compareAt && product.compareAt > product.price ? <s>{formatMoney(product.compareAt, site.shop.currency)}</s> : null}</div>
       </div>
     </Link>
     <button type="button" disabled={soldOut} className="boutique-card__add" aria-label={`${single ? "הוספה לסל" : "בחירת אפשרויות"}: ${product.name}`} onClick={() => {

@@ -3,10 +3,67 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { formatMoney } from "@/lib/shop-model";
+import { formatMoney, type ShopProduct, type ShopVariant } from "@/lib/shop-model";
 import { productLine, useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CommerceIcon } from "./commerce-icon";
+
+const SWATCHES: Record<string, string> = {
+  "שחור": "#1c1c1c",
+  "לבן": "#f7f4ef",
+  "חום": "#6b4226",
+  "חום כהה": "#3e2718",
+  "חום בהיר": "#a67c52",
+  "בלונד": "#d6b072",
+  "בלונדיני": "#d6b072",
+  "אפור": "#8d8d8d",
+  "אפור כהה": "#4d4d4d",
+  "אפור בהיר": "#c8c8c8",
+  "ורוד": "#e7a3b5",
+  "אדום": "#b42318",
+  "בורדו": "#6e2430",
+  "כחול": "#2f5f98",
+  "ירוק": "#3f6b4a",
+  "בז": "#e6d3b3",
+  "בז'": "#e6d3b3",
+  "ניוד": "#d8b89a",
+  "זהב": "#c6a15b",
+  "כסף": "#c0c4c8",
+  "סגול": "#6d4c8a",
+  "כתום": "#d9782d",
+};
+
+function swatchColor(value: string) {
+  const named = value.trim();
+  if (/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(named)) return named;
+  return SWATCHES[named] ?? "#e6ddd3";
+}
+
+function isColorOption(name: string) {
+  return /צבע|גוון|color|colour/i.test(name);
+}
+
+function hasOptionGroups(product: ShopProduct) {
+  return product.options.length > 0 && product.variants.every((variant) => product.options.every((option) => variant.selected[option.name]));
+}
+
+function matchVariant(product: ShopProduct, choice: Record<string, string>) {
+  return product.variants.find((variant) => product.options.every((option) => variant.selected[option.name] === choice[option.name]));
+}
+
+function chooseOption(product: ShopProduct, current: ShopVariant, name: string, value: string) {
+  const exact = matchVariant(product, { ...current.selected, [name]: value });
+  if (exact) return exact;
+  return product.variants.find((variant) => variant.selected[name] === value && variant.stock !== 0)
+    ?? product.variants.find((variant) => variant.selected[name] === value)
+    ?? current;
+}
+
+function valueSoldOut(product: ShopProduct, current: ShopVariant, name: string, value: string) {
+  const exact = matchVariant(product, { ...current.selected, [name]: value });
+  if (exact) return exact.stock === 0;
+  return product.variants.filter((variant) => variant.selected[name] === value).every((variant) => variant.stock === 0);
+}
 
 export function ProductPage() {
   const params = useParams();
@@ -22,7 +79,10 @@ function ProductDetails({ id }: { id: string }) {
   const [bundleQty, setBundleQty] = useState(0);
   const [image, setImage] = useState(0);
   const [packs, setPacks] = useState(1);
-  const variant = product?.variants.find((item) => item.id === variantId) ?? product?.variants[0];
+  const variant = product?.variants.find((item) => item.id === variantId) ?? product?.variants.find((item) => item.stock !== 0) ?? product?.variants[0];
+  const grouped = product ? hasOptionGroups(product) : false;
+  const cap = !variant || variant.stock == null ? 20 : Math.max(1, Math.min(20, variant.stock));
+  const count = Math.min(packs, cap);
   const bundle = product?.bundles.find((item) => item.qty === bundleQty);
   const price = bundle?.price ?? variant?.price ?? product?.price ?? 0;
   const soldOut = variant?.stock === 0;
@@ -52,12 +112,15 @@ function ProductDetails({ id }: { id: string }) {
           <div className="product-info__price"><span>{formatMoney(price, shop.currency)}</span>{product.compareAt && product.compareAt > price && !bundle ? <s>{formatMoney(product.compareAt, shop.currency)}</s> : null}</div>
           {product.short ? <p className="product-info__intro">{product.short}</p> : null}
           <div className="product-purchase">
-            {product.variants.length > 1 ? <fieldset className="product-options"><legend>בחרי את האפשרות שלך</legend><div>{product.variants.map((item) => <button key={item.id} type="button" aria-pressed={variant.id === item.id} onClick={() => setVariantId(item.id)}>{item.title || "רגיל"}{item.stock === 0 ? " · אזל" : ""}</button>)}</div></fieldset> : null}
+            {grouped ? product.options.map((option) => <fieldset key={option.name} className="product-options"><legend>{option.name}{variant.selected[option.name] ? <>: <b>{variant.selected[option.name]}</b></> : null}</legend><div>{option.values.map((value) => {
+              const sold = valueSoldOut(product, variant, option.name, value);
+              return <button key={value} type="button" aria-pressed={variant.selected[option.name] === value} data-sold={sold ? "true" : undefined} onClick={() => setVariantId(chooseOption(product, variant, option.name, value).id)}>{isColorOption(option.name) ? <span className="product-swatch" style={{ background: swatchColor(value) }} /> : null}{value}</button>;
+            })}</div></fieldset>) : product.variants.length > 1 ? <fieldset className="product-options"><legend>בחרי את האפשרות שלך</legend><div>{product.variants.map((item) => <button key={item.id} type="button" aria-pressed={variant.id === item.id} data-sold={item.stock === 0 ? "true" : undefined} onClick={() => setVariantId(item.id)}>{item.title || "רגיל"}</button>)}</div></fieldset> : null}
             {product.bundles.length ? <fieldset className="product-options"><legend>יחידה או מארז?</legend><div><button type="button" aria-pressed={bundleQty === 0} onClick={() => setBundleQty(0)}>יחידה</button>{product.bundles.map((item) => <button key={item.qty} type="button" aria-pressed={bundleQty === item.qty} onClick={() => setBundleQty(item.qty)}>{item.label} · {formatMoney(item.price, shop.currency)}</button>)}</div></fieldset> : null}
             <div className="product-purchase__status"><span className={soldOut ? "stock-status stock-status--out" : "stock-status"}>{soldOut ? "כרגע לא במלאי" : variant.stock != null ? "זמין במלאי" : "ניתן להזמנה"}</span><span>{bundle ? "כמות מארזים" : "כמות יחידות"}</span></div>
             <div className="product-purchase__actions">
-              <button type="button" className="commerce-button" disabled={soldOut} onClick={() => { const line = productLine(product, variant.id, packs, bundle?.qty); if (line) addLine(line); }}><span>{soldOut ? "אזל מהמלאי" : "הוספה לסל"}</span><CommerceIcon name="bag" /></button>
-              <div className="commerce-quantity" role="group" aria-label="כמות"><button type="button" aria-label="הפחתת כמות" disabled={packs === 1} onClick={() => setPacks((value) => Math.max(1, value - 1))}>−</button><output aria-live="polite">{packs}</output><button type="button" aria-label="הגדלת כמות" disabled={packs === 20} onClick={() => setPacks((value) => Math.min(20, value + 1))}>+</button></div>
+              <button type="button" className="commerce-button" disabled={soldOut} onClick={() => { const line = productLine(product, variant.id, count, bundle?.qty); if (line) addLine(line); }}><span>{soldOut ? "אזל מהמלאי" : "הוספה לסל"}</span><CommerceIcon name="bag" /></button>
+              <div className="commerce-quantity" role="group" aria-label="כמות"><button type="button" aria-label="הפחתת כמות" disabled={count === 1} onClick={() => setPacks((value) => Math.max(1, value - 1))}>−</button><output aria-live="polite">{count}</output><button type="button" aria-label="הגדלת כמות" disabled={soldOut || count >= cap} onClick={() => setPacks((value) => Math.min(cap, value + 1))}>+</button></div>
             </div>
             <p className="product-purchase__note">אפשרויות משלוח ואיסוף והמחיר הסופי יוצגו בקופה.</p>
           </div>
