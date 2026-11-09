@@ -16,6 +16,7 @@ import {
   type ShopProduct,
   type ShopSnapshot,
 } from "@/lib/shop-model";
+import { lockPageScroll } from "@/lib/scroll-lock";
 
 type SiteValue = {
   shop: ShopSnapshot;
@@ -92,11 +93,8 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen || cartOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen, cartOpen]);
+    if (menuOpen) return lockPageScroll();
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!ready || !cart.length) return;

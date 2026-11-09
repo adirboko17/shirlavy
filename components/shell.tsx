@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { MENU_ROUTES, NAV, SITE_EMAIL, TOP_NAV, waLink } from "@/lib/data";
 import { useSite } from "@/lib/site";
+import { pageScrollY } from "@/lib/scroll-lock";
 import { MenuButton, MobileMenu } from "./mobile-menu";
 import { CartDrawer } from "./cart-drawer";
 import { StorePopups } from "./store-popups";
@@ -32,10 +33,11 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 30);
+      const y = pageScrollY();
+      setScrolled(y > 30);
       const promoH = promoRef.current?.offsetHeight ?? 36;
       const safe = Math.max(0, promoH - 36);
-      if (hdRef.current) hdRef.current.style.top = Math.max(safe, promoH - window.scrollY) + "px";
+      if (hdRef.current) hdRef.current.style.top = Math.max(safe, promoH - y) + "px";
     };
     const onResize = () => {
       const next = window.innerWidth >= 1200;
@@ -95,9 +97,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
         )}
       </div>
 
-      <header ref={hdRef} style={{ position: "fixed", top: "calc(36px + env(safe-area-inset-top, 0px))", right: 0, left: 0, zIndex: 50, height: 0, margin: 0, padding: 0, pointerEvents: "none" }}>
-        <div ref={barRef} style={{ position: "absolute", top: 0, right: 0, left: 0, padding: "12px clamp(12px,2vw,24px)", pointerEvents: "none" }}>
+      <header ref={hdRef} className="site-header" data-scrolled={scrolled} style={{ position: "fixed", top: "calc(36px + env(safe-area-inset-top, 0px))", right: 0, left: 0, zIndex: 50, height: 0, margin: 0, padding: 0, pointerEvents: "none" }}>
+        <div ref={barRef} className="site-header__backing" style={{ position: "absolute", top: 0, right: 0, left: 0, padding: "12px clamp(12px,2vw,24px)", pointerEvents: "none" }}>
         <div
+          className="site-header__bar"
           style={{
             pointerEvents: "auto",
             maxWidth: 1320,

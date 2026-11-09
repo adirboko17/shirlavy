@@ -5,11 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { CommerceIcon } from "./commerce-icon";
 import { formatMoney, requiredPolicyIds, type CartLine, type Currency } from "@/lib/shop-model";
 import { useSite } from "@/lib/site";
+import { lockPageScroll } from "@/lib/scroll-lock";
 
 export function CartDrawer() {
   const site = useSite();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const unlockRef = useRef<(() => void) | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export function CartDrawer() {
     let nextFrame = 0;
     let timer = 0;
     if (site.cartOpen) {
+      unlockRef.current ??= lockPageScroll();
       if (!dialog.open) dialog.showModal();
       closeRef.current?.focus({ preventScroll: true });
       frame = requestAnimationFrame(() => {
@@ -27,10 +30,41 @@ export function CartDrawer() {
     } else {
       setVisible(false);
       // Keep the native modal mounted until the exit transition finishes.
-      timer = window.setTimeout(() => dialog.close(), window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420);
+      timer = window.setTimeout(() => {
+        dialog.close();
+        unlockRef.current?.();
+        unlockRef.current = null;
+      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420);
     }
     return () => { cancelAnimationFrame(frame); cancelAnimationFrame(nextFrame); window.clearTimeout(timer); };
   }, [site.cartOpen]);
+  useEffect(() => {
+    if (!site.cartOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const viewport = window.visualViewport;
+    const syncViewport = () => {
+      const mobile = window.matchMedia("(max-width: 759px)").matches;
+      // Mobile browser bars can reduce the visible area independently of layout height.
+      if (mobile && (!viewport || viewport.scale === 1)) {
+        dialog.style.setProperty("--cart-viewport-height", `${viewport?.height ?? window.innerHeight}px`);
+        dialog.style.setProperty("--cart-viewport-top", `${viewport?.offsetTop ?? 0}px`);
+      } else {
+        dialog.style.removeProperty("--cart-viewport-height");
+        dialog.style.removeProperty("--cart-viewport-top");
+      }
+    };
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    viewport?.addEventListener("resize", syncViewport);
+    viewport?.addEventListener("scroll", syncViewport);
+    return () => {
+      window.removeEventListener("resize", syncViewport);
+      viewport?.removeEventListener("resize", syncViewport);
+      viewport?.removeEventListener("scroll", syncViewport);
+    };
+  }, [site.cartOpen]);
+  useEffect(() => () => { unlockRef.current?.(); unlockRef.current = null; }, []);
   const currency = site.shop.currency;
   const policies = site.shop.policies.filter((policy) => policy.cart !== "hidden");
   const needed = requiredPolicyIds(site.shop.policies, "cart");
