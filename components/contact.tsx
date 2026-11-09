@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CONTACT_TREATMENT_TOPICS, PHONE, SITE_EMAIL, waLink } from "@/lib/data";
-import { Slot, Socials, h2Style } from "./ui";
+import slotMap from "@/lib/slot-map.json";
+import { Socials } from "./ui";
 
 const TOPICS = [
   ...CONTACT_TREATMENT_TOPICS,
@@ -10,111 +11,128 @@ const TOPICS = [
   ["shop", "הזמנה מהחנות"],
 ] as const;
 
+const QUICK_LINKS = [
+  ["ייעוץ לטיפול", "גבות, הסרה ואסתטיקה", "היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול."],
+  ["פרטים על האקדמיה", "מסלולי לימוד והכשרה", "היי שיר, אשמח לפרטים על האקדמיה."],
+  ["שאלה על הזמנה", "מוצרים, משלוחים והחזרות", "היי, יש לי שאלה לגבי הזמנה מהחנות."],
+] as const;
+
 export function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", msg: "", topic: "brows" });
   const [tried, setTried] = useState(false);
   const [ready, setReady] = useState(false);
+  const statusRef = useRef<HTMLHeadingElement>(null);
   const topicLabel = TOPICS.find(([key]) => key === form.topic)?.[1] ?? "";
   const message = [`היי שיר, שמי ${form.name.trim()}.`, `נושא הפנייה: ${topicLabel}`, `טלפון: ${form.phone.trim()}`, form.email.trim() ? `אימייל: ${form.email.trim()}` : "", form.msg.trim()].filter(Boolean).join("\n");
   const errs = {
     name: form.name.trim().length < 2 ? "נא למלא שם מלא" : "",
     phone: !/^0\d{8,9}$/.test(form.phone.replace(/[\s-]/g, "")) ? "נא למלא מספר טלפון תקין" : "",
-    email: form.email && !/^\S+@\S+\.\S+$/.test(form.email) ? "כתובת האימייל אינה תקינה" : "",
+    email: form.email.trim() && !/^\S+@\S+\.\S+$/.test(form.email.trim()) ? "כתובת האימייל אינה תקינה" : "",
   };
-  const quick = [
-    ["ייעוץ לטיפול", "גבות, הסרה, אסתטיקה ואסתטיקה רפואית", "היי שיר, אשמח לתאם ייעוץ ללא עלות לטיפול."],
-    ["פרטים על האקדמיה", "מסלולי לימוד ומחזורים", "היי שיר, אשמח לפרטים על האקדמיה."],
-    ["שאלה על הזמנה", "מוצרים, משלוחים והחזרות", "היי, יש לי שאלה לגבי הזמנה מהחנות."],
-  ];
+
+  useEffect(() => {
+    if (ready) statusRef.current?.focus();
+  }, [ready]);
 
   return (
-    <div>
-      <section className="contact-intro">
-        <div className="contact-intro__inner">
-          <div><span className="contact-label">יצירת קשר</span><h1>בואי נדבר.</h1></div>
-          <div><p>הדרך המהירה ביותר היא וואטסאפ.<br />שיר עונה באופן אישי לכל פנייה.</p><a href={waLink("היי שיר, אשמח לדבר איתך.")} target="_blank" rel="noopener noreferrer" className="pill gold">כתבי לשיר בוואטסאפ <span aria-hidden>←</span></a></div>
+    <div className="contact-page">
+      <section className="contact-intro" aria-labelledby="contact-title">
+        <div className="contact-container contact-intro__inner">
+          <div>
+            <span className="contact-label">יצירת קשר</span>
+            <h1 id="contact-title">בואי נדבר.</h1>
+            <p className="contact-intro__subtitle">כל התחלה טובה מתחילה בשיחה אישית.</p>
+          </div>
+          <div className="contact-intro__aside">
+            <p>על טיפול, על לימודים או על משהו קטן שרצית לשאול.<br />שיר עונה באופן אישי לכל פנייה.</p>
+            <a href={waLink("היי שיר, אשמח לדבר איתך.")} target="_blank" rel="noopener noreferrer" className="contact-button">כתבי לשיר בוואטסאפ <span aria-hidden="true">←</span></a>
+            <a className="contact-text-link" href="#contact-form">או השאירי כאן את פרטי הפנייה <span aria-hidden="true">↓</span></a>
+          </div>
         </div>
       </section>
-      <section style={{ padding: "clamp(16px,3vw,32px) clamp(16px,4vw,48px) 0" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <span className="contact-label">במה אפשר לעזור?</span>
+
+      <section className="contact-quick" aria-labelledby="contact-quick-title">
+        <div className="contact-container">
+          <h2 className="contact-label" id="contact-quick-title">במה אפשר לעזור?</h2>
           <div className="contact-quick-grid">
-            {quick.map(([t, d, msg]) => (
-              <a key={t} href={waLink(msg)} target="_blank" rel="noopener noreferrer" className="quick">
-                <span><span style={{ fontSize: "clamp(20px,1.8vw,24px)", fontWeight: 300 }}>{t}</span><span style={{ fontSize: 14, color: "#5A5A5A" }}>{d}</span></span>
-                <span aria-hidden className="round" style={{ background: "#F5EEE7", color: "#7A573C", fontSize: 16 }}>←</span>
+            {QUICK_LINKS.map(([title, description, msg], index) => (
+              <a key={title} href={waLink(msg)} target="_blank" rel="noopener noreferrer" className="contact-quick-link">
+                <span className="contact-quick-link__number" aria-hidden="true">0{index + 1}</span>
+                <span className="contact-quick-link__copy"><strong>{title}</strong><span>{description}</span></span>
+                <span aria-hidden="true" className="contact-quick-link__arrow">←</span>
               </a>
             ))}
           </div>
         </div>
       </section>
-      <section style={{ padding: "clamp(64px,8vw,112px) clamp(16px,4vw,48px)" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: "clamp(40px,6vw,96px)", alignItems: "flex-start" }}>
-          <div style={{ flex: "1.1 1 400px", minWidth: 0, display: "flex", flexDirection: "column", gap: 28 }}>
-            <span className="contact-label">פנייה אישית</span>
-            <h2 style={h2Style("clamp(28px,3vw,42px)")}>מה תרצי לשאול?</h2>
+
+      <section className="contact-main" aria-labelledby="contact-form-title">
+        <div className="contact-container contact-main__grid">
+          <div className="contact-form-panel" id="contact-form">
+            <div className="contact-form-heading">
+              <span className="contact-label">פנייה אישית</span>
+              <h2 id="contact-form-title">מה תרצי לשאול?</h2>
+              <p>כמה פרטים, ונכין יחד הודעה לשיר.</p>
+            </div>
             {ready ? (
-              <div role="status" style={{ borderRadius: 24, background: "#F5EEE7", padding: "clamp(28px,3vw,40px)", display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
-                <span style={{ fontSize: 28, fontWeight: 200 }}>תודה, {form.name.trim().split(" ")[0]}.</span>
-                <span style={{ fontSize: 15, lineHeight: 1.7, color: "#5A5A5A" }}>ההודעה שלך מוכנה. המשיכי לוואטסאפ ושלחי אותה לשיר.</span>
-                <a href={waLink(message)} target="_blank" rel="noopener noreferrer" className="pill gold">פתיחת ההודעה בוואטסאפ <span aria-hidden>←</span></a>
-                <button type="button" className="pill ghost" onClick={() => { setReady(false); }}>עריכת הפרטים</button>
+              <div className="contact-ready" role="status">
+                <span className="contact-ready__mark" aria-hidden="true">✓</span>
+                <h3 ref={statusRef} tabIndex={-1}>ההודעה מוכנה, {form.name.trim().split(" ")[0]}.</h3>
+                <p>המשיכי לוואטסאפ, בדקי את הפרטים ושלחי את ההודעה לשיר.</p>
+                <a href={waLink(message)} target="_blank" rel="noopener noreferrer" className="contact-button">פתיחת ההודעה בוואטסאפ <span aria-hidden="true">←</span></a>
+                <button type="button" className="contact-text-link" onClick={() => setReady(false)}>עריכת הפרטים</button>
               </div>
             ) : (
-              <form className="contact-form" noValidate onSubmit={(e) => { e.preventDefault(); if (Object.values(errs).some(Boolean)) setTried(true); else setReady(true); }} style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,220px),1fr))", gap: 24 }}>
+              <form className="contact-form" noValidate onSubmit={(e) => {
+                e.preventDefault();
+                const invalid = (Object.keys(errs) as (keyof typeof errs)[]).find(key => errs[key]);
+                if (invalid) {
+                  setTried(true);
+                  (e.currentTarget.elements.namedItem(invalid) as HTMLInputElement | null)?.focus();
+                } else setReady(true);
+              }}>
+                <div className="contact-fields">
                   {([
                     ["name", "שם מלא", "text"],
                     ["phone", "טלפון", "tel"],
                     ["email", "אימייל (לא חובה)", "email"],
-                  ] as const).map(([k, label, type]) => (
-                    <label key={k} style={{ display: "flex", flexDirection: "column", gap: 4, gridColumn: k === "email" ? "1 / -1" : "auto" }}>
-                      <span style={{ fontSize: 13, color: "#5A5A5A" }}>{label}</span>
-                      <input name={k} type={type} value={form[k]} onChange={(e) => setForm((s) => ({ ...s, [k]: e.target.value }))} autoComplete={k === "name" ? "name" : k === "phone" ? "tel" : "email"} aria-describedby={tried && errs[k] ? `contact-${k}-error` : undefined} aria-invalid={tried && !!errs[k]} className="line-input" style={{ borderBottomColor: tried && errs[k] ? "#A0442E" : "rgba(41,37,34,.2)" }} />
-                      {tried && errs[k] ? <span id={`contact-${k}-error`} style={{ fontSize: 13, color: "#A0442E" }}>{errs[k]}</span> : null}
+                  ] as const).map(([key, label, type]) => (
+                    <label key={key} className={`contact-field${key === "email" ? " contact-field--wide" : ""}`}>
+                      <span>{label}</span>
+                      <input name={key} type={type} required={key !== "email"} dir={key === "name" ? "auto" : "ltr"} value={form[key]} onChange={(e) => setForm(s => ({ ...s, [key]: e.target.value }))} autoComplete={key === "name" ? "name" : key === "phone" ? "tel" : "email"} aria-describedby={tried && errs[key] ? `contact-${key}-error` : undefined} aria-invalid={tried && !!errs[key]} />
+                      {tried && errs[key] ? <span className="contact-field__error" id={`contact-${key}-error`}>{errs[key]}</span> : null}
                     </label>
                   ))}
                 </div>
-                <div>
-                  <span style={{ fontSize: 13, color: "#5A5A5A" }}>נושא הפנייה</span>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
-                    {TOPICS.map(([k, label]) => {
-                      const on = form.topic === k;
-                      return <button key={k} type="button" aria-pressed={on} className="chip" onClick={() => setForm((s) => ({ ...s, topic: k }))} style={{ height: 44, border: `1px solid ${on ? "#8F6A4B" : "rgba(28,28,28,.14)"}`, background: on ? "#8F6A4B" : "#fff", color: on ? "#fff" : "#1C1C1C" }}>{label}</button>;
-                    })}
+                <fieldset className="contact-topics">
+                  <legend>נושא הפנייה</legend>
+                  <div>
+                    {TOPICS.map(([key, label]) => <button key={key} type="button" aria-pressed={form.topic === key} onClick={() => setForm(s => ({ ...s, topic: key }))}>{label}</button>)}
                   </div>
-                </div>
-                <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  <span style={{ fontSize: 13, color: "#5A5A5A" }}>הודעה (לא חובה)</span>
-                  <textarea name="msg" rows={3} value={form.msg} onChange={(e) => setForm((s) => ({ ...s, msg: e.target.value }))} className="line-input" style={{ padding: "10px 2px", resize: "vertical", lineHeight: 1.6 }} />
+                </fieldset>
+                <label className="contact-field">
+                  <span>הודעה (לא חובה)</span>
+                  <textarea name="msg" rows={4} value={form.msg} onChange={(e) => setForm(s => ({ ...s, msg: e.target.value }))} placeholder="מוזמנת לכתוב לי כאן…" />
                 </label>
-                <button type="submit" className="pill gold" style={{ alignSelf: "flex-start", padding: "0 40px" }}>הכנת הודעה לוואטסאפ <span aria-hidden>←</span></button>
-                <p className="contact-form-note">השליחה מתבצעת בוואטסאפ, לאחר שתאשרי את ההודעה.</p>
+                <div className="contact-form-footer">
+                  <button type="submit" className="contact-button">הכנת הודעה לוואטסאפ <span aria-hidden="true">←</span></button>
+                  <p className="contact-form-note">השליחה מתבצעת בוואטסאפ, לאחר שתאשרי את ההודעה.</p>
+                </div>
               </form>
             )}
           </div>
-          <div style={{ flex: "1 1 340px", minWidth: 0, display: "flex", flexDirection: "column", gap: 28 }}>
-            <div className="contact-clinic-photo">
-              <Slot id="contact-clinic" placeholder="צילום הקליניקה" />
-            </div>
-            <div>
-              {[
-                ["הקליניקה", "קליניקת בוטיק לנשים בלבד"],
-                ["טלפון", PHONE.replace(/^972/, "0").replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")],
-                ["אימייל", SITE_EMAIL],
-              ].map(([k, v]) => (
-                <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 16, padding: "14px 0", borderBottom: "1px solid rgba(28,28,28,.1)", fontSize: 15 }}>
-                  <span style={{ color: "#7A573C", fontSize: 13, fontWeight: 500 }}>{k}</span>
-                  {k === "אימייל" ? (
-                    <a href={`mailto:${SITE_EMAIL}`} dir="ltr" style={{ color: "inherit" }}>{v}</a>
-                  ) : (
-                    <span>{v}</span>
-                  )}
-                </div>
-              ))}
-            </div>
-            <Socials />
-          </div>
+
+          <aside className="contact-clinic" aria-label="הקליניקה ופרטי הקשר">
+            <figure className="contact-clinic-figure">
+              <div className="contact-clinic-photo"><img src={slotMap["contact-clinic"]} alt="פינת הייעוץ בקליניקה של שיר לביא" loading="lazy" width={1536} height={2048} /></div>
+              <figcaption><span className="contact-label">הקליניקה של שיר לביא</span><span>קליניקת בוטיק לנשים בלבד</span></figcaption>
+            </figure>
+            <dl className="contact-details">
+              <div><dt>טלפון</dt><dd><a href={`tel:+${PHONE}`} dir="ltr">{PHONE.replace(/^972/, "0").replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3")}</a></dd></div>
+              <div><dt>אימייל</dt><dd><a href={`mailto:${SITE_EMAIL}`} dir="ltr">{SITE_EMAIL}</a></dd></div>
+            </dl>
+            <div className="contact-socials"><span>ניפגש גם כאן</span><Socials /></div>
+          </aside>
         </div>
       </section>
     </div>

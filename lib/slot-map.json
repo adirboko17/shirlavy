@@ -1,4 +1,7 @@
 {
+  "brows-hero-portrait": "/assets/treatment-heroes/brows-portrait.jpeg",
+  "removal-hero-portrait": "/assets/treatment-heroes/removal-portrait.jpeg",
+  "aesthetics-hero-portrait": "/assets/treatment-heroes/aesthetics-portrait.jpeg",
   "brows-hero-tool": "/assets/treatment-heroes/brows-tweezers.png",
   "aesthetics-hero-tool": "/assets/treatment-heroes/aesthetics-syringe.png",
   "removal-hero-tool": "/assets/treatment-heroes/removal-laser.png",

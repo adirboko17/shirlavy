@@ -8,9 +8,9 @@ export function TreatmentLabel({ children }: { children: ReactNode }) {
   return <span className="treatment-label">{children}</span>;
 }
 
-export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream", titleAbove = false, cutout = false }: {
+export function TreatmentHero({ label, title, text, image, caption, children, back, tone = "cream", titleAbove = false, cutout = false, fullBleed = false }: {
   label: string; title: ReactNode; text: string; image: keyof typeof slotMap | "brand"; caption: string;
-  children?: ReactNode; back?: boolean; tone?: "cream" | "clay"; titleAbove?: boolean; cutout?: boolean;
+  children?: ReactNode; back?: boolean; tone?: "cream" | "clay"; titleAbove?: boolean; cutout?: boolean; fullBleed?: boolean;
 }) {
   const heading = (
     <>
@@ -19,7 +19,7 @@ export function TreatmentHero({ label, title, text, image, caption, children, ba
     </>
   );
   return (
-    <section className={`treatment-hero treatment-hero--${tone}${titleAbove ? " treatment-hero--title-above" : ""}${cutout ? " treatment-hero--cutout" : ""}`}>
+    <section className={`treatment-hero treatment-hero--${tone}${titleAbove ? " treatment-hero--title-above" : ""}${cutout ? " treatment-hero--cutout" : ""}${fullBleed ? " treatment-hero--full-bleed" : ""}`}>
         <div className="treatment-hero__grid">
           <div className="treatment-hero__copy">
             {back ? <Link className="treatment-back" href="/aesthetics">→ כל טיפולי האסתטיקה</Link> : null}
@@ -29,7 +29,7 @@ export function TreatmentHero({ label, title, text, image, caption, children, ba
           </div>
           <figure className={`treatment-hero__figure${image === "brand" ? " treatment-hero__figure--brand" : ""}${cutout ? " treatment-hero__figure--cutout" : ""}`}>
             <div className="treatment-hero__photo"><img src={image === "brand" ? "/assets/monogram-gold.png" : slotMap[image]} alt="" loading="eager" fetchPriority="high" /></div>
-            <figcaption>{caption}</figcaption>
+            {fullBleed ? null : <figcaption>{caption}</figcaption>}
           </figure>
         </div>
     </section>
