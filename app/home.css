@@ -34,9 +34,10 @@
 .home-treatment-photo__frame { position: relative; overflow: hidden; aspect-ratio: 4/5; background: #c6ab94; border-radius: 20px; }
 .home-treatment-photo__slide { position: absolute; inset: 0; opacity: 0; transform: scale(1.035); transition: opacity .5s ease, transform .7s ease; pointer-events: none; }
 .home-treatment-photo__slide[data-active="true"] { opacity: 1; transform: scale(1); }
-.home-treatment-logo { position: absolute; inset: 0; display: grid; place-items: center; padding: 16% 14%; background: radial-gradient(120% 85% at 50% 42%, #fff8ef 0%, #f4e7d6 52%, #e6d2bc 100%); }
+.home-treatment-logo { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 24px; padding: 16% 14%; background: radial-gradient(120% 85% at 50% 42%, #fff8ef 0%, #f4e7d6 52%, #e6d2bc 100%); }
 .home-treatment-logo::after { content: ""; position: absolute; inset: 22px; border: 1px solid rgba(133, 88, 63, .2); border-radius: 22px; pointer-events: none; }
 .home-treatment-logo img { width: min(68%, 250px); height: auto; }
+.home-treatment-logo__soon { padding: 6px 22px; border: 1px solid rgba(133, 88, 63, .25); border-radius: 999px; color: #85644e; font-size: 18px; font-weight: 300; line-height: 1.4; }
 .home-treatment-photo figcaption { display: flex; justify-content: space-between; gap: 15px; padding: 16px 8px; font-size: 12px; color: #6b4934; }
 .home-treatment-photo figcaption [dir="ltr"] { font-size: 9px; letter-spacing: .12em; align-self: center; }
 .home-academy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; padding: 0; color: #fff9ee; background: var(--home-clay); overflow: hidden; }

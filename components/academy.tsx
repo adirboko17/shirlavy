@@ -168,7 +168,7 @@ export function AcademyPage() {
     </section>
 
     <section className="academy-section academy-syllabus">
-      <div className="academy-container academy-syllabus__grid">
+      <div className="academy-container">
         <div>
           <AcademyLabel>מה תלמדי כאן</AcademyLabel><h2>מהשלב התיאורטי<br />לשלב המעשי</h2>
           <div className="academy-subjects">
@@ -182,7 +182,6 @@ export function AcademyPage() {
           </div>
           <p className="academy-small">את תוכנית הלימודים המפורטת אפשר לקבל בשיחה עם שיר.</p>
         </div>
-        <AcademyPhoto slot="ac-gal-4" caption="ליווי אישי, גם בפרטים הקטנים" className="academy-syllabus__photo" />
       </div>
       <div className="academy-container">
         <aside className="academy-certification" aria-labelledby="academy-certification-title">

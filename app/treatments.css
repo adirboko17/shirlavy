@@ -275,6 +275,22 @@
   .treatment-process__list li { gap: 14px; }
   .treatment-technique dl { gap: 18px; }
 }
+.treatment-results--carousel:focus-visible { outline: 2px solid var(--t-clay); outline-offset: 6px; border-radius: 10px; }
+@media (max-width: 800px) {
+  .treatment-removal .treatment-results--carousel {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 88%;
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 14px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--t-clay) transparent;
+  }
+  .treatment-results--carousel > figure { min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; }
+}
 @media (prefers-reduced-motion: reduce) {
   .treatment-page *, .treatment-page *::before, .treatment-page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }

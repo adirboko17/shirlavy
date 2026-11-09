@@ -1,0 +1,30 @@
+.aesthetics-coming-soon {
+  min-height: max(760px, 100svh);
+  display: grid;
+  place-items: center;
+  padding: 140px 24px 80px;
+  overflow: hidden;
+  color: #493d35;
+  background: radial-gradient(ellipse at 50% 32%, #fffdf8 0%, #f5f0e8 50%, #eee5d9 100%);
+  text-align: center;
+}
+.aesthetics-coming-soon__content { width: 100%; max-width: 560px; animation: aesthetics-coming-soon-in .8s ease both; }
+.aesthetics-coming-soon__brand { position: relative; isolation: isolate; width: 280px; max-width: 72%; margin: 0 auto 48px; padding: 28px 16px; }
+.aesthetics-coming-soon__brand img { display: block; width: 100%; height: auto; }
+.aesthetics-coming-soon__label { display: inline-flex; align-items: center; gap: 14px; color: #85644e; font-size: 13px; }
+.aesthetics-coming-soon__label::before, .aesthetics-coming-soon__label::after { content: ""; width: 28px; height: 1px; background: #c5af91; }
+.aesthetics-coming-soon h1 { margin: 14px 0 18px; font-size: clamp(58px, 7vw, 88px); font-weight: 300; line-height: 1.15; letter-spacing: -.035em; }
+.aesthetics-coming-soon p { margin: 0; color: #73675d; font-size: 16px; line-height: 1.9; }
+.aesthetics-coming-soon__back { display: inline-flex; align-items: center; gap: 28px; margin-top: 34px; padding: 10px 0; border-bottom: 1px solid #bca68f; color: #85644e; font-size: 14px; transition: color .2s, border-color .2s; }
+.aesthetics-coming-soon__back:hover { color: #493d35; border-color: currentColor; }
+.aesthetics-coming-soon__back:focus-visible { outline: 2px solid #85644e; outline-offset: 6px; }
+@keyframes aesthetics-coming-soon-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 640px) {
+  .aesthetics-coming-soon { min-height: max(700px, 100svh); padding: 132px 22px 64px; }
+  .aesthetics-coming-soon__brand { width: 220px; margin-bottom: 40px; }
+  .aesthetics-coming-soon p { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aesthetics-coming-soon__content { animation: none; }
+  .aesthetics-coming-soon__back { transition: none; }
+}

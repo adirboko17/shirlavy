@@ -58,7 +58,6 @@
 .academy-tracks__support p { max-width: 680px; margin-inline: auto; }
 .academy-tracks__support strong { color: var(--ac-ink); font-weight: 500; }
 .academy-syllabus { background: #fcfaf7; }
-.academy-syllabus__grid { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(40px, 7vw, 100px); align-items: start; }
 .academy-syllabus h2 { margin-top: 20px; }
 .academy-subjects { margin-top: 32px; }
 .academy-subject { border-bottom: 1px solid var(--ac-line); }
@@ -73,18 +72,18 @@
 .academy-subject__answer p { font-size: 15px; padding-bottom: 24px; }
 .academy-subject[data-open="true"] .academy-subject__answer { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
 .academy-page .academy-small { margin-top: 20px; font-size: 12px; }
-.academy-syllabus__photo { position: sticky; top: 120px; padding-top: 8px; width: 100%; max-width: 280px; }
-.academy-syllabus__photo > div { aspect-ratio: 1; border-radius: 14px; }
 .academy-certification { margin-top: clamp(32px, 4vw, 48px); padding: clamp(24px, 3vw, 36px); border: 1px solid var(--ac-line); border-radius: 18px; background: #f6f3ee; }
 .academy-certification h3 { margin-bottom: 18px; font-size: clamp(26px, 3vw, 38px); line-height: 1.3; font-weight: 300; text-wrap: balance; }
 .academy-certification > p { max-width: 850px; }
 .academy-certification .academy-certification__support { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ac-line); color: var(--ac-ink); }
 .academy-certification strong { font-weight: 500; }
-.academy-mentor { border-block: 1px solid var(--ac-line); background: #f6f3ee; }
-.academy-mentor__grid { display: grid; grid-template-columns: 200px minmax(0, 1fr); max-width: 860px; gap: clamp(32px, 6vw, 80px); align-items: center; }
-.academy-mentor .academy-photo { width: 100%; max-width: 200px; }
-.academy-mentor .academy-photo > div { aspect-ratio: 1; }
-.academy-mentor .academy-photo img { object-position: center 35%; }
+.academy-mentor { padding: 0; border-block: 1px solid var(--ac-line); background: #f6f3ee; }
+.academy-mentor__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); max-width: none; min-height: clamp(440px, 32vw, 560px); align-items: stretch; }
+.academy-mentor .academy-photo { position: relative; width: 100%; min-width: 0; }
+.academy-mentor .academy-photo > div { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
+.academy-mentor .academy-photo img { object-position: center 30%; }
+.academy-mentor .academy-photo figcaption { position: absolute; inset-inline: 0; bottom: 0; padding: 50px 28px 24px; background: linear-gradient(transparent, rgba(35, 27, 21, .65)); color: #fffaf5; }
+.academy-mentor__grid > div { align-self: center; width: 100%; max-width: 850px; justify-self: center; padding: clamp(40px, 5vw, 80px) clamp(28px, 6vw, 100px); }
 .academy-mentor blockquote { font-size: clamp(24px, 2.6vw, 34px); font-weight: 300; line-height: 1.65; letter-spacing: -.02em; margin: 20px 0 0; }
 .academy-text-link { display: inline-flex; align-items: center; gap: 28px; padding-bottom: 9px; border-bottom: 1px solid var(--ac-clay); font-size: 14px; color: var(--ac-clay); }
 .academy-gallery { background: #fcfaf7; }
@@ -112,8 +111,6 @@
 @media (max-width: 850px) {
   .academy-hero__intro { padding: 128px 28px 56px; }
   .academy-split { gap: 40px; }
-  .academy-syllabus__grid { grid-template-columns: minmax(0, 1fr) 220px; gap: 32px; }
-  .academy-mentor__grid { gap: 36px; }
 }
 @media (max-width: 640px) {
   .academy-hero__layout { grid-template-columns: 1fr; min-height: 0; }
@@ -128,11 +125,9 @@
   .academy-section-heading { flex-direction: column; align-items: flex-start; gap: 22px; margin-bottom: 28px; }
   .academy-tracks__grid { gap: 18px; }
   .academy-track-copy { gap: 14px; }
-  .academy-syllabus__grid { grid-template-columns: 1fr; gap: 28px; }
-  .academy-syllabus__photo { position: static; max-width: 260px; justify-self: center; }
-  .academy-syllabus__photo > div { aspect-ratio: 3/2; }
-  .academy-mentor .academy-photo { max-width: 160px; }
-  .academy-mentor__grid { gap: 24px; }
+  .academy-mentor .academy-photo { height: clamp(300px, 85vw, 420px); }
+  .academy-mentor__grid { min-height: 0; }
+  .academy-mentor__grid > div { padding: 36px 22px 44px; }
   .academy-mentor blockquote { margin-top: 20px; }
   .academy-testimonials__quote { min-height: 290px; }
   .academy-testimonials__controls { margin-top: 18px; }

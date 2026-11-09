@@ -15,8 +15,7 @@ const TREATMENTS = [
   ["01", "מיקרובליידינג", "MICROBLADING", "הדמיית שיער בגבות בטכניקה טבעית, בכיוון צמיחת השערה.", "/brows"],
   ["02", "הצללת פודרה ושיטה משולבת", "POWDER & COMBINATION", "מראה רך ומוגדר, בהתאמה למבנה הפנים ולסוג העור.", "/brows"],
   ["03", "הסרת איפור קבוע בלייזר", "LASER REMOVAL", "טיפול מותאם אישית להסרת איפור קבוע ישן, כושל או לא רצוי.", "/removal"],
-  ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק והידוק העור בטכנולוגיות מתקדמות.", "/aesthetics"],
-  ["05", "אסתטיקה רפואית", "MEDICAL AESTHETICS", "הזרקות וטיפולים אסתטיים-רפואיים, מבוצעים על ידי רופא מוסמך.", "/aesthetics#medical"],
+  ["04", "טיפולי אסתטיקה מתקדמים", "ADVANCED AESTHETICS", "הסרת שיער בלייזר, מיצוק והידוק העור ואסתטיקה רפואית.", "/aesthetics"],
 ] as const;
 
 const ACADEMY = [
@@ -167,9 +166,10 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
                   {i >= 3 ? (
                     <div className="home-treatment-logo">
                       <img src="/assets/logo-gold.png" alt="" />
+                      <span className="home-treatment-logo__soon">בקרוב</span>
                     </div>
                   ) : (
-                    <Slot id={"home-tr-" + (i + 1)} placeholder={item[1]} />
+                    <Slot id={"home-tr-" + (i + 1)} placeholder={item[1]} fit="cover" />
                   )}
                 </div>)}
               </div>

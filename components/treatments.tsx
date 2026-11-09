@@ -13,7 +13,7 @@ export function RemovalPage() {
     <nav className="treatment-page-nav" aria-label="בעמוד הסרת איפור קבוע"><a href="#removal-results">לפני ואחרי</a><a href="#removal-about">על הטיפול</a><a href="#removal-process">התהליך</a><a href="#removal-safety">בטיחות והתאמה</a></nav>
     <section className="treatment-section treatment-gallery" id="removal-results"><div className="treatment-container">
       <div className="treatment-heading"><div><TreatmentLabel>מהקליניקה</TreatmentLabel><h2>לפני ואחרי</h2></div><p>תמונות מתהליכי הבהרה והסרה בקליניקה.<br />כל תוצאה אישית. לא ניתן להבטיח הסרה מלאה.</p></div>
-      <div className="treatment-results"><ResultPhotoCard slotId="rm-ba-1" caption="לפני ואחרי סדרת טיפולים" /><ResultPhotoCard slotId="rm-ba-2" caption="הבהרה לקראת טיפול חדש" /></div>
+      <div className="treatment-results treatment-results--carousel" role="region" aria-label="תמונות לפני ואחרי הסרת איפור קבוע — ניתן לגלול לצדדים" tabIndex={0}><ResultPhotoCard slotId="rm-ba-1" /><ResultPhotoCard slotId="rm-ba-2" /></div>
     </div></section>
     <section className="treatment-section" id="removal-about"><div className="treatment-container removal-overview">
       <div className="treatment-section-intro"><TreatmentLabel>לפני שמתחילים מחדש</TreatmentLabel><h2>קודם מבינות<br />מה נכון לעור שלך.</h2><p>{PMU_REMOVAL_COPY[0]}</p><a className="treatment-link removal-overview__link" href="#removal-process">איך נראה התהליך? <span aria-hidden="true">↓</span></a></div>
