@@ -75,7 +75,7 @@ function httpsOrPath(value: unknown) {
   return "";
 }
 
-async function rpc(name: string, body: Record<string, unknown>) {
+async function rpc(name: string, body: Record<string, unknown>, timeoutMs = 8000) {
   const env = storelyEnv();
   if (!env) return null;
   try {
@@ -88,7 +88,7 @@ async function rpc(name: string, body: Record<string, unknown>) {
       },
       body: JSON.stringify(body),
       cache: "no-store",
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     const payload = await response.json().catch(() => null);
     if (!response.ok) return null;
@@ -488,6 +488,81 @@ export async function placeOrder(input: {
     amount: total,
   });
   return { ok: true as const, orderNumber: number, total, currency: currencyOf(record.currency) };
+}
+
+export async function beginPayment(input: {
+  hostHeader: string | null;
+  visitorKey: string;
+  lines: StoreLine[];
+  customer: { name: string; email: string; phone: string; street: string; city: string; zip: string };
+  shippingName: string;
+  code: string;
+  giftCode: string;
+}) {
+  const hostname = storefrontHostname(input.hostHeader);
+  const env = storelyEnv();
+  if (!hostname || !env) return { ok: false as const, reason: "לא הצלחנו לפתוח תשלום" };
+  const payload = await rpc("begin_storefront_payment", {
+    tracking_key: env.trackingKey,
+    hostname,
+    visitor_key: input.visitorKey,
+    lines: input.lines,
+    customer_name: input.customer.name,
+    customer_email: input.customer.email,
+    customer_phone: input.customer.phone,
+    customer_street: input.customer.street,
+    customer_city: input.customer.city,
+    customer_zip: input.customer.zip,
+    shipping_name: input.shippingName,
+    code: input.code,
+    gift_code: input.giftCode,
+  }, 20000);
+  const record = recordOf(payload);
+  const url = text(record?.url, 4000);
+  if (record?.ok === true && url.startsWith("https://pay.hyp.co.il/p/?")) {
+    return { ok: true as const, url };
+  }
+  const orderNumber = record?.orderNumber;
+  const number = typeof orderNumber === "string" || typeof orderNumber === "number" ? String(orderNumber).trim() : "";
+  if (record?.ok === true && number) {
+    await recordEvent({
+      hostHeader: input.hostHeader,
+      visitorKey: input.visitorKey,
+      event: "purchase",
+      path: "/checkout",
+      amount: amount(record.total) ?? 0,
+    });
+    return { ok: true as const, orderNumber: number, total: amount(record.total) ?? 0, currency: currencyOf(record.currency) };
+  }
+  return { ok: false as const, reason: text(record?.reason, 300) || "לא הצלחנו לפתוח את דף התשלום" };
+}
+
+export async function completePayment(input: { hostHeader: string | null; query: string }) {
+  const hostname = storefrontHostname(input.hostHeader);
+  const env = storelyEnv();
+  if (!hostname || !env) return { ok: false as const, reason: "לא הצלחנו לאשר את התשלום" };
+  const payload = await rpc("complete_storefront_payment", {
+    tracking_key: env.trackingKey,
+    hostname,
+    query: input.query,
+  }, 20000);
+  const record = recordOf(payload);
+  const orderNumber = record?.orderNumber;
+  const number = typeof orderNumber === "string" || typeof orderNumber === "number" ? String(orderNumber).trim() : "";
+  if (!record || record.ok !== true || !number) {
+    return { ok: false as const, reason: text(record?.reason, 300) || "לא הצלחנו לאשר את התשלום" };
+  }
+  const visitorKey = text(record.visitorKey, 80);
+  if (visitorKey) {
+    await recordEvent({
+      hostHeader: input.hostHeader,
+      visitorKey,
+      event: "purchase",
+      path: "/checkout",
+      amount: amount(record.total) ?? 0,
+    });
+  }
+  return { ok: true as const, orderNumber: number, total: amount(record.total) ?? 0, currency: currencyOf(record.currency) };
 }
 
 export async function recordEvent(input: {

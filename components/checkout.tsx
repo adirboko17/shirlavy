@@ -83,17 +83,24 @@ export function CheckoutPage() {
     event.preventDefault();
     if (submitting.current || !canSubmit) return;
     submitting.current = true; setPending(true); setReason("");
+    let leaving = false;
     try {
       const response = await fetch("/api/storely/order", {
         method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ lines: site.cart.map(storefrontLine), name: name.trim(), email: email.trim(), phone: phone.trim(), city: pickup ? "" : city.trim(), street: pickup ? "" : [street.trim(), addressExtra.trim()].filter(Boolean).join(", "), zip: pickup ? "" : zip.trim(), shippingName, ...appliedCodes, policies: site.acceptedPolicies }),
       });
       const body = await response.json().catch(() => null);
+      const paymentUrl = typeof body?.url === "string" ? body.url : "";
+      if (response.ok && body?.ok && paymentUrl.startsWith("https://pay.hyp.co.il/p/?")) {
+        leaving = true;
+        window.location.assign(paymentUrl);
+        return;
+      }
       if (!response.ok || !body?.ok || !body.orderNumber) { setReason(body?.reason || "ההזמנה לא נשמרה. הפרטים שלך נשארו כאן, ואפשר לנסות שוב."); return; }
       setOrderNumber(String(body.orderNumber)); site.clearCart();
     } catch {
       setReason("לא התקבל אישור מהשרת. הפרטים נשמרו כאן; לפני ניסיון נוסף, בדקי אם התקבל אישור הזמנה.");
-    } finally { submitting.current = false; setPending(false); }
+    } finally { if (!leaving) { submitting.current = false; setPending(false); } }
   }
 
   useEffect(() => { if (reason || orderNumber) statusRef.current?.focus(); }, [reason, orderNumber]);
@@ -145,7 +152,7 @@ export function CheckoutPage() {
               {codesChanged ? <p className="checkout-note">לחצי על „החלת הקודים” בסיכום ההזמנה כדי לעדכן את הסכום.</p> : null}
               {currentQuoteError ? <div className="checkout-error" role="alert">{currentQuoteError} <button type="button" onClick={() => { setQuoteError(null); setRetry(value => value + 1); }}>לנסות שוב</button></div> : null}
               {reason ? <div className="checkout-error" role="alert" ref={statusRef} tabIndex={-1}>{reason}</div> : null}
-              <button type="submit" className="checkout-primary checkout-pay" disabled={!canSubmit} aria-busy={pending || calculating}><span>{pending ? "שומרים את ההזמנה…" : calculating ? "מחשבים את הסכום…" : "אישור הזמנה"}</span><span>{quote ? displayedTotal : <CommerceIcon name="arrow" />}</span></button>
+              <button type="submit" className="checkout-primary checkout-pay" disabled={!canSubmit} aria-busy={pending || calculating}><span>{pending ? "מעבירים לתשלום…" : calculating ? "מחשבים את הסכום…" : "לתשלום"}</span><span>{quote ? displayedTotal : <CommerceIcon name="arrow" />}</span></button>
             </section>
           </fieldset>
         </form>

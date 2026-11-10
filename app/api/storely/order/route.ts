@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { loadShop, placeOrder, quoteShop, type StoreLine } from "@/lib/storely";
+import { beginPayment, loadShop, quoteShop, type StoreLine } from "@/lib/storely";
 import { isPickupZone, requiredPolicyIds } from "@/lib/shop-model";
 import { createVisitorKey, validVisitorKey, VISITOR_COOKIE, visitorCookieOptions } from "@/lib/visitor";
 
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
   const jar = await cookies();
   const current = jar.get(VISITOR_COOKIE)?.value;
   const visitorKey = validVisitorKey(current) ? current : createVisitorKey();
-  const placed = await placeOrder({
+  const started = await beginPayment({
     hostHeader: request.headers.get("host"),
     visitorKey,
     lines,
@@ -81,8 +81,8 @@ export async function POST(request: Request) {
     code,
     giftCode,
   });
-  if (!placed.ok) return NextResponse.json(placed, { status: 400 });
-  const response = NextResponse.json({ ok: true, orderNumber: placed.orderNumber, total: placed.total, currency: placed.currency });
+  if (!started.ok) return NextResponse.json(started, { status: 400 });
+  const response = NextResponse.json(started);
   if (!validVisitorKey(current)) {
     response.cookies.set(VISITOR_COOKIE, visitorKey, visitorCookieOptions(request.headers.get("x-forwarded-proto") === "https"));
   }
