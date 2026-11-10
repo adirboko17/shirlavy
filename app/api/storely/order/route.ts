@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { beginPayment, loadShop, quoteShop, type StoreLine } from "@/lib/storely";
-import { isPickupZone, requiredPolicyIds } from "@/lib/shop-model";
+import { isPickupZone } from "@/lib/shop-model";
+import { allowsAnalytics, CONSENT_COOKIE } from "@/lib/consent";
 import { createVisitorKey, validVisitorKey, VISITOR_COOKIE, visitorCookieOptions } from "@/lib/visitor";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +44,9 @@ export async function POST(request: Request) {
   if (!lines || !name || !EMAIL_RE.test(email) || phone.replace(/\D/g, "").length < 9 || !shippingName) {
     return NextResponse.json({ ok: false, reason: "חסרים פרטים להזמנה" }, { status: 400 });
   }
+  if (!accepted.includes("terms")) {
+    return NextResponse.json({ ok: false, reason: "צריך לאשר את תקנון האתר לפני התשלום" }, { status: 400 });
+  }
 
   const shop = await loadShop(request.headers.get("host"));
   const choice = shop.shipping.find((method) => method.name === shippingName);
@@ -52,10 +56,6 @@ export async function POST(request: Request) {
   }
   if (!city && !isPickupZone(choice.zone)) {
     return NextResponse.json({ ok: false, reason: "חסרה עיר" }, { status: 400 });
-  }
-  const needed = requiredPolicyIds(shop.policies, "both");
-  if (needed.some((id) => !accepted.includes(id))) {
-    return NextResponse.json({ ok: false, reason: "צריך לאשר את המדיניות לפני התשלום" }, { status: 400 });
   }
 
   const quoted = await quoteShop({
@@ -73,6 +73,7 @@ export async function POST(request: Request) {
   const current = jar.get(VISITOR_COOKIE)?.value;
   const visitorKey = validVisitorKey(current) ? current : createVisitorKey();
   const started = await beginPayment({
+    analyticsAllowed: allowsAnalytics(jar.get(CONSENT_COOKIE)?.value),
     hostHeader: request.headers.get("host"),
     visitorKey,
     lines,

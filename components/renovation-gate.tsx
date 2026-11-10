@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { waLink } from "@/lib/data";
+import { LegalLinks } from "./legal-controls";
 
 const STORAGE_KEY = "sl-entry";
 const ENTRY_CODE = "252525";
 const WA = waLink("היי שיר, אשמח לתאם שיחת ייעוץ.");
 
 export function RenovationGate({ children }: { children: React.ReactNode }) {
+  const path = usePathname();
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -16,6 +19,7 @@ export function RenovationGate({ children }: { children: React.ReactNode }) {
     setReady(true);
   }, []);
 
+  if (path.startsWith("/policies/")) return children;
   if (!ready) return <div className="reno" aria-hidden />;
   if (!open) return <Renovation onUnlock={() => setOpen(true)} />;
   return children;
@@ -74,6 +78,7 @@ function Renovation({ onUnlock }: { onUnlock: () => void }) {
         </form>
       </div>
       <footer className="reno-foot">
+        <LegalLinks />
         <span>קליניקת בוטיק לנשים · אקדמיה לאיפור קבוע</span>
         <span dir="ltr">© SHIR LAVY</span>
       </footer>

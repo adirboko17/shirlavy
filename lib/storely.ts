@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { legalPolicies } from "./legal";
 import {
   currencyOf,
   EMPTY_SHOP,
@@ -353,7 +354,7 @@ export const loadShop = cache(async (hostHeader: string | null): Promise<ShopSna
     products: productsOf(record.products, collections),
     collections,
     shipping: shippingOf(record.shipping),
-    policies: policiesOf(record.policies),
+    policies: legalPolicies(policiesOf(record.policies)),
     popups: Array.isArray(record.popups) ? record.popups.slice(0, 20) : [],
     quiz: record.quiz && typeof record.quiz === "object" ? record.quiz : null,
     events,
@@ -491,6 +492,7 @@ export async function placeOrder(input: {
 }
 
 export async function beginPayment(input: {
+  analyticsAllowed?: boolean;
   hostHeader: string | null;
   visitorKey: string;
   lines: StoreLine[];
@@ -526,6 +528,7 @@ export async function beginPayment(input: {
   const number = typeof orderNumber === "string" || typeof orderNumber === "number" ? String(orderNumber).trim() : "";
   if (record?.ok === true && number) {
     await recordEvent({
+      analyticsAllowed: input.analyticsAllowed,
       hostHeader: input.hostHeader,
       visitorKey: input.visitorKey,
       event: "purchase",
@@ -579,7 +582,7 @@ export async function recoverCheckout(input: { hostHeader: string | null; checko
   };
 }
 
-export async function completePayment(input: { hostHeader: string | null; query: string }) {
+export async function completePayment(input: { hostHeader: string | null; query: string; analyticsAllowed?: boolean }) {
   const hostname = storefrontHostname(input.hostHeader);
   const env = storelyEnv();
   if (!hostname || !env) return { ok: false as const, reason: "לא הצלחנו לאשר את התשלום" };
@@ -597,6 +600,7 @@ export async function completePayment(input: { hostHeader: string | null; query:
   const visitorKey = text(record.visitorKey, 80);
   if (visitorKey) {
     await recordEvent({
+      analyticsAllowed: input.analyticsAllowed,
       hostHeader: input.hostHeader,
       visitorKey,
       event: "purchase",
@@ -608,6 +612,7 @@ export async function completePayment(input: { hostHeader: string | null; query:
 }
 
 export async function recordEvent(input: {
+  analyticsAllowed?: boolean;
   hostHeader: string | null;
   visitorKey: string;
   event: "page_view" | "add_to_cart" | "begin_checkout" | "purchase";
@@ -620,6 +625,7 @@ export async function recordEvent(input: {
   utmMedium?: string;
   utmCampaign?: string;
 }) {
+  if (input.analyticsAllowed !== true) return false;
   const hostname = storefrontHostname(input.hostHeader);
   const env = storelyEnv();
   if (!hostname || !env) return false;

@@ -365,7 +365,7 @@ img { max-width: 100%; }
 .qty.tall { width: 48px; height: 54px; font-size: 18px; }
 .fab {
   position: fixed;
-  left: 16px;
+  right: max(16px, env(safe-area-inset-right));
   bottom: calc(16px + env(safe-area-inset-bottom));
   z-index: 40;
   width: 56px;

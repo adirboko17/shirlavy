@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { shabbatSchedule, type ShabbatSchedule } from "@/lib/shabbat";
+import { LegalLinks } from "./legal-controls";
 
 type Phase = { ready: false } | { ready: true; schedule: ShabbatSchedule; preview: "shabbat" | "open" | null };
 
 export function ShabbatGate({ children }: { children: React.ReactNode }) {
+  const path = usePathname();
   const [phase, setPhase] = useState<Phase>({ ready: false });
 
   useEffect(() => {
@@ -31,6 +34,7 @@ export function ShabbatGate({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  if (path.startsWith("/policies/")) return children;
   if (!phase.ready) return <div className="reno" aria-hidden />;
   const closed = phase.preview === "open" ? false : phase.preview === "shabbat" || phase.schedule.closed;
   if (!closed) return children;
@@ -69,6 +73,7 @@ function ShabbatPage({ opensAt }: { opensAt: Date }) {
         </div>
       </div>
       <footer className="reno-foot">
+        <LegalLinks />
         <span>קליניקת בוטיק לנשים · אקדמיה לאיפור קבוע</span>
         <span dir="ltr">© SHIR LAVY</span>
       </footer>

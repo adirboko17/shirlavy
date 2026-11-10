@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent, type InputHTMLAttributes } from "react";
-import { formatMoney, formatShippingPrice, isPickupZone, lineKey, requiredPolicyIds, storefrontLine, type CartLine, type Currency } from "@/lib/shop-model";
+import { formatMoney, formatShippingPrice, isPickupZone, lineKey, storefrontLine, type CartLine, type Currency } from "@/lib/shop-model";
 import { readCustomerDraft, useSite, writeCustomerDraft } from "@/lib/site";
-import { PolicyRow, cartSubtotal } from "./cart-drawer";
+import { cartSubtotal } from "./cart-drawer";
+import { LegalLinks } from "./legal-controls";
 import { CommerceIcon } from "./commerce-icon";
 
 type Quote = {
@@ -29,6 +30,7 @@ export function CheckoutPage() {
   const [pending, setPending] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const submitting = useRef(false);
   const restored = useRef("");
   const siteRef = useRef(site);
@@ -39,9 +41,6 @@ export function CheckoutPage() {
 
   const shipping = site.shop.shipping.find(method => method.name === shippingName) ?? null;
   const pickup = shipping ? isPickupZone(shipping.zone) : false;
-  const needed = requiredPolicyIds(site.shop.policies, "both");
-  const policiesReady = needed.every(id => site.acceptedPolicies.includes(id));
-  const checkoutPolicies = site.shop.policies.filter(policy => policy.checkout !== "hidden" || needed.includes(policy.id));
   const quoteKey = JSON.stringify({ lines: site.cart.map(storefrontLine), ...appliedCodes, shippingName, email: email.trim() });
   const quote = quoted?.key === quoteKey ? quoted.value : null;
   const currentQuoteError = quoteError?.key === quoteKey ? quoteError.message : "";
@@ -162,7 +161,7 @@ export function CheckoutPage() {
     try {
       const response = await fetch("/api/storely/order", {
         method: "POST", headers: { "content-type": "application/json" },
-        body: JSON.stringify({ lines: site.cart.map(storefrontLine), name: name.trim(), email: email.trim(), phone: phone.trim(), city: pickup ? "" : city.trim(), street: pickup ? "" : [street.trim(), addressExtra.trim()].filter(Boolean).join(", "), zip: pickup ? "" : zip.trim(), shippingName, ...appliedCodes, policies: site.acceptedPolicies }),
+        body: JSON.stringify({ lines: site.cart.map(storefrontLine), name: name.trim(), email: email.trim(), phone: phone.trim(), city: pickup ? "" : city.trim(), street: pickup ? "" : [street.trim(), addressExtra.trim()].filter(Boolean).join(", "), zip: pickup ? "" : zip.trim(), shippingName, ...appliedCodes, policies: termsAccepted ? ["terms"] : [] }),
       });
       const body = await response.json().catch(() => null);
       const paymentUrl = typeof body?.url === "string" ? body.url : "";
@@ -182,7 +181,7 @@ export function CheckoutPage() {
   const currency = site.shop.currency;
   const subtotal = cartSubtotal(site.cart);
   const count = site.cart.reduce((sum, line) => sum + line.quantity, 0);
-  const canSubmit = !pending && !!quote && !quote.addGift && !!shipping && policiesReady && !codesChanged && site.cart.length > 0;
+  const canSubmit = !pending && !!quote && !quote.addGift && !!shipping && termsAccepted && !codesChanged && site.cart.length > 0;
   const displayedTotal = quote ? formatMoney(quote.total, quote.currency) : formatMoney(subtotal, currency);
 
   if (orderNumber) return <section className="checkout-page checkout-done" ref={statusRef} tabIndex={-1}>
@@ -200,6 +199,7 @@ export function CheckoutPage() {
           <fieldset className="checkout-form-fields" disabled={pending}>
             <section className="checkout-block" aria-labelledby="checkout-contact-title">
               <div className="checkout-block__heading"><span aria-hidden="true">01</span><div><h2 id="checkout-contact-title">פרטי קשר</h2><p>כדי שנוכל לעדכן אותך לגבי ההזמנה.</p></div></div>
+              <p className="checkout-privacy">הפרטים נמסרים מרצונך לשיר לביא לצורך טיפול בהזמנה, תשלום ומשלוח, ויועברו לספקי השירות הנדרשים לכך. ללא פרטי החובה לא ניתן להשלים הזמנה. לפרטי קשר ולזכויות עיון ותיקון: <Link href="/policies/privacy" target="_blank" rel="noopener noreferrer">מדיניות הפרטיות (נפתחת בחלון חדש)</Link>.</p>
               <div className="checkout-grid">
                 <Field id="checkout-name" label="שם מלא" value={name} onChange={setField("name")} autoComplete="name" required placeholder="שם פרטי ושם משפחה" />
                 <Field id="checkout-phone" label="טלפון נייד" value={phone} onChange={setField("phone")} autoComplete="tel" inputMode="tel" type="tel" dir="ltr" required pattern="(?:[^0-9]*[0-9]){9,}[^0-9]*" title="מספר טלפון עם 9 ספרות לפחות" placeholder="050-0000000" />
@@ -213,6 +213,7 @@ export function CheckoutPage() {
                   <input type="radio" name="shipping" value={method.name} checked={shippingName === method.name} onChange={() => setField("shippingName")(method.name)} required /><span>{method.name}</span><b>{method.price === 0 && isPickupZone(method.zone) ? "ללא עלות" : formatShippingPrice(method.price, currency)}</b>
                 </label>)}
               </fieldset> : <div className="checkout-notice"><CommerceIcon name="delivery" /><div><strong>המשלוחים אינם זמינים כרגע</strong><p>לא ניתן להשלים הזמנה כרגע. <Link href="/contact">צרי איתנו קשר לעזרה</Link>.</p></div></div>}
+              <p className="checkout-note">משלוחים לכל הארץ עד 5 ימי עסקים. <Link href="/policies/shipping" target="_blank" rel="noopener noreferrer">לתנאי המשלוח (חלון חדש)</Link></p>
               {pickup ? <p className="checkout-note">בחרת באיסוף עצמי — אין צורך בכתובת למשלוח.</p> : <div className="checkout-grid checkout-address">
                 <Field id="checkout-street" label="רחוב ומספר בית" value={street} onChange={setField("street")} autoComplete="address-line1" required className="checkout-grid__wide" placeholder="שם הרחוב ומספר הבית" />
                 <Field id="checkout-address-extra" label="דירה, קומה או כניסה" optional value={addressExtra} onChange={setField("addressExtra")} autoComplete="address-line2" className="checkout-grid__wide" />
@@ -220,18 +221,16 @@ export function CheckoutPage() {
                 <Field id="checkout-zip" label="מיקוד" optional value={zip} onChange={setField("zip")} autoComplete="postal-code" inputMode="numeric" dir="ltr" />
               </div>}
             </section>
-            <section className="checkout-block checkout-confirm" aria-labelledby="checkout-confirm-title">
-              <div className="checkout-block__heading"><span aria-hidden="true">03</span><div><h2 id="checkout-confirm-title">בדיקה ואישור</h2><p>בדקי שהפרטים וסיכום ההזמנה נכונים.</p></div></div>
-              {checkoutPolicies.map(policy => <PolicyRow key={policy.id} id={policy.id} title={policy.title} mode={needed.includes(policy.id) ? "checkbox" : policy.checkout} />)}
-              {!policiesReady ? <p className="checkout-note">יש לאשר את התנאים לפני השלמת ההזמנה.</p> : null}
+            <section className="checkout-block checkout-confirm" aria-label="אישור ותשלום">
               {codesChanged ? <p className="checkout-note">לחצי על „החלת הקודים” בסיכום ההזמנה כדי לעדכן את הסכום.</p> : null}
               {currentQuoteError ? <div className="checkout-error" role="alert">{currentQuoteError} <button type="button" onClick={() => { setQuoteError(null); setRetry(value => value + 1); }}>לנסות שוב</button></div> : null}
               {reason ? <div className="checkout-error" role="alert" ref={statusRef} tabIndex={-1}>{reason}</div> : null}
+              <div className="checkout-consent"><input id="checkout-terms" type="checkbox" required aria-labelledby="checkout-terms-label" aria-describedby="checkout-terms-help" checked={termsAccepted} onChange={event => setTermsAccepted(event.target.checked)} /><div><span id="checkout-terms-label"><label htmlFor="checkout-terms">קראתי ואני מסכימה ל</label><Link href="/policies/terms" target="_blank" rel="noopener noreferrer">תקנון האתר</Link>, הכולל את תנאי הרכישה, המשלוחים והביטולים.</span><small id="checkout-terms-help">התקנון נפתח בחלון חדש. האישור אינו הרשמה לדיוור פרסומי.</small></div></div>
               <button type="submit" className="checkout-primary checkout-pay" disabled={!canSubmit} aria-busy={pending || calculating}><span>{pending ? "מעבירים לתשלום…" : calculating ? "מחשבים את הסכום…" : "לתשלום"}</span><span>{quote ? displayedTotal : <CommerceIcon name="arrow" />}</span></button>
             </section>
           </fieldset>
         </form>
-        <footer className="checkout-footer"><Link href="/shop">חזרה לחנות</Link><span>SHIR LAVY · Aesthetics & Academy</span></footer>
+        <footer className="checkout-footer"><LegalLinks /><span>SHIR LAVY · Aesthetics & Academy</span></footer>
       </div>
       <aside className={`checkout__summary${summaryOpen ? " is-open" : ""}`} aria-label="סיכום הזמנה">
         <button className="checkout-summary-toggle" type="button" aria-expanded={summaryOpen} aria-controls="checkout-summary-body" onClick={() => setSummaryOpen(value => !value)}><span><CommerceIcon name="bag" /> סיכום ההזמנה <span aria-hidden="true">{summaryOpen ? "−" : "+"}</span></span><b>{displayedTotal}</b></button>

@@ -1,0 +1,18 @@
+Verified on 2026-11-10:
+- next build: passed using .next-legal (initial Google Fonts fetch failed; final build succeeded).
+- TypeScript noEmit: passed.
+- node scripts/verify-legal.mjs: six policy routes, consent default/opt-in/withdrawal, server rejection without terms: passed.
+- Browser: mobile 390px and desktop 1366px: no horizontal overflow; exactly one checkout checkbox.
+- Browser: accessibility keyboard open, toggle, Escape, focus restoration: passed.
+- Browser: cookie preferences reopen, analytics selection and withdrawal: passed.
+- No order created and no payment submitted. No deployment performed.
+
+Merchant-provided facts: Shir Lavy; business number and address in lib/legal.ts; nationwide shipping within five business days; accessible parking/toilets and elevator.
+The accessibility statement explicitly does not claim a full AA audit. Full legal and accessibility compliance has not been certified.
+
+Research:
+https://www.gov.il/he/pages/duty_to_notify
+https://www.gov.il/he/pages/declaration_website_accessibility
+https://www.gov.il/he/pages/website_accessibility
+https://www.consumers.org.il/category/remote-purchase
+https://main.knesset.gov.il/Activity/Legislation/Laws/Pages/LawBill.aspx?lawitemid=2002974

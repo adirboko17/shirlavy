@@ -1,0 +1,44 @@
+.legal-links { display: flex; flex-wrap: wrap; gap: 4px 20px; align-items: center; font-size: 13px; line-height: 1.6; }
+.legal-links a, .legal-links button { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 0; color: #665448; text-decoration: underline; text-underline-offset: 4px; }
+.legal-links button { font: inherit; border: 0; background: transparent; cursor: pointer; }
+.reno-foot { flex-wrap: wrap; }
+.reno-foot .legal-links { justify-content: center; }
+.checkout-footer { flex-direction: column; align-items: flex-start; }
+.checkout-privacy { margin: 0; color: #62584f; font-size: 12px; line-height: 1.9; }
+.checkout-privacy a, .checkout-note a { text-decoration: underline; text-underline-offset: 3px; }
+.checkout-consent { display: flex; align-items: flex-start; gap: 11px; font-size: 13px; line-height: 1.9; color: #43392f; }
+.checkout-consent input { width: 20px; height: 20px; flex: 0 0 20px; margin: 3px 0 0; accent-color: #765338; }
+.checkout-consent label { cursor: pointer; }
+.checkout-consent a { text-decoration: underline; text-underline-offset: 3px; }
+.checkout-consent small { display: block; color: #62584f; font-size: 11px; }
+.checkout-confirm { gap: 16px; }
+.policy-body h2 { font-size: 22px; font-weight: 500; margin: 30px 0 12px; }
+.policy-body p { margin: 0 0 18px; }
+.policy-body a { color: #765338; text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.legal-updated { margin: 0; font-size: 13px; color: #62584f; }
+.skip-link { position: fixed; top: 12px; right: 12px; transform: translateY(-180%); z-index: 200; padding: 12px 20px; border-radius: 6px; color: #fff; background: #43392f; }
+.skip-link:focus { transform: translateY(0); }
+:is(a, button, input, select, textarea, summary):focus-visible { outline: 3px solid #765338; outline-offset: 4px; }
+.accessibility-fab { position: fixed; left: max(16px, env(safe-area-inset-left)); bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 55; display: grid; place-items: center; width: 48px; height: 48px; min-width: 48px; padding: 0; border: 1px solid #cbb9a8; border-radius: 50%; background: #fffcf8; color: #765338; box-shadow: 0 2px 10px #43392f14; cursor: pointer; transition: background .2s, border-color .2s; }
+.accessibility-fab svg { display: block; width: 24px; height: 24px; }
+@media (hover: hover) { .accessibility-fab:hover { background: #f4ede5; border-color: #8f6a4b; } }
+.legal-dialog { width: min(460px, calc(100% - 32px)); max-height: calc(100dvh - 40px); overflow: auto; padding: 32px; border: 1px solid #e5dfd7; border-radius: 18px; background: #fffcf8; color: #43392f; direction: rtl; text-align: right; margin: auto; box-shadow: 0 20px 80px #0003; }
+.legal-dialog::backdrop { background: #21170e66; }
+.legal-dialog h2 { font-size: 24px; font-weight: 400; padding-inline-end: 28px; margin: 0 0 16px; }
+.legal-dialog p { font-size: 14px; line-height: 1.9; }
+.legal-dialog a { display: inline-block; padding: 12px 0; color: #765338; text-decoration: underline; text-underline-offset: 4px; }
+.legal-dialog-close { position: absolute; top: 12px; left: 12px; width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font-size: 26px; cursor: pointer; }
+.accessibility-options { display: grid; gap: 10px; }
+.accessibility-options button, .cookie-actions button { min-height: 46px; padding: 12px 16px; border: 1px solid #b49c87; border-radius: 8px; background: #fff; color: #43392f; font: inherit; font-size: 13px; cursor: pointer; }
+.accessibility-options button { display: flex; justify-content: space-between; }
+.accessibility-options button[aria-pressed="true"] { background: #eadfce; border-color: #765338; }
+.cookie-banner { position: fixed; bottom: calc(84px + env(safe-area-inset-bottom)); left: 16px; width: min(430px, calc(100% - 32px)); max-height: calc(100dvh - 120px); overflow: auto; z-index: 54; padding: 22px; border: 1px solid #dacabb; border-radius: 14px; background: #fffcf8; color: #43392f; box-shadow: 0 8px 35px #43392f26; direction: rtl; }
+.cookie-banner h2 { font-size: 18px; font-weight: 500; margin: 0 0 8px; }
+.cookie-banner p { font-size: 13px; line-height: 1.8; margin: 0 0 16px; }
+.cookie-banner a { color: #765338; text-decoration: underline; }
+.cookie-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.cookie-actions button { flex: 1 1 120px; }
+.a11y-links a { text-decoration: underline !important; text-underline-offset: 4px !important; }
+.a11y-motion *, .a11y-motion *::before, .a11y-motion *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+@media (max-width: 759px) { .legal-links { gap: 2px 16px; } .legal-dialog { padding: 26px 22px; } }

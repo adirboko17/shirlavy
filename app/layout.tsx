@@ -9,6 +9,8 @@ import "./about.css";
 import "./treatments.css";
 import "./academy.css";
 import "./contact.css";
+import "./legal.css";
+import { AccessibilityTools, CookiePreferences } from "@/components/legal-controls";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
 import { RenovationGate } from "@/components/renovation-gate";
@@ -49,6 +51,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             </RenovationGate>
           </ShabbatGate>
         </SiteProvider>
+        <AccessibilityTools />
+        <CookiePreferences />
       </body>
     </html>
   );

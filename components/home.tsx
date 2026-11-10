@@ -28,7 +28,8 @@ const ACADEMY = [
 export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const { products, width } = useSite();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [playing, setPlaying] = useState(true);
+  const videoPausedByUser = useRef(false);
+  const [playing, setPlaying] = useState(false);
   const [vOk, setVOk] = useState<boolean | null>(null);
   const [t, setT] = useState(0);
   const [mobileTreatment, setMobileTreatment] = useState<number | null>(0);
@@ -38,12 +39,40 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setPlaying(false);
-      video.pause();
-      return;
-    }
-    video.play().catch(() => setPlaying(false));
+    let playPending = false;
+    let disposed = false;
+    const tryPlay = () => {
+      if (disposed || playPending || videoPausedByUser.current || document.hidden || !video.paused) return;
+      // Set the DOM properties as well as the JSX attributes before requesting autoplay.
+      video.defaultMuted = true;
+      video.muted = true;
+      video.playsInline = true;
+      playPending = true;
+      void video.play().catch(() => {
+        // A browser may require a user gesture. Keep the poster and retry on interaction.
+      }).finally(() => { playPending = false; });
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) tryPlay();
+    });
+    observer.observe(video);
+    video.addEventListener("canplay", tryPlay);
+    document.addEventListener("visibilitychange", tryPlay);
+    window.addEventListener("pageshow", tryPlay);
+    document.addEventListener("pointerup", tryPlay, { passive: true });
+    document.addEventListener("touchend", tryPlay, { passive: true });
+    document.addEventListener("keydown", tryPlay);
+    tryPlay();
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      video.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", tryPlay);
+      window.removeEventListener("pageshow", tryPlay);
+      document.removeEventListener("pointerup", tryPlay);
+      document.removeEventListener("touchend", tryPlay);
+      document.removeEventListener("keydown", tryPlay);
+    };
   }, []);
 
   const featured = [...products].sort((a, b) => a.rank - b.rank).slice(0, 4);
@@ -74,15 +103,18 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
             preload="auto"
             poster="/slots/home-hero-main.webp"
             aria-hidden
-            onLoadedData={() => setVOk(true)}
-            onError={() => setVOk(false)}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: vOk === false ? 0 : 1, transition: "opacity 1.2s ease" }}
+            controls={false}
+            disablePictureInPicture
+            onPlaying={() => { setVOk(true); setPlaying(true); }}
+            onPause={() => setPlaying(false)}
+            onError={() => { setVOk(false); setPlaying(false); }}
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: vOk === true ? 1 : 0, pointerEvents: "none", transition: "opacity 1.2s ease" }}
           >
-            <source src="/assets/hero-video.mp4" media="(max-width: 759px)" />
-            <source src="/assets/hero-video-desktop.mp4" media="(min-width: 760px)" />
+            <source src="/assets/hero-video.mp4" type="video/mp4" media="(max-width: 759px)" />
+            <source src="/assets/hero-video-desktop.mp4" type="video/mp4" />
           </video>
           <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 1, background: shade }} />
-          {vOk === false ? <div className="home-hero-fallback"><Slot id="home-hero-main" /></div> : null}
+          {vOk !== true ? <div className="home-hero-fallback" aria-hidden><Slot id="home-hero-main" /></div> : null}
           <div className="home-hero__copy" style={{ position: "absolute", inset: "auto 0 0 0", zIndex: 2, padding: "0 clamp(20px,4.5vw,64px) clamp(32px,6vh,64px)", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 24 }}>
             <h1 style={{ margin: 0, fontWeight: 200, fontSize: "clamp(42px,6.4vw,100px)", lineHeight: 0.94, letterSpacing: "-.045em", textWrap: "balance", color: "#fff" }}>
               היופי שלך.
@@ -111,10 +143,12 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
                 const v = videoRef.current;
                 if (!v) return;
                 if (v.paused) {
-                  void v.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+                  videoPausedByUser.current = false;
+                  v.muted = true;
+                  void v.play().catch(() => setPlaying(false));
                 } else {
+                  videoPausedByUser.current = true;
                   v.pause();
-                  setPlaying(false);
                 }
               }}
               className="play"
@@ -229,7 +263,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           {featured.length === 0 ? (
             <p style={{ margin: 0, color: "#5A5A5A" }}>המוצרים מהחנות יופיעו כאן.</p>
           ) : mobile ? (
-            <ResponsiveCarousel ariaLabel="מוצרים מומלצים" slideWidth="min(72vw, 280px)">
+            <ResponsiveCarousel ariaLabel="מוצרים מומלצים" slideWidth="min(60vw, 230px)">
               {featured.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -250,7 +284,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
         <div className="home-container">
           <HomeSectionLabel>במילים שלהן</HomeSectionLabel>
           <div className="home-section-heading"><h2>מה אומרות הבוגרות</h2><Link href="/academy" className="home-text-link">עוד מהאקדמיה <span aria-hidden>←</span></Link></div>
-          <ResponsiveCarousel ariaLabel="המלצות בוגרות" slideWidth="min(86vw, 340px)" desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "clamp(24px,4vw,56px)" }}>
+          <ResponsiveCarousel ariaLabel="המלצות בוגרות" slideWidth="100%" desktopStyle={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "clamp(24px,4vw,56px)" }}>
             {GRADUATE_TESTIMONIALS.slice(0, 3).map((item) => <blockquote className="home-quote" key={item.name}>
               <span className="home-quote__mark" aria-hidden>“</span>
               <p>{item.q}</p>

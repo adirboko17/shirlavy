@@ -27,7 +27,8 @@ export function ShopPage() {
         <div>
           <span className="commerce-eyebrow">THE SHIR LAVY EDIT</span>
           <h1>החנות<br /><em>שלנו</em></h1>
-          <p>{SHOP_INTRO}<br />{SHOP_INTRO_SECOND}</p>
+          <p className="shop-intro__description--desktop">{SHOP_INTRO}<br />{SHOP_INTRO_SECOND}</p>
+          <p className="shop-intro__description--mobile">מוצרים וציוד מקצועי שנבחרו בקפידה, עם שירות אישי ומשלוחים לכל הארץ.</p>
           <a className="commerce-text-link" href="#catalog">לכל המוצרים שלנו <CommerceIcon name="arrow" /></a>
         </div>
         <div className="shop-intro__signature" aria-hidden="true">

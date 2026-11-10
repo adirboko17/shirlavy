@@ -91,6 +91,12 @@
   .home-academy__copy { padding: 32px 20px 44px; }
 }
 @media (max-width: 759px) {
+  .home-community .ig-reels { display: block; min-width: 0; }
+  .home-community .resp-carousel { margin-inline: 0; padding-inline: 0; }
+  .home-community .ig-tile { border-radius: 22px; }
+  .home-community .ig-reels > div > .ig-tile { width: min(72vw, 280px); }
+  .home-shop .resp-carousel { padding-inline-end: 0; }
+  .home-shop .resp-carousel__dots { padding-inline-end: clamp(16px, 4vw, 48px); }
   .home-hero { height: auto !important; min-height: min(72svh, 620px); display: flex; align-items: flex-end; }
   .home-hero .home-hero__copy { position: relative !important; inset: auto !important; width: 100%; padding-top: 150px !important; }
   .home-treatment--selector { width: 100%; border: 0; background: transparent; text-align: start; font-family: inherit; cursor: pointer; }
@@ -111,7 +117,9 @@
   .home-academy h2 { font-size: 44px; }
   .home-academy__intro { font-size: 14px; }
   .home-academy__values { gap: 18px 16px; }
-  .home-quote { padding-inline-end: 16px; }
+  .home-testimonials { padding-inline: clamp(24px, 6.4vw, 40px); }
+  .home-testimonials .resp-carousel { margin-inline: 0; padding-inline: 0; }
+  .home-quote { padding-inline: 0; }
   .home-quote > p { font-size: 16px; }
   .home-testimonials .home-section-heading { margin-bottom: 24px; }
 }

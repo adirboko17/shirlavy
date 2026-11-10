@@ -10,6 +10,7 @@ import { MenuButton, MobileMenu } from "./mobile-menu";
 import { CartDrawer } from "./cart-drawer";
 import { StorePopups } from "./store-popups";
 import { Socials } from "./ui";
+import { LegalLinks } from "./legal-controls";
 
 const CONSULT = waLink("היי שיר, אשמח לתאם שיחת ייעוץ ללא עלות.");
 
@@ -74,14 +75,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   if (path === "/checkout") {
     return <div className="checkout-shell" dir="rtl" lang="he">
+      <a className="skip-link" href="#main-content">דילוג לתוכן הראשי</a>
       <header className="checkout-header"><div><Logo onDark={false} small /><Link href="/shop">חזרה לחנות <span aria-hidden="true">←</span></Link></div></header>
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>{children}</main>
       <CartDrawer />
     </div>;
   }
 
   return (
     <div dir="rtl" lang="he" style={{ minHeight: "100vh", background: "#fff", color: "#1C1C1C" }}>
+      <a className="skip-link" href="#main-content">דילוג לתוכן הראשי</a>
       <div ref={promoRef} className="promo" role="note" aria-label="הזמנות מהחנות בוואטסאפ, האתר שומר שבת">
         {wide ? (
           <div style={{ width: "100%", textAlign: "center", padding: "0 16px" }}>הזמנות מהחנות באתר · האתר שומר שבת</div>
@@ -185,7 +188,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main>{children}</main>
+      <main id="main-content" tabIndex={-1}>{children}</main>
 
       {showFooter ? (
         <footer style={{ background: "#F7F5F2" }}>
@@ -218,18 +221,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 12, borderTop: "1px solid rgba(164,123,88,.22)", paddingTop: 22, fontSize: 13, color: "#8A8A8A" }}>
               <span>© SHIR LAVY Aesthetics & Academy</span>
-              <span style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
-                {site.shop.policies.some((policy) => policy.footer) ? site.shop.policies.filter((policy) => policy.footer).map((policy) => (
-                  <Link key={policy.id} href={`/policies/${policy.id}`} style={{ color: "#8A8A8A" }}>{policy.title}</Link>
-                )) : (
-                  <>
-                    <a href="#" style={{ color: "#8A8A8A" }}>מדיניות פרטיות</a>
-                    <a href="#" style={{ color: "#8A8A8A" }}>תקנון</a>
-                    <a href="#" style={{ color: "#8A8A8A" }}>הצהרת נגישות</a>
-                  </>
-                )}
-                {site.shop.events.length ? <Link href="/events" style={{ color: "#8A8A8A" }}>אירועים</Link> : null}
-              </span>
+              <LegalLinks />
             </div>
           </div>
         </footer>

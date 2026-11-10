@@ -19,6 +19,7 @@
 .shop-intro h1 { margin: 22px 0; font-size: clamp(44px, 5.1vw, 72px); font-weight: 300; line-height: 1.15; letter-spacing: -.045em; }
 .shop-intro h1 em { font-style: normal; color: #947357; }
 .shop-intro p { margin: 0 0 25px; line-height: 1.85; font-size: 15px; color: #71665c; }
+.shop-intro__description--mobile { display: none; }
 .shop-intro__signature { min-height: 280px; border-inline-start: 1px solid #d9cdbf; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; }
 .shop-intro__signature img { width: 170px; height: 180px; object-fit: contain; opacity: .65; }
 .shop-intro__signature span { font-size: 9px; letter-spacing: .22em; color: #8c7762; }
@@ -200,13 +201,20 @@
 }
 @media (max-width: 759px) {
   .commerce-container { width: calc(100% - 36px); }
-  .shop-intro { padding: 132px 0 42px; }
+  .shop-intro { padding: 118px 0 32px; }
   .shop-intro__inner { grid-template-columns: 1fr; gap: 0; position: relative; }
   .shop-intro__inner > div:first-child { position: relative; z-index: 1; }
-  .shop-intro h1 { font-size: 46px; }
-  .shop-intro p { font-size: 13px; max-width: 290px; }
-  .shop-intro__signature { position: absolute; inset-inline-end: -30px; top: 12px; border: 0; opacity: .12; min-height: 0; }
-  .shop-intro__signature img { width: 170px; height: 210px; }
+  .shop-intro .commerce-eyebrow { font-size: 10px; letter-spacing: .12em; }
+  .shop-intro h1 { font-size: clamp(34px, 9.5vw, 44px); line-height: 1.2; margin: 14px 0 22px; padding-inline-end: 70px; text-wrap: balance; }
+  .shop-intro h1 br { display: none; }
+  .shop-intro h1 em { margin-inline-start: .22em; }
+  .shop-intro p { font-size: 14px; line-height: 1.85; max-width: none; margin-bottom: 22px; text-wrap: pretty; }
+  .shop-intro__description--desktop { display: none; }
+  .shop-intro__description--mobile { display: block; }
+  .shop-intro p br { display: block; content: ""; margin-top: 10px; }
+  .shop-intro .commerce-text-link { min-height: 48px; padding: 12px 22px; border-radius: 999px; background: #866346; color: #fffaf3; font-size: 14px; gap: 24px; }
+  .shop-intro__signature { position: absolute; inset-inline-end: 0; top: 23px; border: 0; opacity: 1; min-height: 0; pointer-events: none; }
+  .shop-intro__signature img { width: 56px; height: 64px; opacity: .55; }
   .shop-intro__signature span { display: none; }
   .shop-catalog { padding-top: 36px; }
   .shop-toolbar { margin-bottom: 24px; gap: 10px; padding-block: 10px; }

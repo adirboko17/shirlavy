@@ -17,6 +17,7 @@ import {
   type ShopSnapshot,
 } from "@/lib/shop-model";
 import { lockPageScroll } from "@/lib/scroll-lock";
+import { browserCookieChoice } from "@/lib/consent";
 
 type SiteValue = {
   shop: ShopSnapshot;
@@ -121,7 +122,7 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
       return current.map((item) => (item.key === line.key ? { ...line, quantity: Math.min(99, item.quantity + line.quantity) } : item));
     });
     if (open) setCartOpen(true);
-    if (!track) return;
+    if (!track || browserCookieChoice() !== "analytics") return;
     void fetch("/api/storely/event", {
       method: "POST",
       headers: { "content-type": "application/json" },

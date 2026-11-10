@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { recordEvent, requestHostname, storefrontHostname } from "@/lib/storely";
 import { ATTR_COOKIE, createVisitorKey, readAttr, validVisitorKey, VISITOR_COOKIE, visitorCookieOptions } from "@/lib/visitor";
+import { allowsAnalytics, CONSENT_COOKIE } from "@/lib/consent";
 
 function place(value: string | null) {
   const raw = value?.trim() ?? "";
@@ -30,6 +31,11 @@ function isPrefetch(request: NextRequest) {
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  // No optional tracking or attribution until an explicit choice is present.
+  if (!allowsAnalytics(request.cookies.get(CONSENT_COOKIE)?.value)) {
+    if (request.cookies.has(ATTR_COOKIE)) response.cookies.delete(ATTR_COOKIE);
+    return response;
+  }
   const secure = request.nextUrl.protocol === "https:";
   const current = request.cookies.get(VISITOR_COOKIE)?.value;
   const visitorKey = validVisitorKey(current) ? current : createVisitorKey();
@@ -60,6 +66,7 @@ export async function middleware(request: NextRequest) {
     const city = place(request.headers.get("x-vercel-ip-city"));
     try {
       await recordEvent({
+        analyticsAllowed: true,
         hostHeader: host,
         visitorKey,
         event: "page_view",
@@ -73,6 +80,7 @@ export async function middleware(request: NextRequest) {
       });
       if (path === "/checkout") {
         await recordEvent({
+          analyticsAllowed: true,
           hostHeader: host,
           visitorKey,
           event: "begin_checkout",
