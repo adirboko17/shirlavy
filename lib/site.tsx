@@ -36,6 +36,7 @@ type SiteValue = {
   setQty: (key: string, qty: number) => void;
   removeLine: (key: string) => void;
   clearCart: () => void;
+  restoreCart: (lines: CartLine[]) => void;
   togglePolicy: (id: string, on: boolean) => void;
 };
 
@@ -143,6 +144,7 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
+  const restoreCart = useCallback((lines: CartLine[]) => setCart(lines), []);
 
   const togglePolicy = useCallback((id: string, on: boolean) => {
     setAcceptedPolicies((current) => (on ? Array.from(new Set([...current, id])) : current.filter((item) => item !== id)));
@@ -166,8 +168,9 @@ export function SiteProvider({ shop = EMPTY_SHOP, children }: { shop?: ShopSnaps
     setQty,
     removeLine,
     clearCart,
+    restoreCart,
     togglePolicy,
-  }), [shop, cart, width, cartOpen, menuOpen, acceptedPolicies, addLine, setQty, removeLine, clearCart, togglePolicy]);
+  }), [shop, cart, width, cartOpen, menuOpen, acceptedPolicies, addLine, setQty, removeLine, clearCart, restoreCart, togglePolicy]);
 
   return <SiteContext.Provider value={value}>{children}</SiteContext.Provider>;
 }

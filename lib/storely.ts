@@ -537,6 +537,48 @@ export async function beginPayment(input: {
   return { ok: false as const, reason: text(record?.reason, 300) || "לא הצלחנו לפתוח את דף התשלום" };
 }
 
+export async function recoverCheckout(input: { hostHeader: string | null; checkoutId: string }) {
+  const hostname = storefrontHostname(input.hostHeader);
+  const env = storelyEnv();
+  if (!hostname || !env) return { ok: false as const, reason: "העגלה לא נמצאה" };
+  const payload = await rpc("recover_storefront_checkout", {
+    tracking_key: env.trackingKey,
+    hostname,
+    checkout_id: input.checkoutId,
+  });
+  const record = recordOf(payload);
+  if (!record || record.ok !== true || !Array.isArray(record.lines)) {
+    return { ok: false as const, reason: "העגלה לא נמצאה" };
+  }
+  const lines = record.lines.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const row = item as Record<string, unknown>;
+    const id = text(row.id, 80);
+    const quantity = Number(row.qty);
+    const price = amount(row.price);
+    if (!id || !Number.isInteger(quantity) || quantity < 1 || quantity > 99 || price == null) return [];
+    return [{
+      id,
+      name: text(row.name, 160),
+      detail: text(row.sub, 160),
+      image: text(row.image, 500),
+      price,
+      quantity,
+    }];
+  });
+  if (!lines.length) return { ok: false as const, reason: "העגלה לא נמצאה" };
+  return {
+    ok: true as const,
+    name: text(record.name, 120),
+    email: text(record.email, 180),
+    phone: text(record.phone, 40),
+    street: text(record.street, 180),
+    city: text(record.city, 80),
+    zip: text(record.zip, 20),
+    lines,
+  };
+}
+
 export async function completePayment(input: { hostHeader: string | null; query: string }) {
   const hostname = storefrontHostname(input.hostHeader);
   const env = storelyEnv();

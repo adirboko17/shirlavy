@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent, type InputHTMLAttributes } from "react";
-import { formatMoney, formatShippingPrice, isPickupZone, requiredPolicyIds, storefrontLine, type Currency } from "@/lib/shop-model";
+import { formatMoney, formatShippingPrice, isPickupZone, lineKey, requiredPolicyIds, storefrontLine, type CartLine, type Currency } from "@/lib/shop-model";
 import { readCustomerDraft, useSite, writeCustomerDraft } from "@/lib/site";
 import { PolicyRow, cartSubtotal } from "./cart-drawer";
 import { CommerceIcon } from "./commerce-icon";
@@ -14,6 +15,8 @@ type Quote = {
 
 export function CheckoutPage() {
   const site = useSite();
+  const recoverId = useSearchParams().get("recover") ?? "";
+  const recovering = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(recoverId);
   const [customer, setCustomer] = useState({ name: "", email: "", phone: "", street: "", addressExtra: "", city: "", zip: "", shippingName: "" });
   const [draftReady, setDraftReady] = useState(false);
   const [code, setCode] = useState("");
@@ -27,6 +30,9 @@ export function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState("");
   const [summaryOpen, setSummaryOpen] = useState(false);
   const submitting = useRef(false);
+  const restored = useRef("");
+  const siteRef = useRef(site);
+  siteRef.current = site;
   const statusRef = useRef<HTMLDivElement>(null);
   const { name, email, phone, street, addressExtra, city, zip, shippingName } = customer;
   const setField = (field: keyof typeof customer) => (value: string) => setCustomer(current => ({ ...current, [field]: value }));
@@ -42,7 +48,76 @@ export function CheckoutPage() {
   const calculating = !!shipping && !!site.cart.length && !quote && !currentQuoteError;
   const codesChanged = code.trim() !== appliedCodes.code || giftCode.trim() !== appliedCodes.giftCode;
 
-  useEffect(() => { setCustomer(readCustomerDraft()); setDraftReady(true); }, []);
+  useEffect(() => {
+    if (recovering) return;
+    setCustomer(readCustomerDraft());
+    setDraftReady(true);
+  }, [recovering]);
+
+  useEffect(() => {
+    if (!recovering || restored.current === recoverId || siteRef.current.shop.products.length === 0) return;
+    restored.current = recoverId;
+    let active = true;
+    void fetch("/api/storely/checkout/recover", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id: recoverId }),
+    })
+      .then(async (response) => {
+        const body = await response.json().catch(() => null);
+        if (!active) return;
+        if (!response.ok || !body?.ok || !Array.isArray(body.lines)) {
+          setReason(typeof body?.reason === "string" ? body.reason : "העגלה לא נמצאה");
+          return;
+        }
+        const lines = body.lines.flatMap((item: Record<string, unknown>) => {
+          const id = typeof item.id === "string" ? item.id : "";
+          const product = siteRef.current.shop.products.find((entry) => entry.variants.some((variant) => variant.id === id) || entry.id === id);
+          const variant = product?.variants.find((entry) => entry.id === id) ?? product?.variants[0];
+          const quantity = Number(item.quantity);
+          if (!product || !variant || !Number.isInteger(quantity) || quantity < 1) return [];
+          const line: CartLine = {
+            key: lineKey(variant.id, undefined, Number(item.price) === 0),
+            variantId: variant.id,
+            productId: product.id,
+            name: typeof item.name === "string" && item.name ? item.name : product.name,
+            detail: typeof item.detail === "string" ? item.detail : "",
+            image: typeof item.image === "string" && item.image ? item.image : product.images[0] ?? "",
+            unitPrice: Number(item.price) || variant.price || product.price,
+            quantity,
+            bundle: false,
+            gift: Number(item.price) === 0,
+          };
+          return [line];
+        });
+        if (!lines.length) {
+          setReason("העגלה לא נמצאה");
+          return;
+        }
+        siteRef.current.restoreCart(lines);
+        const next = {
+          name: typeof body.name === "string" ? body.name : "",
+          email: typeof body.email === "string" ? body.email : "",
+          phone: typeof body.phone === "string" ? body.phone : "",
+          street: typeof body.street === "string" ? body.street : "",
+          addressExtra: "",
+          city: typeof body.city === "string" ? body.city : "",
+          zip: typeof body.zip === "string" ? body.zip : "",
+          shippingName: "",
+        };
+        writeCustomerDraft(next);
+        setCustomer(next);
+      })
+      .catch(() => {
+        if (active) setReason("העגלה לא נמצאה");
+      })
+      .finally(() => {
+        if (active) setDraftReady(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [recoverId, recovering, site.shop.products.length]);
   useEffect(() => {
     if (draftReady) {
       try { writeCustomerDraft(customer); } catch { /* Checkout remains usable without session storage. */ }
