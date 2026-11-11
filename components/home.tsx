@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { StoreQuiz } from "./store-quiz";
@@ -25,16 +25,60 @@ const ACADEMY = [
   ["מאות תלמידות", "הכשרה לנשים מהצפון ועד הדרום."],
 ];
 
+const INTRO_KEY = "sl-intro";
+
 export function HomePage({ instagram }: { instagram: InstagramWallData }) {
   const { products, width } = useSite();
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoPausedByUser = useRef(false);
+  const introSkip = useRef(false);
+  const introGone = useRef(false);
+  const introStarted = useRef(0);
+  const dismissIntro = useRef(() => {});
   const [playing, setPlaying] = useState(false);
   const [vOk, setVOk] = useState<boolean | null>(null);
+  const [intro, setIntro] = useState(true);
+  const [introLeave, setIntroLeave] = useState(false);
   const [t, setT] = useState(0);
   const [mobileTreatment, setMobileTreatment] = useState<number | null>(0);
   const narrow = (width || 1200) < 760;
   const mobile = (width || 1200) < 760;
+
+  useLayoutEffect(() => {
+    introStarted.current = performance.now();
+    try {
+      if (sessionStorage.getItem(INTRO_KEY) === "1") {
+        introSkip.current = true;
+        setIntro(false);
+      }
+    } catch {
+      // Private browsing can block session storage. The intro still closes when the video is ready.
+    }
+  }, []);
+
+  dismissIntro.current = () => {
+    if (introSkip.current || introGone.current) return;
+    introGone.current = true;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const minimum = reduce ? 180 : 1200;
+    const wait = Math.max(0, minimum - (performance.now() - introStarted.current));
+    window.setTimeout(() => {
+      try { sessionStorage.setItem(INTRO_KEY, "1"); } catch { /* ignore */ }
+      setIntroLeave(true);
+      window.setTimeout(() => setIntro(false), reduce ? 0 : 720);
+    }, wait);
+  };
+
+  useEffect(() => {
+    if (!intro) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const timer = window.setTimeout(() => dismissIntro.current(), 20000);
+    return () => {
+      document.body.style.overflow = previous;
+      window.clearTimeout(timer);
+    };
+  }, [intro]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -48,8 +92,11 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
       video.muted = true;
       video.playsInline = true;
       playPending = true;
-      void video.play().catch(() => {
+      void video.play().then(() => {
+        if (!video.paused) dismissIntro.current();
+      }).catch(() => {
         // A browser may require a user gesture. Keep the poster and retry on interaction.
+        dismissIntro.current();
       }).finally(() => { playPending = false; });
     };
     const observer = new IntersectionObserver(([entry]) => {
@@ -105,9 +152,9 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
             aria-hidden
             controls={false}
             disablePictureInPicture
-            onPlaying={() => { setVOk(true); setPlaying(true); }}
+            onPlaying={() => { setVOk(true); setPlaying(true); dismissIntro.current(); }}
             onPause={() => setPlaying(false)}
-            onError={() => { setVOk(false); setPlaying(false); }}
+            onError={() => { setVOk(false); setPlaying(false); dismissIntro.current(); }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 0, opacity: vOk === true ? 1 : 0, pointerEvents: "none", transition: "opacity 1.2s ease" }}
           >
             <source src="/assets/hero-video.mp4" type="video/mp4" media="(max-width: 759px)" />
@@ -318,6 +365,7 @@ export function HomePage({ instagram }: { instagram: InstagramWallData }) {
           <InstagramWall posts={instagram.posts} />
         </div>
       </section>
+      {intro ? <div className={introLeave ? "home-intro home-intro--leave" : "home-intro"} aria-hidden="true"><img className="home-intro__mark" src="/assets/monogram-tone.png" alt="" /><div className="home-intro__brand"><img className="home-intro__logo" src="/assets/logo-foil.png" alt="" /><span className="home-intro__line" /></div></div> : null}
     </div>
   );
 }

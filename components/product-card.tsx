@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatMoney, type ShopProduct } from "@/lib/shop-model";
+import { formatMoney, productPath, type ShopProduct } from "@/lib/shop-model";
 import { productLine, useSite } from "@/lib/site";
 import { CommerceIcon } from "./commerce-icon";
 
@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   const site = useSite();
   const single = product.variants.length === 1 && product.bundles.length === 0;
   const soldOut = !product.variants.length || product.variants.every((variant) => variant.stock === 0);
-  const href = `/shop/${product.id}`;
+  const href = productPath(product, site.products);
   const tag = soldOut ? "אזל מהמלאי" : product.tag || (product.isNew ? "חדש בחנות" : product.best ? "מהאהובים שלנו" : "");
 
   return <article className="boutique-card">

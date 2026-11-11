@@ -13,7 +13,6 @@ import "./legal.css";
 import { AccessibilityTools, CookiePreferences } from "@/components/legal-controls";
 import { SiteProvider } from "@/lib/site";
 import { Shell } from "@/components/shell";
-import { RenovationGate } from "@/components/renovation-gate";
 import { loadShop } from "@/lib/storely";
 import { ShabbatGate } from "@/components/shabbat-gate";
 
@@ -46,9 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className={heebo.className}>
         <SiteProvider shop={shop}>
           <ShabbatGate>
-            <RenovationGate>
-              <Shell>{children}</Shell>
-            </RenovationGate>
+            <Shell>{children}</Shell>
           </ShabbatGate>
         </SiteProvider>
         <AccessibilityTools />

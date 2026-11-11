@@ -31,7 +31,7 @@ export function CookiePreferences() {
   }
   const actions = <div className="cookie-actions"><button type="button" onClick={() => save("essential")}>חיוניות בלבד</button><button type="button" onClick={() => save("analytics")}>אישור מדידה</button></div>;
   return <>
-    {showBanner ? <section className="cookie-banner" aria-labelledby="cookie-banner-title"><div><h2 id="cookie-banner-title">הפרטיות שלך, הבחירה שלך</h2><p>אנו שומרות עגלה והעדפות לתפעול האתר. מדידת גלישה תופעל רק באישורך. אפשר להמשיך עם חיוניות בלבד ולשנות את הבחירה בכל עת. <Link href="/policies/cookies">מידע על עוגיות</Link></p></div>{actions}</section> : null}
+    {showBanner ? <section className="cookie-banner" aria-labelledby="cookie-banner-title"><div className="cookie-banner__copy"><h2 id="cookie-banner-title">הפרטיות שלך</h2><p>עגלה והעדפות נשמרות לתפעול האתר. מדידת גלישה רק באישורך, ואפשר לשנות בכל עת. <Link href="/policies/cookies">מידע על עוגיות</Link></p></div>{actions}</section> : null}
     <dialog ref={dialog} className="legal-dialog" aria-labelledby="cookie-dialog-title"><button className="legal-dialog-close" type="button" onClick={() => dialog.current?.close()} aria-label="סגירת העדפות עוגיות">×</button><h2 id="cookie-dialog-title">העדפות עוגיות</h2><p>עוגיות חיוניות משמשות לעגלה, להזמנה ולשמירת העדפות. מדידה אופציונלית מסייעת להבין את השימוש באתר.</p><p>הבחירה הנוכחית: {choice === "analytics" ? "חיוניות ומדידה" : "חיוניות בלבד"}.</p>{actions}<Link href="/policies/cookies" onClick={() => dialog.current?.close()}>למדיניות העוגיות המלאה</Link></dialog>
   </>;
 }
