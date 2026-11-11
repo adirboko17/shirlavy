@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { formatMoney, type Currency } from "@/lib/shop-model";
+import { useSite } from "@/lib/site";
 import { CommerceIcon } from "./commerce-icon";
 
 type ReceiptLine = { title: string; quantity: number; unitPrice: number };
@@ -29,6 +30,7 @@ function currencyOf(value: unknown): Currency {
 
 export function PaymentReturn() {
   const started = useRef(false);
+  const site = useSite();
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [reason, setReason] = useState("");
 
@@ -53,6 +55,9 @@ export function PaymentReturn() {
           setReason(typeof body?.reason === "string" ? body.reason : "לא הצלחנו לאשר את התשלום.");
           return;
         }
+        localStorage.setItem("shirlavy-cart", "[]");
+        site.clearCart();
+        site.closeCart();
         const lines = Array.isArray(body.lines)
           ? body.lines.flatMap((item: unknown) => {
               if (!item || typeof item !== "object") return [];
