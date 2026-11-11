@@ -143,7 +143,6 @@ function ProductDetails({ id }: { id: string }) {
           <span className="commerce-eyebrow">{product.catName || "THE SHIR LAVY COLLECTION"}</span>
           <h1>{product.name}</h1>
           <div className="product-info__price"><span>{formatMoney(price, shop.currency)}</span>{product.compareAt && product.compareAt > price && !bundle ? <s>{formatMoney(product.compareAt, shop.currency)}</s> : null}</div>
-          {product.short ? <p className="product-info__intro">{product.short}</p> : null}
           <div className="product-purchase">
             {grouped ? product.options.map((option) => <fieldset key={option.name} className="product-options"><legend>{option.name}{variant.selected[option.name] ? <>: <b>{variant.selected[option.name]}</b></> : null}</legend><div>{option.values.map((value) => {
               const sold = valueSoldOut(product, variant, option.name, value);
