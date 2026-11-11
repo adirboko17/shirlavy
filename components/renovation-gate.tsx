@@ -19,7 +19,7 @@ export function RenovationGate({ children }: { children: React.ReactNode }) {
     setReady(true);
   }, []);
 
-  if (path.startsWith("/policies/")) return children;
+  if (path.startsWith("/policies/") || path === "/checkout" || path.startsWith("/checkout/")) return children;
   if (!ready) return <div className="reno" aria-hidden />;
   if (!open) return <Renovation onUnlock={() => setOpen(true)} />;
   return children;

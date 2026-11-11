@@ -73,7 +73,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const showFooter = path !== "/checkout";
   const showFab = !wide && site.width < 760 && !["/shop", "/checkout"].includes(path) && !path.startsWith("/shop/") && !site.menuOpen;
 
-  if (path === "/checkout") {
+  if (path === "/checkout" || path.startsWith("/checkout/")) {
     return <div className="checkout-shell" dir="rtl" lang="he">
       <a className="skip-link" href="#main-content">דילוג לתוכן הראשי</a>
       <header className="checkout-header"><div><Logo onDark={false} small /><Link href="/shop">חזרה לחנות <span aria-hidden="true">←</span></Link></div></header>

@@ -608,7 +608,28 @@ export async function completePayment(input: { hostHeader: string | null; query:
       amount: amount(record.total) ?? 0,
     });
   }
-  return { ok: true as const, orderNumber: number, total: amount(record.total) ?? 0, currency: currencyOf(record.currency) };
+  const receipt = recordOf(record.receipt);
+  const lines = Array.isArray(receipt?.lines)
+    ? receipt.lines.flatMap((item) => {
+        const row = recordOf(item);
+        const title = text(row?.title, 160);
+        const quantity = Number(row?.quantity);
+        const unitPrice = amount(row?.unitPrice);
+        if (!title || !Number.isInteger(quantity) || quantity < 1 || unitPrice == null) return [];
+        return [{ title, quantity, unitPrice }];
+      })
+    : [];
+  return {
+    ok: true as const,
+    orderNumber: number,
+    total: amount(receipt?.total) ?? amount(record.total) ?? 0,
+    currency: currencyOf(record.currency),
+    discount: amount(receipt?.discount) ?? 0,
+    shipping: amount(receipt?.shipping) ?? 0,
+    shippingName: text(receipt?.shippingName, 120),
+    email: text(receipt?.email, 180),
+    lines,
+  };
 }
 
 export async function recordEvent(input: {
