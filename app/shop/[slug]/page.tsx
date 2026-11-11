@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { ProductPage } from "@/components/product";
-import { findShopProduct, productPath, productSlug } from "@/lib/shop-model";
+import { findShopProduct, productPath } from "@/lib/shop-model";
 import { loadShop } from "@/lib/storely";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -26,15 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  const { shop, product } = await loadProduct(slug);
+  const { product } = await loadProduct(slug);
   if (!product) notFound();
-  const canonical = productSlug(product, shop.products);
-  let decoded = slug;
-  try {
-    decoded = decodeURIComponent(slug);
-  } catch {
-    /* already decoded, or not valid percent-encoding */
-  }
-  if (decoded !== canonical) permanentRedirect(productPath(product, shop.products));
   return <ProductPage />;
 }

@@ -143,15 +143,19 @@ export function isPickupZone(zone: string) {
 
 type ProductSlugSource = { id: string; handle: string };
 
+function safeProductSlug(value: string) {
+  return value.length > 0 && !/[/?#\s]/.test(value);
+}
+
 export function productSlug(product: ProductSlugSource, products: ProductSlugSource[] = [product]) {
   const handle = product.handle.trim();
-  if (!handle) return product.id;
+  if (!safeProductSlug(handle)) return product.id;
   const shared = products.some((item) => item.id !== product.id && item.handle.trim() === handle);
   return shared ? product.id : handle;
 }
 
 export function productPath(product: ProductSlugSource, products?: ProductSlugSource[]) {
-  return `/shop/${encodeURIComponent(productSlug(product, products))}`;
+  return `/shop/${productSlug(product, products)}`;
 }
 
 export function findShopProduct<T extends ProductSlugSource>(products: T[], key: string) {
