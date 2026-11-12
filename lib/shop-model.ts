@@ -13,6 +13,7 @@ export type ShopVariant = {
   price: number;
   stock: number | null;
   selected: Record<string, string>;
+  image?: string;
 };
 
 export type ShopBundle = {

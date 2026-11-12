@@ -213,6 +213,7 @@ function variantsOf(value: unknown, fallbackPrice: number, options: ShopOption[]
     const stockNumber = typeof stockValue === "number" ? stockValue : typeof stockValue === "string" ? Number(stockValue) : NaN;
     const tracked = row?.tracked !== false;
     const title = text(row?.title, 120);
+    const image = httpsOrPath(row?.image);
     variants.push({
       id,
       title,
@@ -220,6 +221,7 @@ function variantsOf(value: unknown, fallbackPrice: number, options: ShopOption[]
       price,
       stock: tracked ? (Number.isFinite(stockNumber) ? stockNumber : 0) : null,
       selected: selectedOf(row, title, options),
+      ...(image.startsWith("https://") ? { image } : {}),
     });
   }
   return variants;

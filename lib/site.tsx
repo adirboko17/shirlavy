@@ -193,7 +193,7 @@ export function productLine(product: ShopProduct, variantId: string, packs = 1, 
     productId: product.id,
     name: product.name,
     detail: bundle ? bundle.label : variant.title,
-    image: bundle?.image || product.images[0] || "",
+    image: bundle?.image || variant.image || product.images[0] || "",
     // Cart quantities count individual units; bundle.price is the whole pack.
     unitPrice: bundle ? bundle.price / bundle.qty : variant.price,
     quantity,

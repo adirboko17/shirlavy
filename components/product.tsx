@@ -110,7 +110,7 @@ function ProductDetails({ id }: { id: string }) {
   const product = products.find((item) => item.id === id);
   const [variantId, setVariantId] = useState("");
   const [bundleQty, setBundleQty] = useState(0);
-  const [image, setImage] = useState(0);
+  const [manualImage, setManualImage] = useState<number | null>(null);
   const [packs, setPacks] = useState(1);
   const variant = product?.variants.find((item) => item.id === variantId) ?? product?.variants.find((item) => item.stock !== 0) ?? product?.variants[0];
   const grouped = product ? hasOptionGroups(product) : false;
@@ -123,7 +123,13 @@ function ProductDetails({ id }: { id: string }) {
   if (!product || !variant) return <section className="commerce product-missing"><CommerceIcon name="bag" width="42" height="42" /><h1>המוצר לא נמצא</h1><Link href="/shop" className="commerce-text-link">חזרה לחנות <CommerceIcon name="arrow" /></Link></section>;
 
   const photos = product.images;
-  const current = photos[image] || photos[0];
+  const variantPhoto = photos.indexOf(variant.image ?? "");
+  const image = manualImage ?? (variantPhoto >= 0 ? variantPhoto : 0);
+  const current = manualImage == null && variant.image && variantPhoto < 0 ? variant.image : photos[image] || photos[0];
+  function selectVariant(nextId: string) {
+    setVariantId(nextId);
+    setManualImage(null);
+  }
   const related = products.filter((item) => item.id !== product.id).sort((a, b) => Number(b.cat === product.cat) - Number(a.cat === product.cat) || a.rank - b.rank).slice(0, 4);
 
   return <div className="commerce product-page">
@@ -137,7 +143,7 @@ function ProductDetails({ id }: { id: string }) {
             <span className="product-gallery__signature" aria-hidden="true">SHIR LAVY · THE COLLECTION</span>
             {photos.length > 1 ? <span className="product-gallery__count" dir="ltr">{image + 1} / {photos.length}</span> : null}
           </div>
-          {photos.length > 1 ? <div className="product-gallery__thumbs" role="group" aria-label="תמונות המוצר">{photos.map((src, index) => <button key={`${src}-${index}`} type="button" aria-label={`תמונה ${index + 1} של ${product.name}`} aria-pressed={index === image} onClick={() => setImage(index)}><img src={src} alt="" loading="lazy" /></button>)}</div> : null}
+          {photos.length > 1 ? <div className="product-gallery__thumbs" role="group" aria-label="תמונות המוצר">{photos.map((src, index) => <button key={`${src}-${index}`} type="button" aria-label={`תמונה ${index + 1} של ${product.name}`} aria-pressed={index === image && current === src} onClick={() => setManualImage(index)}><img src={src} alt="" loading="lazy" /></button>)}</div> : null}
         </div>
         <div className="product-info">
           <span className="commerce-eyebrow">{product.catName || "THE SHIR LAVY COLLECTION"}</span>
@@ -147,8 +153,8 @@ function ProductDetails({ id }: { id: string }) {
           <div className="product-purchase">
             {grouped ? product.options.map((option) => <fieldset key={option.name} className="product-options"><legend>{option.name}{variant.selected[option.name] ? <>: <b>{variant.selected[option.name]}</b></> : null}</legend><div>{option.values.map((value) => {
               const sold = valueSoldOut(product, variant, option.name, value);
-              return <button key={value} type="button" aria-pressed={variant.selected[option.name] === value} data-sold={sold ? "true" : undefined} onClick={() => setVariantId(chooseOption(product, variant, option.name, value).id)}>{isColorOption(option.name) ? <span className="product-swatch" style={{ background: swatchColor(value, option.colors) }} /> : null}{value}</button>;
-            })}</div></fieldset>) : product.variants.length > 1 ? <fieldset className="product-options"><legend>בחרי את האפשרות שלך</legend><div>{product.variants.map((item) => <button key={item.id} type="button" aria-pressed={variant.id === item.id} data-sold={item.stock === 0 ? "true" : undefined} onClick={() => setVariantId(item.id)}>{item.title || "רגיל"}</button>)}</div></fieldset> : null}
+              return <button key={value} type="button" aria-pressed={variant.selected[option.name] === value} data-sold={sold ? "true" : undefined} onClick={() => selectVariant(chooseOption(product, variant, option.name, value).id)}>{isColorOption(option.name) ? <span className="product-swatch" style={{ background: swatchColor(value, option.colors) }} /> : null}{value}</button>;
+            })}</div></fieldset>) : product.variants.length > 1 ? <fieldset className="product-options"><legend>בחרי את האפשרות שלך</legend><div>{product.variants.map((item) => <button key={item.id} type="button" aria-pressed={variant.id === item.id} data-sold={item.stock === 0 ? "true" : undefined} onClick={() => selectVariant(item.id)}>{item.title || "רגיל"}</button>)}</div></fieldset> : null}
             {product.bundles.length ? <BundlePicker bundles={product.bundles} unitPrice={variant.price} currency={shop.currency} selected={bundleQty} onSelect={setBundleQty} /> : null}
             <div className="product-purchase__status"><span className={soldOut ? "stock-status stock-status--out" : "stock-status"}>{soldOut ? "כרגע לא במלאי" : variant.stock != null ? "זמין במלאי" : "ניתן להזמנה"}</span><span>{bundle ? "כמות מארזים" : "כמות יחידות"}</span></div>
             <div className="product-purchase__actions">
