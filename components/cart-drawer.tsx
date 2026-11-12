@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CommerceIcon } from "./commerce-icon";
-import { formatMoney, requiredPolicyIds, type CartLine, type Currency } from "@/lib/shop-model";
+import { formatMoney, productPath, requiredPolicyIds, type CartLine, type Currency } from "@/lib/shop-model";
 import { useSite } from "@/lib/site";
 import { lockPageScroll } from "@/lib/scroll-lock";
 
@@ -134,15 +134,17 @@ function CartLineRow({ line, currency }: { line: CartLine; currency: Currency })
   const site = useSite();
   const step = line.bundleQty || 1;
   const total = line.unitPrice * line.quantity;
+  const product = site.products.find((item) => item.id === line.productId);
+  const href = product ? productPath(product, site.products) : line.productId ? `/shop/${encodeURIComponent(line.productId)}` : "/shop";
   return (
     <article className="cart-line">
-      <Link href={`/shop/${line.productId}`} onClick={site.closeCart} className="cart-line__photo" aria-label={line.name}>
+      <Link href={href} onClick={site.closeCart} className="cart-line__photo" aria-label={line.name}>
         {line.image ? <img src={line.image} alt="" /> : null}
       </Link>
       <div className="cart-line__body">
         <div className="cart-line__top">
           <div>
-            <Link href={`/shop/${line.productId}`} onClick={site.closeCart}><strong>{line.name}</strong></Link>
+            <Link href={href} onClick={site.closeCart}><strong>{line.name}</strong></Link>
             {line.detail ? <span>{line.detail}</span> : null}
           </div>
           <b>{formatMoney(total, currency)}</b>

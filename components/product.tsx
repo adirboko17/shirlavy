@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useId, useState } from "react";
-import { formatMoney, type Currency, type ShopBundle, type ShopProduct, type ShopVariant } from "@/lib/shop-model";
+import { findShopProduct, formatMoney, type Currency, type ShopBundle, type ShopProduct, type ShopVariant } from "@/lib/shop-model";
 import { productLine, useSite } from "@/lib/site";
 import { ProductCard } from "./product-card";
 import { CommerceIcon } from "./commerce-icon";
@@ -69,9 +69,9 @@ function valueSoldOut(product: ShopProduct, current: ShopVariant, name: string, 
 
 export function ProductPage() {
   const params = useParams();
-  const id = typeof params?.id === "string" ? params.id : "";
+  const slug = typeof params?.slug === "string" ? params.slug : "";
   // Reset gallery and selection state when navigating between products.
-  return <ProductDetails key={id} id={id} />;
+  return <ProductDetails key={slug} slug={slug} />;
 }
 
 function BundlePicker({ bundles, unitPrice, currency, selected, onSelect }: {
@@ -105,9 +105,9 @@ function BundlePicker({ bundles, unitPrice, currency, selected, onSelect }: {
   </fieldset>;
 }
 
-function ProductDetails({ id }: { id: string }) {
+function ProductDetails({ slug }: { slug: string }) {
   const { products, shop, addLine } = useSite();
-  const product = products.find((item) => item.id === id);
+  const product = findShopProduct(products, slug);
   const [variantId, setVariantId] = useState("");
   const [bundleQty, setBundleQty] = useState(0);
   const [manualImage, setManualImage] = useState<number | null>(null);
@@ -149,7 +149,6 @@ function ProductDetails({ id }: { id: string }) {
           <span className="commerce-eyebrow">{product.catName || "THE SHIR LAVY COLLECTION"}</span>
           <h1>{product.name}</h1>
           <div className="product-info__price"><span>{formatMoney(price, shop.currency)}</span>{product.compareAt && product.compareAt > price && !bundle ? <s>{formatMoney(product.compareAt, shop.currency)}</s> : null}</div>
-          {product.short ? <p className="product-info__intro">{product.short}</p> : null}
           <div className="product-purchase">
             {grouped ? product.options.map((option) => <fieldset key={option.name} className="product-options"><legend>{option.name}{variant.selected[option.name] ? <>: <b>{variant.selected[option.name]}</b></> : null}</legend><div>{option.values.map((value) => {
               const sold = valueSoldOut(product, variant, option.name, value);

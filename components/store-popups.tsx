@@ -99,6 +99,13 @@ function numberOf(value: unknown, fallback: number, min: number, max: number) {
   return Math.min(max, Math.max(min, number));
 }
 
+function overlayAlpha(value: unknown) {
+  const number = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(number)) return 0.46;
+  if (number > 1) return Math.min(80, Math.max(0, number)) / 100;
+  return Math.min(1, Math.max(0, number));
+}
+
 function alignOf(value: unknown): Align {
   return value === "center" || value === "left" ? value : "right";
 }
@@ -128,7 +135,7 @@ function parsePopup(value: unknown): Popup | null {
       padding: numberOf(design.padding, 24, 0, 64),
       gap: numberOf(design.gap, 12, 0, 40),
       background: text(design.background, 20) || "#fff",
-      overlay: numberOf(design.overlay, 0.45, 0, 1),
+      overlay: overlayAlpha(design.overlay),
       closeOnOverlay: design.closeOnOverlay !== false,
       closeColor: text(design.closeColor, 20) || "#1C1C1C",
       blocks,

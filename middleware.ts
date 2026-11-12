@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { recordEvent, requestHostname, storefrontHostname } from "@/lib/storely";
+import { findShopProduct, productSlug } from "@/lib/shop-model";
+import { loadShop, recordEvent, requestHostname, storefrontHostname } from "@/lib/storely";
 import { ATTR_COOKIE, createVisitorKey, readAttr, validVisitorKey, VISITOR_COOKIE, visitorCookieOptions } from "@/lib/visitor";
 import { allowsAnalytics, CONSENT_COOKIE } from "@/lib/consent";
 
@@ -29,7 +30,31 @@ function isPrefetch(request: NextRequest) {
   return purpose.includes("prefetch");
 }
 
+const PRODUCT_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+async function productRedirect(request: NextRequest) {
+  const match = request.nextUrl.pathname.match(/^\/shop\/([^/]+)$/);
+  if (!match || (request.method !== "GET" && request.method !== "HEAD")) return null;
+  let segment = match[1];
+  try {
+    segment = decodeURIComponent(segment);
+  } catch {
+    return null;
+  }
+  if (!PRODUCT_ID.test(segment)) return null;
+  const shop = await loadShop(request.headers.get("host"));
+  const product = findShopProduct(shop.products, segment);
+  if (!product) return null;
+  const canonical = productSlug(product, shop.products);
+  if (canonical === segment) return null;
+  const url = request.nextUrl.clone();
+  url.pathname = `/shop/${canonical}`;
+  return NextResponse.redirect(url, 308);
+}
+
 export async function middleware(request: NextRequest) {
+  const redirected = await productRedirect(request);
+  if (redirected) return redirected;
   const response = NextResponse.next();
   // No optional tracking or attribution until an explicit choice is present.
   if (!allowsAnalytics(request.cookies.get(CONSENT_COOKIE)?.value)) {

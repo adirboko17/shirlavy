@@ -142,6 +142,36 @@ export function isPickupZone(zone: string) {
   return /pickup|collect|locker|איסוף|נקוד/i.test(zone);
 }
 
+type ProductSlugSource = { id: string; handle: string };
+
+function safeProductSlug(value: string) {
+  return value.length > 0 && !/[/?#\s]/.test(value);
+}
+
+export function productSlug(product: ProductSlugSource, products: ProductSlugSource[] = [product]) {
+  const handle = product.handle.trim();
+  if (!safeProductSlug(handle)) return product.id;
+  const shared = products.some((item) => item.id !== product.id && item.handle.trim() === handle);
+  return shared ? product.id : handle;
+}
+
+export function productPath(product: ProductSlugSource, products?: ProductSlugSource[]) {
+  return `/shop/${productSlug(product, products)}`;
+}
+
+export function findShopProduct<T extends ProductSlugSource>(products: T[], key: string) {
+  let raw = key.trim();
+  try {
+    raw = decodeURIComponent(raw);
+  } catch {
+    /* the segment is already decoded, or it is not valid percent-encoding */
+  }
+  const byId = products.find((item) => item.id === raw);
+  if (byId) return byId;
+  const byHandle = products.filter((item) => item.handle.trim() === raw);
+  return byHandle.length === 1 ? byHandle[0] : undefined;
+}
+
 export function lineKey(variantId: string, bundleQty?: number, gift?: boolean) {
   return `${gift ? "gift:" : ""}${variantId}:${bundleQty && bundleQty > 1 ? bundleQty : "1"}`;
 }
