@@ -230,7 +230,7 @@ export function CheckoutPage() {
             </section>
           </fieldset>
         </form>
-        <footer className="checkout-footer"><LegalLinks /><span>SHIR LAVY · Aesthetics & Academy</span></footer>
+        <footer className="checkout-footer"><LegalLinks /><span>שיר לביא אסתטיקה מתקדמת</span></footer>
       </div>
       <aside className={`checkout__summary${summaryOpen ? " is-open" : ""}`} aria-label="סיכום הזמנה">
         <button className="checkout-summary-toggle" type="button" aria-expanded={summaryOpen} aria-controls="checkout-summary-body" onClick={() => setSummaryOpen(value => !value)}><span><CommerceIcon name="bag" /> סיכום ההזמנה <span aria-hidden="true">{summaryOpen ? "−" : "+"}</span></span><b>{displayedTotal}</b></button>

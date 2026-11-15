@@ -195,7 +195,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           <div style={{ maxWidth: 1320, margin: "0 auto", padding: "clamp(40px,6vw,72px) clamp(24px,5vw,64px) 28px", display: "flex", flexDirection: "column", gap: "clamp(40px,5vw,64px)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,200px),1fr))", gap: 40 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 20, alignItems: "flex-start" }}>
-                <img src="/assets/logo-gold.png" alt="SHIR LAVY - Aesthetics & Academy" style={{ width: 132, height: "auto" }} />
+                <img src="/assets/logo-gold.png" alt="שיר לביא אסתטיקה מתקדמת" style={{ width: 132, height: "auto" }} />
                 <span style={{ fontSize: 14, lineHeight: 1.7, color: "#5A5A5A", maxWidth: 240 }}>קליניקת בוטיק לאיפור קבוע ואסתטיקה, ואקדמיה מקצועית לנשים.</span>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -220,7 +220,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 12, borderTop: "1px solid rgba(164,123,88,.22)", paddingTop: 22, fontSize: 13, color: "#8A8A8A" }}>
-              <span>© SHIR LAVY Aesthetics & Academy</span>
+              <span>© שיר לביא אסתטיקה מתקדמת</span>
               <LegalLinks />
             </div>
           </div>
@@ -270,9 +270,9 @@ function Logo({ onDark, small }: { onDark: boolean; small?: boolean }) {
   const m = small ? 28 : 30;
   const h = small ? 13 : 14;
   return (
-    <Link href="/" aria-label="SHIR LAVY - דף הבית" dir="ltr" style={{ background: "none", border: 0, padding: small ? 0 : "0 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: small ? 9 : 10, flex: "none" }}>
+    <Link href="/" aria-label="שיר לביא אסתטיקה מתקדמת, דף הבית" dir="ltr" style={{ background: "none", border: 0, padding: small ? 0 : "0 12px", cursor: "pointer", display: "flex", alignItems: "center", gap: small ? 9 : 10, flex: "none" }}>
       <img src={onDark ? "/assets/monogram-ivory.png" : "/assets/monogram-gold.png"} alt="" style={{ width: m, height: m }} />
-      <img src={onDark ? "/assets/name-ivory.png" : "/assets/name-gold.png"} alt="SHIR LAVY" style={{ height: h, width: "auto" }} />
+      <img src={onDark ? "/assets/name-ivory.png" : "/assets/name-gold.png"} alt="" style={{ height: h, width: "auto" }} />
     </Link>
   );
 }

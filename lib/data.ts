@@ -1,5 +1,8 @@
 export const PHONE = "972502444994";
 export const SITE_EMAIL = "office@shirlavy.co.il";
+export const SITE_URL = "https://www.shirlavy.co.il";
+export const SITE_NAME = "שיר לביא אסתטיקה מתקדמת";
+export const SITE_DESCRIPTION = "שיר לביא אסתטיקה מתקדמת. קליניקת בוטיק לאיפור קבוע ואסתטיקה, ואקדמיה מקצועית לנשים.";
 
 export const INSTAGRAM_PROFILE_URL = "https://www.instagram.com/shir_aesthetics/";
 export const FACEBOOK_PROFILE_URL = "https://www.facebook.com/lavyshir";

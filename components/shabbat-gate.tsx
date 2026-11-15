@@ -62,7 +62,7 @@ function ShabbatPage({ opensAt }: { opensAt: Date }) {
       <img className="reno-mark" src="/assets/monogram-tone.png" alt="" aria-hidden />
       <span />
       <div className="reno-content">
-        <img className="reno-logo" src="/assets/logo-foil.png" alt="SHIR LAVY - Aesthetics & Academy" />
+        <img className="reno-logo" src="/assets/logo-foil.png" alt="שיר לביא אסתטיקה מתקדמת" />
         <div className="reno-rule" />
         <div className="reno-copy">
           <h1 id="shabbat-title">האתר שומר שבת</h1>
@@ -75,7 +75,7 @@ function ShabbatPage({ opensAt }: { opensAt: Date }) {
       <footer className="reno-foot">
         <LegalLinks />
         <span>קליניקת בוטיק לנשים · אקדמיה לאיפור קבוע</span>
-        <span dir="ltr">© SHIR LAVY</span>
+        <span>© שיר לביא אסתטיקה מתקדמת</span>
       </footer>
     </main>
   );
